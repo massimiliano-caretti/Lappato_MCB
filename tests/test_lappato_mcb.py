@@ -184,10 +184,33 @@ class CacheTests(unittest.TestCase):
 
 
 # ─── manifests/__init__.py ─────────────────────────────────────────────
+EXPECTED_MANIFEST_DOMAINS = {
+    "anomaly_detection",
+    "causal_ml",
+    "clustering",
+    "cybersecurity",
+    "fairness",
+    "geospatial",
+    "graph_ml",
+    "llm_eval",
+    "medical_imaging",
+    "nlp",
+    "rag_eval",
+    "recommender",
+    "rl_eval",
+    "speech_audio",
+    "survival",
+    "tabular_generic",
+    "timeseries",
+    "vision",
+    "wdbc",
+}
+
+
 class ManifestRegistryTests(unittest.TestCase):
 
-    def test_three_domains_registered(self):
-        self.assertEqual(set(manifests.REGISTRY), {"wdbc", "nlp", "timeseries"})
+    def test_manifest_domains_registered(self):
+        self.assertEqual(set(manifests.REGISTRY), EXPECTED_MANIFEST_DOMAINS)
 
     def test_each_manifest_has_five_entries(self):
         # Cross-domain comparability is part of the design.

@@ -4,6 +4,58 @@ All notable changes to LAPPATO_MCB are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-05-04
+
+Domain expansion release. The manifest registry grows from 3 to 19
+domains, covering most mainstream supervised, unsupervised, evaluation
+and domain-specific ML tasks. The framework code, public API and the
+existing 3 manifests (WDBC, NLP, time series) are unchanged.
+
+### Added
+
+- **Sixteen new manifest domains**, each with five evidence-gated or
+  structural weakness entries (5 entries × 16 = 80 new
+  weakness checks):
+  - `anomaly_detection` — outlier / novelty detection diagnostics
+  - `causal_ml` — causal-inference / treatment-effect estimation
+  - `clustering` — unsupervised cluster-quality diagnostics
+  - `cybersecurity` — intrusion / malware detection
+  - `fairness` — group-fairness, demographic parity, EO/EOpp
+  - `geospatial` — spatial-autocorrelation, CRS, leakage diagnostics
+  - `graph_ml` — node/edge classification + link prediction
+  - `llm_eval` — LLM evaluation harness diagnostics
+  - `medical_imaging` — radiology / CT / MRI classification
+  - `rag_eval` — retrieval-augmented generation evaluation
+  - `recommender` — top-K recommendation, coverage, diversity
+  - `rl_eval` — RL policy evaluation diagnostics
+  - `speech_audio` — speech recognition / audio classification
+  - `survival` — survival analysis, C-index, calibration
+  - `tabular_generic` — domain-agnostic tabular fallback
+  - `vision` — image classification diagnostics
+- A shared `lappato_mcb/manifests/_common.py` module factoring out
+  helper functions reused across the new manifests.
+
+### Changed
+
+- The test `test_three_domains_registered` was renamed to
+  `test_manifest_domains_registered` and its expected set lifted
+  from 3 to 19 domain ids (parametrised via the
+  `EXPECTED_MANIFEST_DOMAINS` constant for easy future extensions).
+- The report-pack registry still ships only the original 3 packs
+  (WDBC, NLP, time series); domains without a registered pack fall
+  back to the framework-side artefact rendering through the existing
+  `_generic_fallback_pack` mechanism, so the new manifests are fully
+  usable for retrieval and weakness-card emission with the standard
+  reporting still working through the fallback.
+
+### Backwards compatibility
+
+- The constructor signature, manifest schema, weakness-card schema
+  and meta-log columns are unchanged.
+- Existing user code calling
+  `lappato_mcb.manifests.get("wdbc"|"nlp"|"timeseries")` keeps
+  working without modification.
+
 ## [1.0.0] — 2026-05-04
 
 First production-ready release. The public API is stable
