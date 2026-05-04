@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+
+# Generated LAPPATO_MCB / example artefacts.
+checkpoints/*
+!checkpoints/.gitkeep
+
+# Local environment files.
+.env
+.venv/
+venv/

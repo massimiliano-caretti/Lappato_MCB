@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "domain": "wdbc",
+  "description": "Hand-curated topics that should surface in a healthy WDBC LAPPATO_MCB run. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "class_imbalance": [
+      {
+        "name": "class-balanced loss",
+        "must_match_keywords": ["class", "balanced"],
+        "rationale": "Cui et al. 2019 — class-balanced loss for long-tailed classification."
+      },
+      {
+        "name": "focal loss",
+        "must_match_keywords": ["focal", "loss"],
+        "rationale": "Lin et al. 2017 — focal loss as canonical reweighting baseline."
+      },
+      {
+        "name": "imbalanced classification methods",
+        "must_match_keywords": ["imbalanced", "classification"],
+        "rationale": "Generic recall check on the imbalance literature."
+      }
+    ],
+    "low_calibration": [
+      {
+        "name": "isotonic calibration",
+        "must_match_keywords": ["isotonic", "calibration"],
+        "rationale": "Zadrozny & Elkan 2001 — standard nonparametric calibration."
+      },
+      {
+        "name": "Brier score",
+        "must_match_keywords": ["brier"],
+        "rationale": "Brier 1950 — proper scoring rule for probability calibration."
+      },
+      {
+        "name": "reliability diagram",
+        "must_match_keywords": ["reliability"],
+        "rationale": "Standard diagnostic for calibration quality."
+      }
+    ],
+    "marker_redundancy": [
+      {
+        "name": "SHAP interaction values",
+        "must_match_keywords": ["shap"],
+        "rationale": "Lundberg et al. — SHAP for feature interactions."
+      },
+      {
+        "name": "group lasso",
+        "must_match_keywords": ["group", "lasso"],
+        "rationale": "Yuan & Lin 2006 — sparse group lasso for correlated features."
+      }
+    ],
+    "tabular_baseline_alternatives": [
+      {
+        "name": "TabPFN",
+        "must_match_keywords": ["tabpfn"],
+        "rationale": "Hollmann et al. 2023 — foundation model for small tabular data."
+      },
+      {
+        "name": "CatBoost",
+        "must_match_keywords": ["catboost"],
+        "rationale": "Prokhorenkova et al. 2018 — alternative GBDT to LightGBM."
+      }
+    ],
+    "decision_curve_missing": [
+      {
+        "name": "decision curve analysis",
+        "must_match_keywords": ["decision", "curve"],
+        "rationale": "Vickers & Elkin 2006 — net-benefit framework."
+      },
+      {
+        "name": "net benefit",
+        "must_match_keywords": ["net", "benefit"],
+        "rationale": "Standard term in clinical risk-prediction reporting."
+      }
+    ]
+  }
+}

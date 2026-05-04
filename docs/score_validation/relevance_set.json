@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "description": "Hand-curated relevance set for LAPPATO_MCB's local _score_hit ranking. Each entry pairs a manifest-style query with a synthetic-but-plausible paper record and a 5-point human relevance rating (5 = central match, 0 = unrelated). Used by examples/validate_score.py to report Spearman rank correlation between human ratings and the deterministic local score. Intended as a small sanity-check, NOT a benchmark.",
+  "rating_scale": {
+    "5": "Central match — title and topic align directly with the query intent.",
+    "4": "Strong match — query intent clearly addressed; minor terminology drift.",
+    "3": "Partial match — touches the topic but on a different angle or at a tangent.",
+    "2": "Weak match — shares a few keywords but addresses an unrelated problem.",
+    "1": "Marginal — accidental keyword overlap only.",
+    "0": "Off-topic."
+  },
+  "entries": [
+    {
+      "query": "isotonic Platt calibration LightGBM probability medical",
+      "paper": {
+        "title": "Isotonic regression for probability calibration of gradient-boosted clinical risk models",
+        "abstract": "We compare isotonic and Platt calibration of LightGBM probability outputs on three medical tabular benchmarks and report Brier reliability decomposition.",
+        "year": 2024,
+        "cited_by_count": 32
+      },
+      "human_relevance": 5,
+      "rationale": "Title contains all major query keywords; topic central; recent and cited."
+    },
+    {
+      "query": "isotonic Platt calibration LightGBM probability medical",
+      "paper": {
+        "title": "Temperature scaling for deep multi-class classifiers",
+        "abstract": "We revisit temperature scaling as a post-hoc calibration approach for deep softmax models.",
+        "year": 2023,
+        "cited_by_count": 120
+      },
+      "human_relevance": 3,
+      "rationale": "Adjacent calibration topic but not isotonic/Platt nor LightGBM — partial."
+    },
+    {
+      "query": "isotonic Platt calibration LightGBM probability medical",
+      "paper": {
+        "title": "Survey of survival analysis methods in oncology cohorts",
+        "abstract": "Cox proportional hazards and parametric survival models for clinical follow-up.",
+        "year": 2022,
+        "cited_by_count": 18
+      },
+      "human_relevance": 1,
+      "rationale": "Shares 'medical' framing but no calibration content."
+    },
+    {
+      "query": "isotonic Platt calibration LightGBM probability medical",
+      "paper": {
+        "title": "Distributed quicksort variants on multicore architectures",
+        "abstract": "We benchmark parallel sort algorithms on x86 and ARM nodes.",
+        "year": 2021,
+        "cited_by_count": 4
+      },
+      "human_relevance": 0,
+      "rationale": "Off-topic."
+    },
+    {
+      "query": "class imbalance binary classification clinical LightGBM calibration",
+      "paper": {
+        "title": "Class-balanced focal loss for imbalanced clinical binary classification with LightGBM",
+        "abstract": "We integrate class-balanced and focal loss objectives into LightGBM and report calibration on ICU prediction tasks.",
+        "year": 2025,
+        "cited_by_count": 14
+      },
+      "human_relevance": 5,
+      "rationale": "Direct hit on every salient term."
+    },
+    {
+      "query": "class imbalance binary classification clinical LightGBM calibration",
+      "paper": {
+        "title": "SMOTE variants revisited",
+        "abstract": "Empirical study of synthetic minority oversampling for tabular classification.",
+        "year": 2024,
+        "cited_by_count": 22
+      },
+      "human_relevance": 3,
+      "rationale": "Clear class-imbalance angle but not LightGBM-specific and no calibration."
+    },
+    {
+      "query": "class imbalance binary classification clinical LightGBM calibration",
+      "paper": {
+        "title": "Convolutional neural networks for chest X-ray triage",
+        "abstract": "Image classification with ResNet variants on a chest radiograph cohort.",
+        "year": 2024,
+        "cited_by_count": 60
+      },
+      "human_relevance": 1,
+      "rationale": "Clinical context only — different problem family."
+    },
+    {
+      "query": "long tail multiclass text classification class weighted macro F1",
+      "paper": {
+        "title": "Long-tail multiclass text classification with class-weighted macro-F1 selection",
+        "abstract": "We compare class weighting, focal loss and resampling for long-tail text classification on six benchmarks, reporting macro-F1.",
+        "year": 2024,
+        "cited_by_count": 27
+      },
+      "human_relevance": 5,
+      "rationale": "Title is a paraphrase of the query."
+    },
+    {
+      "query": "long tail multiclass text classification class weighted macro F1",
+      "paper": {
+        "title": "Document representations with sentence transformers",
+        "abstract": "We compare embedding pooling strategies for short-text classification.",
+        "year": 2023,
+        "cited_by_count": 80
+      },
+      "human_relevance": 2,
+      "rationale": "Adjacent text-classification topic but not long-tail nor class-weighted."
+    },
+    {
+      "query": "long tail multiclass text classification class weighted macro F1",
+      "paper": {
+        "title": "Quantum error correction with surface codes",
+        "abstract": "We characterise logical error rates for surface-code patches.",
+        "year": 2024,
+        "cited_by_count": 5
+      },
+      "human_relevance": 0,
+      "rationale": "Off-topic."
+    },
+    {
+      "query": "GARCH heteroscedasticity time series volatility clustering",
+      "paper": {
+        "title": "Bayesian GARCH residual modelling for volatility-clustering univariate forecasting",
+        "abstract": "We layer a Bayesian GARCH residual model on a univariate mean forecaster and evaluate prediction-interval coverage under volatility clustering.",
+        "year": 2025,
+        "cited_by_count": 9
+      },
+      "human_relevance": 5,
+      "rationale": "All keywords present; topic central."
+    },
+    {
+      "query": "GARCH heteroscedasticity time series volatility clustering",
+      "paper": {
+        "title": "Robust ARMA estimation under outliers",
+        "abstract": "M-estimators for ARMA model identification.",
+        "year": 2023,
+        "cited_by_count": 12
+      },
+      "human_relevance": 2,
+      "rationale": "Time-series statistics but not volatility/heteroscedasticity."
+    },
+    {
+      "query": "GARCH heteroscedasticity time series volatility clustering",
+      "paper": {
+        "title": "Bookkeeping reform in mid-19th century Lombardy",
+        "abstract": "Archival study of double-entry adoption.",
+        "year": 2020,
+        "cited_by_count": 1
+      },
+      "human_relevance": 0,
+      "rationale": "Off-topic."
+    },
+    {
+      "query": "conformal prediction intervals time series quantile forecasting",
+      "paper": {
+        "title": "Conformalised quantile regression for multi-step time-series prediction intervals",
+        "abstract": "We extend conformal prediction to recursive time-series quantile forecasters and measure empirical coverage by horizon.",
+        "year": 2025,
+        "cited_by_count": 18
+      },
+      "human_relevance": 5,
+      "rationale": "Direct hit."
+    },
+    {
+      "query": "conformal prediction intervals time series quantile forecasting",
+      "paper": {
+        "title": "Bootstrap percentile intervals for nonparametric regression",
+        "abstract": "Resampling-based interval estimation for kernel smoothers.",
+        "year": 2022,
+        "cited_by_count": 25
+      },
+      "human_relevance": 3,
+      "rationale": "Adjacent uncertainty-quantification topic, not conformal nor TS-specific."
+    },
+    {
+      "query": "decision curve analysis clinical net benefit threshold",
+      "paper": {
+        "title": "Decision-curve analysis for evaluating clinical risk prediction models at threshold ranges",
+        "abstract": "We extend Vickers and Elkin's net-benefit framework to multi-threshold decision rules and report on three clinical cohorts.",
+        "year": 2024,
+        "cited_by_count": 41
+      },
+      "human_relevance": 5,
+      "rationale": "Title is a paraphrase of the query."
+    },
+    {
+      "query": "decision curve analysis clinical net benefit threshold",
+      "paper": {
+        "title": "Bayesian model averaging in regression",
+        "abstract": "Posterior weighting of competing regression specifications.",
+        "year": 2021,
+        "cited_by_count": 88
+      },
+      "human_relevance": 1,
+      "rationale": "Statistical methodology but unrelated to net-benefit analysis."
+    }
+  ]
+}

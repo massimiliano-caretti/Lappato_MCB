@@ -1,0 +1,35 @@
+[
+  {
+    "run_tag": "wdbc",
+    "n_papers_harvested": 36,
+    "by_source": {
+      "arXiv": 0,
+      "OpenAlex": 20,
+      "Crossref": 16,
+      "JOSS": 0
+    },
+    "n_latest_cards": 2
+  },
+  {
+    "run_tag": "nlp",
+    "n_papers_harvested": 53,
+    "by_source": {
+      "arXiv": 13,
+      "OpenAlex": 20,
+      "Crossref": 20,
+      "JOSS": 0
+    },
+    "n_latest_cards": 2
+  },
+  {
+    "run_tag": "timeseries",
+    "n_papers_harvested": 130,
+    "by_source": {
+      "arXiv": 36,
+      "OpenAlex": 36,
+      "Crossref": 36,
+      "JOSS": 22
+    },
+    "n_latest_cards": 4
+  }
+]

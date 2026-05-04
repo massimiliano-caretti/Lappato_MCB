@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "domain": "timeseries",
+  "description": "Hand-curated topics for the time-series manifest. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "residual_autocorrelation": [
+      {
+        "name": "Ljung-Box test",
+        "must_match_keywords": ["ljung", "box"],
+        "rationale": "Ljung & Box 1978 — canonical residual-autocorrelation test."
+      },
+      {
+        "name": "ARIMA / SARIMA residual whitening",
+        "must_match_keywords": ["arima"],
+        "rationale": "Standard family for residual-structure correction."
+      }
+    ],
+    "heteroscedastic_residuals": [
+      {
+        "name": "GARCH volatility clustering",
+        "must_match_keywords": ["garch"],
+        "rationale": "Bollerslev 1986 — heteroscedasticity-aware modelling."
+      },
+      {
+        "name": "variance-stabilising transforms",
+        "must_match_keywords": ["variance"],
+        "rationale": "Box-Cox / log transforms for variance stabilisation."
+      }
+    ],
+    "horizon_degradation": [
+      {
+        "name": "direct vs recursive multi-step",
+        "must_match_keywords": ["multi", "step"],
+        "rationale": "Marcellino et al. 2006 — direct vs recursive comparison."
+      },
+      {
+        "name": "sequence-to-sequence forecasting",
+        "must_match_keywords": ["sequence"],
+        "rationale": "Mainstream multi-horizon neural family."
+      }
+    ],
+    "ts_model_alternatives": [
+      {
+        "name": "N-BEATS / N-HITS",
+        "must_match_keywords": ["beats"],
+        "rationale": "Oreshkin et al. 2020 / Challu et al. 2023 — modern univariate forecasters."
+      },
+      {
+        "name": "Temporal Fusion Transformer",
+        "must_match_keywords": ["temporal", "fusion"],
+        "rationale": "Lim et al. 2021 — TFT multi-horizon transformer."
+      }
+    ],
+    "probabilistic_forecast_missing": [
+      {
+        "name": "conformal prediction intervals",
+        "must_match_keywords": ["conformal"],
+        "rationale": "Vovk et al. — distribution-free prediction intervals."
+      },
+      {
+        "name": "quantile regression forecasting",
+        "must_match_keywords": ["quantile"],
+        "rationale": "Quantile loss / quantile-regression forests for probabilistic forecasting."
+      }
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lappato_mcb"
+version = "1.0.0"
+description = "Literature-aware framework for machine-learning pipelines"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+  { name = "LAPPATO_MCB contributors" }
+]
+keywords = [
+  "machine-learning",
+  "literature-search",
+  "arxiv",
+  "openalex",
+  "crossref",
+  "joss",
+  "pipeline-monitoring",
+  "research-software",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = []
+
+[project.optional-dependencies]
+examples = [
+  "numpy",
+  "scikit-learn",
+  "lightgbm",
+]
+reports = [
+  "matplotlib",
+]
+dev = [
+  "pytest",
+  "build",
+]
+all = [
+  "numpy",
+  "scikit-learn",
+  "lightgbm",
+  "matplotlib",
+]
+
+[project.urls]
+Homepage = "https://github.com/lappato-mcb/lappato_mcb"
+Issues = "https://github.com/lappato-mcb/lappato_mcb/issues"
+Documentation = "https://github.com/lappato-mcb/lappato_mcb#readme"
+
+[tool.setuptools]
+packages = { find = { include = ["lappato_mcb", "lappato_mcb.*"] } }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+# E,F = pyflakes/pycodestyle errors only — keep the style surface
+# narrow on purpose so lint enforces correctness, not opinion.
+select = ["E", "F", "W", "I"]
+ignore = [
+  "E501",  # line length is enforced by formatter, not lint
+  "E731",  # lambdas are used deliberately for inline manifest hooks
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests touch internals; allow unused imports and "useless" returns
+# when they document intent.
+"tests/*" = ["F401", "F811"]

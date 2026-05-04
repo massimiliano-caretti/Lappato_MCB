@@ -1,0 +1,390 @@
+{
+  "run_tag": "nlp",
+  "n_papers_harvested": 53,
+  "by_source": {
+    "arXiv": 13,
+    "OpenAlex": 20,
+    "Crossref": 20,
+    "JOSS": 0
+  },
+  "n_latest_cards": 2,
+  "sample_cards": [
+    {
+      "ts": "2026-05-04T09:10:49",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "title": "TF-IDF is the only representation — sentence-transformer embeddings unrepresented",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "info",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "sentence transformers MiniLM multiclass text classification benchmark 2025",
+        "fastText vs TF IDF text classification small dataset 2025"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 5,
+        "OpenAlex": 10,
+        "Crossref": 10
+      },
+      "n_raw_hits": 25,
+      "n_papers_kept": 25,
+      "n_new_vs_previous_runs": 25,
+      "n_seen_before": 0,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.21203/rs.3.rs-6069218/v1",
+          "title": "Multiclass Classification using VariationalQuantum Circuit on Benchmark Dataset",
+          "year": "2025",
+          "url": "https://doi.org/10.21203/rs.3.rs-6069218/v1",
+          "score": 17.25
+        },
+        {
+          "source": "Crossref",
+          "id": "10.18280/isi.300606",
+          "title": "Performance Evaluation of Text Embedding Models for Ambiguity Classification in Indonesian News Corpus: A Comparative Study of TF-IDF, Word2Vec, FastText BERT, and GPT",
+          "year": "2025",
+          "url": "https://doi.org/10.18280/isi.300606",
+          "score": 16.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.30871/jaic.v9i5.10627",
+          "title": "Generative AI Image Sentiment Analysis on Social Media X using TF-IDF and FastText",
+          "year": "2025",
+          "url": "https://doi.org/10.30871/jaic.v9i5.10627",
+          "score": 16.25
+        },
+        {
+          "source": "Crossref",
+          "id": "10.20944/preprints202510.2427.v1",
+          "title": "A Hybrid TF–IDF and SBERT Approach for Enhanced Text Classification Performance",
+          "year": "2025",
+          "url": "https://doi.org/10.20944/preprints202510.2427.v1",
+          "score": 15.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2502.19801v1",
+          "title": "Text classification using machine learning methods",
+          "year": "2025",
+          "url": "http://arxiv.org/abs/2502.19801v1",
+          "score": 14.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/1904.00785v1",
+          "title": "Question Embeddings Based on Shannon Entropy: Solving intent classification task in goal-oriented dialogue system",
+          "year": "2019",
+          "url": "http://arxiv.org/abs/1904.00785v1",
+          "score": 13.0
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1016/j.procs.2025.03.161",
+          "title": "Sentiment Showdown - Sentence Transformers stand their ground against Language Models: Case of Sentiment Classification using Sentence Embeddings",
+          "year": "2025",
+          "url": "https://doi.org/10.1016/j.procs.2025.03.161",
+          "score": 12.854
+        },
+        {
+          "source": "Crossref",
+          "id": "10.18653/v1/2025.dravidianlangtech-1.56",
+          "title": "Necto@DravidianLangTech 2025: Fine-tuning Multilingual MiniLM for Text Classification in Dravidian Languages",
+          "year": "2025",
+          "url": "https://doi.org/10.18653/v1/2025.dravidianlangtech-1.56",
+          "score": 12.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.18178/wcse.2025.06.032",
+          "title": "Evaluating Performance of Multiclass Chest Radiograph Classification Using Soft Voting of CNNs and Transformers",
+          "year": "2025",
+          "url": "https://doi.org/10.18178/wcse.2025.06.032",
+          "score": 12.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/icedeg65568.2025.11081570",
+          "title": "Comparing CNNs and Transformers for Multiclass Patent Classification in Spanish",
+          "year": "2025",
+          "url": "https://doi.org/10.1109/icedeg65568.2025.11081570",
+          "score": 12.75
+        }
+      ],
+      "why_it_matters": "TF-IDF is strong but lexical; embeddings test whether semantic similarity reduces class confusions that share vocabulary.",
+      "next_checks": [
+        "Compare TF-IDF, fastText and sentence-transformer embeddings.",
+        "Evaluate macro-F1 and confusion-pair changes.",
+        "Keep a linear head for fair representation comparison."
+      ],
+      "success_criteria": [
+        "Embedding baseline is reported under identical splits.",
+        "Representation choice is justified by macro-F1 or confusion reduction."
+      ],
+      "references": [
+        "sentence transformers text classification",
+        "fastText vs TF IDF",
+        "small dataset text classification benchmark"
+      ],
+      "transplant": "Add a Sentence-Transformer embedding (paraphrase-MiniLM-L6) + logistic head as an alternative representation; compare on macro-F1 not accuracy."
+    },
+    {
+      "ts": "2026-05-04T09:11:06",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "calibration_missing_text",
+      "title": "No probability calibration reported — softmax confidences are biased",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "info",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "softmax calibration text classifier temperature scaling 2025",
+        "expected calibration error multiclass language model 2025"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 8,
+        "OpenAlex": 10,
+        "Crossref": 10
+      },
+      "n_raw_hits": 28,
+      "n_papers_kept": 28,
+      "n_new_vs_previous_runs": 25,
+      "n_seen_before": 3,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.65148/ecn/2025011",
+          "title": "Reliable Cybersecurity Threat Detection through Probability Calibration in Multiclass Classification",
+          "year": "2025",
+          "url": "https://doi.org/10.65148/ecn/2025011",
+          "score": 14.854
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/access.2025.3538617",
+          "title": "On Calibration of Prompt Learning Using Temperature Scaling",
+          "year": "2025",
+          "url": "https://doi.org/10.1109/access.2025.3538617",
+          "score": 12.854
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/iscipt67144.2025.11265539",
+          "title": "Efficient Uncertainty Estimation and Calibration on Edge CPUs: A Lightweight Framework with Temperature Scaling and Calibration-Aware Early Stopping",
+          "year": "2025",
+          "url": "https://doi.org/10.1109/iscipt67144.2025.11265539",
+          "score": 12.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.52202/079017-2677",
+          "title": "Information-theoretic Generalization Analysis for Expected Calibration Error",
+          "year": "2024",
+          "url": "https://doi.org/10.52202/079017-2677",
+          "score": 12.604
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2210.07810v1",
+          "title": "A Consistent and Differentiable Lp Canonical Calibration Error Estimator",
+          "year": "2022",
+          "url": "http://arxiv.org/abs/2210.07810v1",
+          "score": 12.5
+        },
+        {
+          "source": "Crossref",
+          "id": "10.52202/079017-0241",
+          "title": "Optimal Multiclass U-Calibration Error and Beyond",
+          "year": "2024",
+          "url": "https://doi.org/10.52202/079017-0241",
+          "score": 12.5
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/calcon63337.2024.10914057",
+          "title": "Deep Learning-based Multiclass ECG Classification with Error-controlled ARIMA Model",
+          "year": "2024",
+          "url": "https://doi.org/10.1109/calcon63337.2024.10914057",
+          "score": 12.5
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2512.09054v1",
+          "title": "Improving Multi-Class Calibration through Normalization-Aware Isotonic Techniques",
+          "year": "2025",
+          "url": "http://arxiv.org/abs/2512.09054v1",
+          "score": 12.25
+        },
+        {
+          "source": "Crossref",
+          "id": "10.12732/ijam.v38i11s.1232",
+          "title": "A Modern Generative AI Framework for Diabetes Detection Leveraging Auto encoders and Softmax Classifier",
+          "year": "2025",
+          "url": "https://doi.org/10.12732/ijam.v38i11s.1232",
+          "score": 11.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2602.24230v1",
+          "title": "A Variational Estimator for $L_p$ Calibration Errors",
+          "year": "2026",
+          "url": "http://arxiv.org/abs/2602.24230v1",
+          "score": 11.0
+        }
+      ],
+      "why_it_matters": "Confidence scores from text classifiers are often used for routing or human review; uncalibrated probabilities make triage policies fragile.",
+      "next_checks": [
+        "Report ECE, Brier score and reliability diagram.",
+        "Compare temperature scaling and isotonic calibration.",
+        "Calibrate on a held-out fold, not the test fold."
+      ],
+      "success_criteria": [
+        "ECE decreases after calibration.",
+        "Macro-F1 is unchanged or changes only within sampling noise."
+      ],
+      "references": [
+        "temperature scaling text classifier",
+        "expected calibration error",
+        "classifier calibration evaluation"
+      ],
+      "transplant": "Wrap the classifier output in temperature scaling on a held-out split; report Expected Calibration Error and a reliability diagram."
+    }
+  ],
+  "sample_papers": [
+    {
+      "ts": "2026-05-04T09:10:20",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "calibration_missing_text",
+      "source": "arXiv",
+      "query": "softmax calibration text classifier temperature scaling 2025",
+      "id": "http://arxiv.org/abs/2305.10406v5",
+      "title": "Variational Classification",
+      "abstract": "We present a latent variable model for classification that provides a novel probabilistic interpretation of neural network softmax classifiers. We derive a variational objective to train the model, analogous to the evidence lower bound (ELBO) used to train variational auto-encoders, that generalises the softmax cross-entropy loss. Treating inputs to the softmax layer as samples of a latent variable, our abstracted perspective reveals a potential inconsistency between their anticipated distribution, required for accurate label predictions, and their empirical distribution found in practice. We augment the variational objective to mitigate such inconsistency and induce a chosen latent distribution, instead of the implicit assumption found in a standard softmax layer. Overall, we provide new theoretical insight into the inner workings of widely-used softmax classifiers. Empirical evaluation on image and text classification datasets demonstrates that our proposed approach, variational classification, maintains classification accuracy while the reshaped latent space improves other desirable properties of a classifier, such as calibration, adversarial robustness, robustness to distribution shift and sample efficiency useful in low data settings.",
+      "year": "2023",
+      "url": "http://arxiv.org/abs/2305.10406v5",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:10:20",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "calibration_missing_text",
+      "source": "arXiv",
+      "query": "softmax calibration text classifier temperature scaling 2025",
+      "id": "http://arxiv.org/abs/2209.04944v2",
+      "title": "Learning When to Say \"I Don't Know\"",
+      "abstract": "We propose a new Reject Option Classification technique to identify and remove regions of uncertainty in the decision space for a given neural classifier and dataset. Such existing formulations employ a learned rejection (remove)/selection (keep) function and require either a known cost for rejecting examples or strong constraints on the accuracy or coverage of the selected examples. We consider an alternative formulation by instead analyzing the complementary reject region and employing a validation set to learn per-class softmax thresholds. The goal is to maximize the accuracy of the selected examples subject to a natural randomness allowance on the rejected examples (rejecting more incorrect than correct predictions). We provide results showing the benefits of the proposed method over naïvely thresholding calibrated/uncalibrated softmax scores with 2-D points, imagery, and text classification datasets using state-of-the-art pretrained models. Source code is available at https://github.com/osu-cvl/learning-idk.",
+      "year": "2022",
+      "url": "http://arxiv.org/abs/2209.04944v2",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:10:20",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "calibration_missing_text",
+      "source": "arXiv",
+      "query": "softmax calibration text classifier temperature scaling 2025",
+      "id": "http://arxiv.org/abs/2205.12528v2",
+      "title": "LOPS: Learning Order Inspired Pseudo-Label Selection for Weakly Supervised Text Classification",
+      "abstract": "Weakly supervised text classification methods typically train a deep neural classifier based on pseudo-labels. The quality of pseudo-labels is crucial to final performance but they are inevitably noisy due to their heuristic nature, so selecting the correct ones has a huge potential for performance boost. One straightforward solution is to select samples based on the softmax probability scores in the neural classifier corresponding to their pseudo-labels. However, we show through our experiments that such solutions are ineffective and unstable due to the erroneously high-confidence predictions from poorly calibrated models. Recent studies on the memorization effects of deep neural models suggest that these models first memorize training samples with clean labels and then those with noisy labels. Inspired by this observation, we propose a novel pseudo-label selection method LOPS that takes learning order of samples into consideration. We hypothesize that the learning order reflects the probability of wrong annotation in terms of ranking, and therefore, propose to select the samples that are learnt earlier. LOPS can be viewed as a strong performance-boost plug-in to most of existing weakly-supervised text classification methods, as confirmed in extensive experiments on four real-world datasets.",
+      "year": "2022",
+      "url": "http://arxiv.org/abs/2205.12528v2",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:10:40",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "source": "OpenAlex",
+      "query": "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "id": "https://openalex.org/W4412401374",
+      "title": "Topic modeling-based prediction of software defects and root cause using BERTopic, and multioutput classifier",
+      "abstract": "The occurrence of software defects remains a major obstacle in software engineering, resulting in costly debugging and maintenance efforts. This study introduces a new angle for software defect prediction (SDP), utilizing advanced natural language processing (NLP) and machine learning (ML) techniques. In this work, the proposed methodology, BERT-MOC, combines the power of BERTopic, a transformer-based topic modeling technique, with a multioutput classifier to predict software defects and the root cause (reason) of defects. BERTopic is used to extract the root cause of the defect from textual descriptions of software defects, creating a meaningful representation of the software artifacts. These topic representations are then combined with the defect log data set.A multi-output classifier is trained on the combined dataset to predict multiple outputs, i.e., defect/not defect and defect root cause, simultaneously. As an estimator, Logistic Regression, Decision Tree Classifier, Kneighbor Classifier, Random Forest Classifier, and Ensemble Method-Voting are included in the MultiOutput Classifier. The proposed model is evaluated by the metrics hamming loss, accuracy, F1-score, precision, recall, and Jaccard similarity. The multi-output classifier with ensemble method voting as an estimator achieved the highest performance with 97% accuracy and F1-score to predict the root cause of the defect and 94% accuracy and F1-score to predict defect or not.",
+      "year": "2025",
+      "url": "https://doi.org/10.1038/s41598-025-11458-0",
+      "venue": "Scientific Reports",
+      "cited_by_count": 5
+    },
+    {
+      "ts": "2026-05-04T09:10:40",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "source": "OpenAlex",
+      "query": "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "id": "https://openalex.org/W4412875486",
+      "title": "<i>TH-Bench:</i> Evaluating Evading Attacks via Humanizing AI Text on Machine-Generated Text Detectors",
+      "abstract": "As Large Language Models (LLMs) advance, Machine-Generated Texts (MGTs) have become increasingly fluent, high-quality, and informative. Existing wide-range MGT detectors are designed to identify MGTs to prevent the spread of plagiarism and misinformation. However, adversaries attempt to humanize MGTs to evade detection (named evading attacks), which requires only minor modifications to bypass MGT detectors. Unfortunately, existing attacks generally lack a unified and comprehensive evaluation framework, as they are assessed using different experimental settings, model architectures, and datasets. To fill this gap, we introduce the Text-Humanization Benchmark (TH-Bench), the first comprehensive benchmark to evaluate evading attacks against MGT detectors. TH-Bench evaluate attacks across three key dimensions: evading effectiveness, text quality, and computational overhead. Our extensive experiments evaluate 6 state-of-the-art attacks against 13 MGT detectors across 6 datasets, spanning 19 domains and generated by 11 widely used LLMs. Our findings reveal that no single evading attack excels across all three dimensions. Through in-depth analysis, we highlight the strengths and limitations of different attacks. More importantly, we identify a trade-off among three dimensions and propose two optimization insights. Through preliminary experiments, we validate their correctness and effectiveness, offering potential directions for future research.",
+      "year": "2025",
+      "url": "https://doi.org/10.1145/3711896.3737418",
+      "venue": "",
+      "cited_by_count": 2
+    },
+    {
+      "ts": "2026-05-04T09:10:40",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "source": "OpenAlex",
+      "query": "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "id": "https://openalex.org/W4412037684",
+      "title": "A hybrid self attentive linearized phrase structured transformer based RNN for financial sentence analysis with sentence level explainability",
+      "abstract": "As financial institutions want openness and accountability in their automated systems, the task of understanding model choices has become more crucial in the field of financial text analysis. In this study, we propose xFiTRNN, a hybrid model that integrates self-attention mechanisms, linearized phrase structure, and a contextualized transformer-based Recurrent Neural Network (RNN) to enhance both model performance and explainability in financial sentence prediction. The model captures subtle contextual information from financial texts while maintaining explainability. xFiTRNN provides transparent, sentence-level insights into predictions by incorporating advanced explainability techniques such as LIME (Local Interpretable Model-agnostic Explanations) and Anchors. Extensive evaluations on benchmark financial datasets demonstrate that xFiTRNN not only achieves a remarkable prediction performance but also enhances explainability in the financial sector. This work highlights the potential of hybrid transformer-based RNN architectures for fostering more accountable and understandable Artificial Intelligence (AI) applications in finance.",
+      "year": "2025",
+      "url": "https://doi.org/10.1038/s41598-025-09265-8",
+      "venue": "Scientific Reports",
+      "cited_by_count": 3
+    },
+    {
+      "ts": "2026-05-04T09:10:40",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "source": "OpenAlex",
+      "query": "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "id": "https://openalex.org/W4412387415",
+      "title": "Integrating Semantic Representations in a Cross-Modal Approach to Fact-Checking",
+      "abstract": "We propose a cross-modal approach with deep fusion of a language model and graph structures based on Abstract Meaning Representations (AMRs) enriched with Wikidata to address the fact-checking problem.We collect and make available a large dataset of factchecked claim sentences, and systematically compare a transformerbased model with Graph Neural Networks (GNNs) based on AMR graphs and extended with external information.Furthermore, we evaluate the integration of language models and GNNs for the fact verification task.While GNN models on AMR-based graphs alone yield lower scores than transformer based language models on their own, the combined cross-modal approach-leveraging a multilayer and deep interaction between textual and structural information-demonstrates the best performance.Finally, we evaluate the generalization capability of this cross-modal approach integrating AMR-based graph structures on out-of-domain English and German claims.",
+      "year": "2025",
+      "url": "https://doi.org/10.1145/3733567.3735567",
+      "venue": "",
+      "cited_by_count": 1
+    },
+    {
+      "ts": "2026-05-04T09:10:40",
+      "cycle": 1,
+      "run_tag": "nlp",
+      "weakness": "embedding_alternatives",
+      "source": "OpenAlex",
+      "query": "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "id": "https://openalex.org/W4413751118",
+      "title": "LLM-assisted Clinical Coding Audit through an Interpretable Coding Pipeline",
+      "abstract": "Abstract Clinical coding is a vital yet complex part of healthcare practice. Most automated coding research relies on imperfect training data, which has an unavoidable negative impact on the quality of code prediction. A key contributing issue, vastly overlooked in current research, is the ubiquitous presence of undercoding and various types of coding errors in widely used coding datasets. From another angle, coding audit is as challenging as coding itself due to the lack of assistive tools, which is also under-studied compared to automated coding research. In this work, we uncover substantial undercoding and errors in commonly used datasets and present the first empirical study on their impacts on the performances of automated coding algorithms. To enable this, we develop an interpretable coding pipeline, using large language models (LLMs) for evidence extraction and code verification, and a multiclass classifier trained on a large-scale dataset of silver-standard evidence-code pairs for code prediction. Assisted by the pipeline, three professional coders systematically identify, categorise, and correct errors in two widely-used coding datasets that have human-annotated evidence texts for assigned codes. As an AI-assisted coding audit tool, the current study uncovers significant data quality issues, including a 76.3% undercoding rate in MDACE and a 29.7% error rate in CodiEsp. Re-evaluating existing models on error-corrected datasets results in consistent performance improvements. Additionally, the pipeline is a highly potential coding framework, which achieves superior or comparative performances to state-of-the-art LLM-based methods. The results underscore the necessity of shifting research focus from model-centric to data-centric solutions in clinical AI.",
+      "year": "2025",
+      "url": "https://doi.org/10.1101/2025.08.24.25334321",
+      "venue": "medRxiv",
+      "cited_by_count": 1
+    }
+  ],
+  "pdf_generated_locally": "checkpoints/nlp_lappato_mcb_report.pdf"
+}

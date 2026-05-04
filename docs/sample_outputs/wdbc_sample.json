@@ -1,0 +1,390 @@
+{
+  "run_tag": "wdbc",
+  "n_papers_harvested": 36,
+  "by_source": {
+    "arXiv": 0,
+    "OpenAlex": 20,
+    "Crossref": 16,
+    "JOSS": 0
+  },
+  "n_latest_cards": 2,
+  "sample_cards": [
+    {
+      "ts": "2026-05-04T09:09:19",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "title": "LightGBM is the only base learner — TabPFN-2.5 / CatBoost unrepresented",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "TabPFN small dataset clinical tabular benchmark medical 2025",
+        "CatBoost LightGBM stacking heterogeneous tabular clinical 2025"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 0,
+        "OpenAlex": 10,
+        "Crossref": 10
+      },
+      "n_raw_hits": 20,
+      "n_papers_kept": 20,
+      "n_new_vs_previous_runs": 20,
+      "n_seen_before": 0,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.1177/20552076241272585",
+          "title": "Predicting dementia in Parkinson's  disease on a small tabular dataset using  hybrid LightGBM–TabPFN and SHAP",
+          "year": "2024",
+          "url": "https://doi.org/10.1177/20552076241272585",
+          "score": 22.812
+        },
+        {
+          "source": "Crossref",
+          "id": "10.21203/rs.3.rs-7944070/v1",
+          "title": "Stacking Ensemble Learning : Combining XGBoost, LightGBM, CatBoost, and AdaBoost with Random Forest Meta Model",
+          "year": "2025",
+          "url": "https://doi.org/10.21203/rs.3.rs-7944070/v1",
+          "score": 18.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.30871/jaic.v9i6.10370",
+          "title": "Hypertension Risk Prediction Using Stacking Ensemble of CatBoost, XGBoost, and LightGBM: A Machine Learning Approach",
+          "year": "2025",
+          "url": "https://doi.org/10.30871/jaic.v9i6.10370",
+          "score": 18.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.30871/jaic.v10i1.12179",
+          "title": "Comparison of LightGBM and CatBoost Algorithms for Diabetes Prediction Based on Clinical Data",
+          "year": "2026",
+          "url": "https://doi.org/10.30871/jaic.v10i1.12179",
+          "score": 17.5
+        },
+        {
+          "source": "Crossref",
+          "id": "10.32877/bt.v8i1.2530",
+          "title": "Stacking Ensemble of XGBoost, LightGBM, and CatBoost for Green Economy Index Prediction",
+          "year": "2025",
+          "url": "https://doi.org/10.32877/bt.v8i1.2530",
+          "score": 17.25
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1016/j.renene.2025.125167",
+          "title": "Hybrid machine learning approach in forecasting renewable energy production: Extra trees, catBoost and LightGBM based stacking model",
+          "year": "2026",
+          "url": "https://doi.org/10.1016/j.renene.2025.125167",
+          "score": 13.0
+        },
+        {
+          "source": "Crossref",
+          "id": "10.26434/chemrxiv-2025-szk5s",
+          "title": "TabPFN Opens New Avenues for Small-Data Tabular Learning in Drug Discovery",
+          "year": "2025",
+          "url": "https://doi.org/10.26434/chemrxiv-2025-szk5s",
+          "score": 12.75
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4410411348",
+          "title": "A Fast and Reliable Transformer-Based TabPFN Model for Liver Disease Diagnosis",
+          "year": "2025",
+          "url": "https://doi.org/10.7759/s44389-025-04072-8",
+          "score": 9.415
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4416450214",
+          "title": "Realistic Evaluation of TabPFN v2 in Open Environments",
+          "year": "2025",
+          "url": "https://doi.org/10.48550/arxiv.2505.16226",
+          "score": 9.354
+        },
+        {
+          "source": "Crossref",
+          "id": "10.32614/cran.package.tabpfn",
+          "title": "tabpfn: Prior-Data Fitted Network Foundational Model for Tabular Data",
+          "year": "2026",
+          "url": "https://doi.org/10.32614/cran.package.tabpfn",
+          "score": 9.0
+        }
+      ],
+      "why_it_matters": "Small tabular clinical datasets are exactly where model-family choice can dominate results; a single GBDT baseline is weak evidence for methodological adequacy.",
+      "next_checks": [
+        "Benchmark CatBoost, logistic elastic-net, TabPFN and AutoGluon.",
+        "Use repeated stratified CV with identical splits.",
+        "Compare discrimination, calibration and net benefit together."
+      ],
+      "success_criteria": [
+        "At least one non-LightGBM baseline is reported.",
+        "Chosen model is justified by performance stability, not only mean score."
+      ],
+      "references": [
+        "TabPFN foundation model tabular data",
+        "CatBoost clinical risk prediction",
+        "TabArena tabular benchmark"
+      ],
+      "transplant": "Add a TabPFN-2.5 baseline alongside LightGBM on the 30 WDBC features; if comparable or better, add to a stacking head with a logistic meta-learner."
+    },
+    {
+      "ts": "2026-05-04T09:09:49",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "decision_curve_missing",
+      "title": "No decision-curve analysis — accuracy is not clinical net benefit",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "decision curve analysis Vickers Elkin clinical classifier 2025",
+        "net benefit calibration tutorial medical machine learning 2025"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 0,
+        "OpenAlex": 10,
+        "Crossref": 10
+      },
+      "n_raw_hits": 20,
+      "n_papers_kept": 16,
+      "n_new_vs_previous_runs": 16,
+      "n_seen_before": 0,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.1016/j.ijmedinf.2025.105844",
+          "title": "Hypothesis: Net benefit as an objective function during development of machine learning algorithms for medical applications",
+          "year": "2025",
+          "url": "https://doi.org/10.1016/j.ijmedinf.2025.105844",
+          "score": 20.991
+        },
+        {
+          "source": "Crossref",
+          "id": "10.54103/2282-0930/29535",
+          "title": "Integrating Calibration into the Evaluation of Clinical Utility: A Proposal for a Weighted Net Benefit",
+          "year": "2025",
+          "url": "https://doi.org/10.54103/2282-0930/29535",
+          "score": 20.25
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1101/2025.08.16.25333820",
+          "title": "Decision Curve Analysis Explained",
+          "year": "2025",
+          "url": "https://doi.org/10.1101/2025.08.16.25333820",
+          "score": 18.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/acai68217.2025.11406486",
+          "title": "Threshold and Calibration Effects in Medical Machine Learning",
+          "year": "2025",
+          "url": "https://doi.org/10.1109/acai68217.2025.11406486",
+          "score": 16.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1186/s41512-025-00188-6",
+          "title": "Correction: Decision curve analysis: confidence intervals and hypothesis testing for net benefit",
+          "year": "2025",
+          "url": "https://doi.org/10.1186/s41512-025-00188-6",
+          "score": 12.854
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1177/0272989x251405237",
+          "title": "Corrigendum to “Calculating the Expected Net Benefit of Sampling for Survival Data: A Tutorial and Case Study”",
+          "year": "2025",
+          "url": "https://doi.org/10.1177/0272989x251405237",
+          "score": 12.75
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4409147844",
+          "title": "Machine learning in point-of-care testing: innovations, challenges, and opportunities",
+          "year": "2025",
+          "url": "https://doi.org/10.1038/s41467-025-58527-6",
+          "score": 12.497
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4390583408",
+          "title": "Machine Learning for Smart and Energy-Efficient Buildings",
+          "year": "2024",
+          "url": "https://doi.org/10.1017/eds.2023.43",
+          "score": 12.112
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4394741386",
+          "title": "Preparing for the bedside—optimizing a postpartum depression risk prediction model for clinical implementation in a health system",
+          "year": "2024",
+          "url": "https://doi.org/10.1093/jamia/ocae056",
+          "score": 10.934
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4392199044",
+          "title": "Deep Learning for Time Series Classification and Extrinsic Regression: A Current Survey",
+          "year": "2024",
+          "url": "https://doi.org/10.1145/3649448",
+          "score": 8.291
+        }
+      ],
+      "why_it_matters": "A clinically useful classifier is not just accurate; it must offer net benefit at plausible decision thresholds.",
+      "next_checks": [
+        "Compute net benefit over a clinically meaningful threshold grid.",
+        "Compare against treat-all and treat-none policies.",
+        "Report calibration and decision curves in the same section."
+      ],
+      "success_criteria": [
+        "Model net benefit is positive over at least one target threshold band.",
+        "Threshold choice is stated explicitly."
+      ],
+      "references": [
+        "decision curve analysis",
+        "clinical net benefit",
+        "risk prediction reporting"
+      ],
+      "transplant": "Add a decision-curve-analysis report (Vickers & Elkin 2006): compute net benefit at threshold range [0.05, 0.50] vs treat-all and treat-none baselines."
+    }
+  ],
+  "sample_papers": [
+    {
+      "ts": "2026-05-04T09:09:06",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "OpenAlex",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "https://openalex.org/W4410411348",
+      "title": "A Fast and Reliable Transformer-Based TabPFN Model for Liver Disease Diagnosis",
+      "abstract": "Early and accurate diagnosis of liver disease is the key to timely treatment and improved patient outcomes. Traditional machine learning models often utilize manually constructed features and struggle to extrapolate to high-dimensional, complex tabular data. This work presents an original approach to predicting liver disease using TabPFN (Prior-Data Fitted Network for Tabular Data), a pre-trained transformer-based model on artificial tabular problems. This model incorporates one-dimensional feature attention and one-dimensional sample attention techniques into the model, and subsequently a multilayer perceptron classifier. Experimental results on the Indian Liver Patient Dataset demonstrate better performance than existing approaches, with an accuracy of 90.36%, an F1-score of 90.35%, a precision of 90.99%, and a recall of 90.36%. These results show how the suggested architecture model effectively captures relevant patterns in tabular information for liver disease identification.",
+      "year": "2025",
+      "url": "https://doi.org/10.7759/s44389-025-04072-8",
+      "venue": "Cureus Journal of Computer Science.",
+      "cited_by_count": 2
+    },
+    {
+      "ts": "2026-05-04T09:09:06",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "OpenAlex",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "https://openalex.org/W4414325778",
+      "title": "From mother to infant: predicting infant temperament using maternal mental health measures and tabular machine learning models",
+      "abstract": "Background: Negative emotionality is a core dimension of infant temperament, characterized by heightened distress, reactivity, and difficulty with self-regulation. It has been consistently associated with later behavioral and emotional difficulties. Emerging evidence suggests that maternal mental health (MMH) in the postpartum period may influence infant temperament. However, few studies have applied machine learning (ML) methods to examine the predictive capacity of MMH profiles for early infant emotional development. Objectives: This study aimed to investigate whether postpartum maternal depression, anxiety, and birth-related trauma, along with sociodemographic factors, can predict infant negative emotionality during the first year postpartum using tabular ML models. Methods: Data were obtained from 410 mother-infant dyads. Infant temperament was assessed using the Negative Emotionality subscale of the Infant Behavior Questionnaire-Revised (IBQ-R). MMH symptoms were measured via the Edinburgh Postnatal Depression Scale (EPDS), the Hospital Anxiety and Depression Scale (HADS), and the City Birth Trauma Scale (City BiTS). Six tabular ML models were trained using MMH and demographic features: Tabular Prior-Data Fitted Network (TabPFN), Light Gradient Boosting Machine (LightGBM), eXtreme Gradient Boosting (XGBoost), Categorical Boosting (CatBoost), Random Forest, and Support Vector Machine (SVM). Performance was evaluated using Receiver Operating Characteristic Area Under The Curve (ROC-AUC), Precision-Recall Area Under the Curve (PR-AUC), F1-score, sensitivity, and specificity. Results: Postpartum MMH symptoms and maternal-infant characteristics moderately predicted infant negative emotionality. LightGBM achieved the highest performance across ROC-AUC (0.76), F1-score (0.72), sensitivity (0.71), and specificity (0.73). TabPFN yielded the highest PR-AUC (0.78). Key predictors included gestational age, infant's age, EPDS score, mother's age, HADS score, and City BiTS score. Conclusions: These findings highlight the potential of ML tools in early identification of at-risk infants and the importance of integrating MMH screening into postnatal care. Such predictive insights can inform timely, personalized interventions that address the unique emotional needs of both mother and infant, ultimately fostering healthier developmental trajectories and enhancing overall family well being.",
+      "year": "2025",
+      "url": "https://doi.org/10.3389/fpubh.2025.1659987",
+      "venue": "Frontiers in Public Health",
+      "cited_by_count": 2
+    },
+    {
+      "ts": "2026-05-04T09:09:06",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "OpenAlex",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "https://openalex.org/W4399794317",
+      "title": "MALLM-GAN: Multi-Agent Large Language Model as Generative Adversarial Network for Synthesizing Tabular Data",
+      "abstract": "In the era of big data, access to abundant data is crucial for driving research forward. However, such data is often inaccessible due to privacy concerns or high costs, particularly in healthcare domain. Generating synthetic (tabular) data can address this, but existing models typically require substantial amounts of data to train effectively, contradicting our objective to solve data scarcity. To address this challenge, we propose a novel framework to generate synthetic tabular data, powered by large language models (LLMs) that emulates the architecture of a Generative Adversarial Network (GAN). By incorporating data generation process as contextual information and utilizing LLM as the optimizer, our approach significantly enhance the quality of synthetic data generation in common scenarios with small sample sizes. Our experimental results on public and private datasets demonstrate that our model outperforms several state-of-art models regarding generating higher quality synthetic data for downstream tasks while keeping privacy of the real data.",
+      "year": "2024",
+      "url": "https://doi.org/10.48550/arxiv.2406.10521",
+      "venue": "arXiv (Cornell University)",
+      "cited_by_count": 2
+    },
+    {
+      "ts": "2026-05-04T09:09:06",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "OpenAlex",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "https://openalex.org/W4416313019",
+      "title": "Enhancing post-kidney transplant prognostication: an interpretable machine learning approach for longitudinal outcome prediction",
+      "abstract": "Kidney transplantation offers life-extending treatment for patients with end-stage renal disease, yet long-term risks of graft loss and death persist. Traditional prediction models using only baseline data often fail to capture patients' evolving health status post-transplant. In this study, we propose a two-stage machine learning (ML) framework for dynamic, next-year risk prediction of graft loss and death, updated annually with newly available clinical and laboratory data. Using a multi-center cohort from the Swiss Transplant Cohort Study (STCS), we trained and evaluated five ML models across 13 years of follow-up, demonstrating that incorporating longitudinal data significantly improved predictive performance compared to baseline-only models. LightGBM achieved the strongest performance, with AUROC values up to 0.896 for graft loss and 0.797 for death. Our findings suggest that dynamic, interpretable ML models can enhance personalized risk stratification, offering a practical and scalable tool for guiding follow-up strategies and early interventions in kidney transplant recipients.",
+      "year": "2025",
+      "url": "https://doi.org/10.1038/s41746-025-02049-4",
+      "venue": "npj Digital Medicine",
+      "cited_by_count": 2
+    },
+    {
+      "ts": "2026-05-04T09:09:06",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "OpenAlex",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "https://openalex.org/W4416450214",
+      "title": "Realistic Evaluation of TabPFN v2 in Open Environments",
+      "abstract": "Tabular data, owing to its ubiquitous presence in real-world domains, has garnered significant attention in machine learning research. While tree-based models have long dominated tabular machine learning tasks, the recently proposed deep learning model TabPFN v2 has emerged, demonstrating unparalleled performance and scalability potential. Although extensive research has been conducted on TabPFN v2 to further improve performance, the majority of this research remains confined to closed environments, neglecting the challenges that frequently arise in open environments. This raises the question: Can TabPFN v2 maintain good performance in open environments? To this end, we conduct the first comprehensive evaluation of TabPFN v2's adaptability in open environments. We construct a unified evaluation framework covering various real-world challenges and assess the robustness of TabPFN v2 under open environments scenarios using this framework. Empirical results demonstrate that TabPFN v2 shows significant limitations in open environments but is suitable for small-scale, covariate-shifted, and class-balanced tasks. Tree-based models remain the optimal choice for general tabular tasks in open environments. To facilitate future research on open environments challenges, we advocate for open environments tabular benchmarks, multi-metric evaluation, and universal modules to strengthen model robustness. We publicly release our evaluation framework at https://anonymous.4open.science/r/tabpfn-ood-4E65.",
+      "year": "2025",
+      "url": "https://doi.org/10.48550/arxiv.2505.16226",
+      "venue": "ArXiv.org",
+      "cited_by_count": 1
+    },
+    {
+      "ts": "2026-05-04T09:09:07",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "Crossref",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "10.26434/chemrxiv-2025-szk5s",
+      "title": "TabPFN Opens New Avenues for Small-Data Tabular Learning in Drug Discovery",
+      "abstract": "",
+      "year": "2025",
+      "url": "https://doi.org/10.26434/chemrxiv-2025-szk5s",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:09:07",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "Crossref",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "10.1109/icatc68823.2025.11407733",
+      "title": "Evaluating Out-of-Distribution Robustness of TabPFN on Tabular Data",
+      "abstract": "",
+      "year": "2025",
+      "url": "https://doi.org/10.1109/icatc68823.2025.11407733",
+      "venue": "2025 International Conference on Advances in Technology and Computing (ICATC)",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:09:07",
+      "cycle": 1,
+      "run_tag": "wdbc",
+      "weakness": "tabular_baseline_alternatives",
+      "source": "Crossref",
+      "query": "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "id": "10.1177/20552076241272585",
+      "title": "Predicting dementia in Parkinson's  disease on a small tabular dataset using  hybrid LightGBM–TabPFN and SHAP",
+      "abstract": "Objective\n                    This study aims to create a robust and interpretable method for predicting dementia in Parkinson's disease (PD), especially in resource-limited settings. The model aims to be accurate even with small datasets and missing values, ultimately promoting its use in clinical practice to benefit patients and medical professionals.\n                  \n                  \n                    Methods\n                    Our study introduces LightGBM–TabPFN, a novel hybrid model for predicting dementia conversion in PD. Combining LightGBM's strength in handling missing values with TabPFN's ability to exploit small datasets, LightGBM–TabPFN outperforms seven existing methods, achieving outstanding accuracy and interpretability thanks to SHAP analysis. This analysis leverages data from 242 PD patients across 17 variables.\n                  \n                  \n                    Results\n                    Our LightGBM–TabPFN model significantly outperformed seven existing methods. Achieving an accuracy of 0.9592 and an area under the ROC curve of 0.9737.\n                  \n                  \n                    Conclusions\n                    The interpretable LightGBM–TabPFN with SHAP signifies a significant advancement in predictive modeling for neurodegenerative diseases. This study not only improves dementia prediction in PD but also provides clinical professionals with insights into model predictions, offering opportunities for application in clinical settings.",
+      "year": "2024",
+      "url": "https://doi.org/10.1177/20552076241272585",
+      "venue": "DIGITAL HEALTH",
+      "cited_by_count": 7
+    }
+  ],
+  "pdf_generated_locally": "checkpoints/wdbc_lappato_mcb_report.pdf"
+}

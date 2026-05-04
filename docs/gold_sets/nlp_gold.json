@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "domain": "nlp",
+  "description": "Hand-curated topics for the NLP (20newsgroups) manifest. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "per_class_f1_spread": [
+      {
+        "name": "long-tail text classification",
+        "must_match_keywords": ["long", "tail"],
+        "rationale": "Standard framing for per-class F1 imbalance."
+      },
+      {
+        "name": "macro-F1 model selection",
+        "must_match_keywords": ["macro", "f1"],
+        "rationale": "Direct match for the manifest's success criterion."
+      },
+      {
+        "name": "class weighting in multiclass",
+        "must_match_keywords": ["class", "weight"],
+        "rationale": "Canonical mitigation for per-class spread."
+      }
+    ],
+    "confusable_classes": [
+      {
+        "name": "hierarchical text classification",
+        "must_match_keywords": ["hierarchical", "classification"],
+        "rationale": "Decomposing confusable pairs via taxonomy."
+      },
+      {
+        "name": "contrastive learning",
+        "must_match_keywords": ["contrastive"],
+        "rationale": "Pulls apart nearby class boundaries."
+      }
+    ],
+    "stopword_dominance": [
+      {
+        "name": "TF-IDF preprocessing",
+        "must_match_keywords": ["tf", "idf"],
+        "rationale": "Mainstream baseline preprocessing pipeline."
+      },
+      {
+        "name": "stopword removal",
+        "must_match_keywords": ["stopword"],
+        "rationale": "Direct topic of the weakness."
+      },
+      {
+        "name": "character n-grams",
+        "must_match_keywords": ["character", "gram"],
+        "rationale": "Alternative representation that dilutes function-word dominance."
+      }
+    ],
+    "embedding_alternatives": [
+      {
+        "name": "sentence transformers",
+        "must_match_keywords": ["sentence", "transformer"],
+        "rationale": "Reimers & Gurevych 2019 — Sentence-BERT family."
+      },
+      {
+        "name": "fastText embeddings",
+        "must_match_keywords": ["fasttext"],
+        "rationale": "Joulin et al. 2017 — efficient text classification baseline."
+      }
+    ],
+    "calibration_missing_text": [
+      {
+        "name": "temperature scaling",
+        "must_match_keywords": ["temperature", "scaling"],
+        "rationale": "Guo et al. 2017 — modern post-hoc NN calibration."
+      },
+      {
+        "name": "expected calibration error",
+        "must_match_keywords": ["expected", "calibration"],
+        "rationale": "Standard scalar metric for classifier calibration."
+      }
+    ]
+  }
+}

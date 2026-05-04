@@ -1,0 +1,57 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    name: Unit tests (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install package with report extras
+        run: python -m pip install -e ".[reports]"
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+  validate-score:
+    name: Validate local relevance score (Spearman)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: Run score validation harness
+        # Catches regressions to the local _score_hit weights against
+        # the bundled hand-curated relevance set in
+        # docs/score_validation/relevance_set.json. The default
+        # threshold (0.50) is well below the documented baseline (~0.89)
+        # so it only fires on a meaningful regression.
+        run: python examples/validate_score.py --min-spearman 0.70
+
+  lint:
+    name: Lint with ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: python -m pip install "ruff==0.6.9"
+      - name: Run ruff
+        run: ruff check lappato_mcb examples tests

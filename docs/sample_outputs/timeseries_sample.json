@@ -1,0 +1,481 @@
+{
+  "run_tag": "timeseries",
+  "n_papers_harvested": 130,
+  "by_source": {
+    "arXiv": 36,
+    "OpenAlex": 36,
+    "Crossref": 36,
+    "JOSS": 22
+  },
+  "n_latest_cards": 4,
+  "sample_cards": [
+    {
+      "ts": "2026-05-04T09:12:19",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "title": "Horizon-h MAPE > 1.5x horizon-1 MAPE — recursive errors compound",
+      "evidence": "timeseries_per_horizon.csv",
+      "evidence_present": true,
+      "severity": "high",
+      "previous_severity": "",
+      "severity_changed": false,
+      "evidence_summary": {
+        "rows": 12,
+        "max_horizon1_mape_ratio": 5.3184
+      },
+      "queries": [
+        "direct vs recursive multi step forecasting strategy",
+        "sequence to sequence forecasting transformer multi horizon 2025"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 5,
+        "OpenAlex": 0,
+        "Crossref": 0
+      },
+      "n_raw_hits": 5,
+      "n_papers_kept": 5,
+      "n_new_vs_previous_runs": 5,
+      "n_seen_before": 0,
+      "top_papers": [
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2511.11461v1",
+          "title": "Epistemic Error Decomposition for Multi-step Time Series Forecasting: Rethinking Bias-Variance in Recursive and Direct Strategies",
+          "year": "2025",
+          "url": "http://arxiv.org/abs/2511.11461v1",
+          "score": 29.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2509.22395v1",
+          "title": "Improving accuracy in short mortality rate series: Exploring Multi-step Forecasting Approaches in Hybrid Systems",
+          "year": "2025",
+          "url": "http://arxiv.org/abs/2509.22395v1",
+          "score": 20.25
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2203.15471v3",
+          "title": "State space models vs. multi-step predictors in predictive control: Are state space models complicating safe data-driven designs?",
+          "year": "2022",
+          "url": "http://arxiv.org/abs/2203.15471v3",
+          "score": 14.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2308.05522v1",
+          "title": "Models Matter: The Impact of Single-Step Retrosynthesis on Synthesis Planning",
+          "year": "2023",
+          "url": "http://arxiv.org/abs/2308.05522v1",
+          "score": 7.25
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2306.06891v1",
+          "title": "Recursion of Thought: A Divide-and-Conquer Approach to Multi-Context Reasoning with Language Models",
+          "year": "2023",
+          "url": "http://arxiv.org/abs/2306.06891v1",
+          "score": 7.25
+        }
+      ],
+      "why_it_matters": "Recursive forecasts compound errors; horizon-specific degradation identifies when a one-step model is not fit for multi-step use.",
+      "next_checks": [
+        "Compare recursive, direct and multi-output strategies.",
+        "Plot MAPE/RMSE by horizon.",
+        "Bootstrap uncertainty around horizon-specific error curves."
+      ],
+      "success_criteria": [
+        "Max horizon-1 MAPE ratio falls below 1.5.",
+        "Long-horizon error decreases under identical rolling-origin splits."
+      ],
+      "references": [
+        "direct vs recursive multi-step forecasting",
+        "sequence to sequence forecasting",
+        "multi-horizon forecasting benchmark"
+      ],
+      "transplant": "Switch from recursive single-step rollout to direct multi-output forecasting (one head per horizon) or to a seq2seq model."
+    },
+    {
+      "ts": "2026-05-04T09:28:55",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "ts_model_alternatives",
+      "title": "ARIMA-only baseline — modern forecasters (NHITS, TFT) unrepresented",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "info",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "NHITS NBEATS univariate forecasting benchmark 2025",
+        "Temporal Fusion Transformer TFT time series benchmark 2025",
+        "open source software time series forecasting benchmark"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 10,
+        "OpenAlex": 15,
+        "Crossref": 15,
+        "JOSS": 15
+      },
+      "n_raw_hits": 55,
+      "n_papers_kept": 46,
+      "n_new_vs_previous_runs": 22,
+      "n_seen_before": 24,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.5194/egusphere-egu24-12981",
+          "title": "Using Temporal Fusion Transformer (TFT) to enhance sub-seasonal drought predictions in the European Alps",
+          "year": "2025",
+          "url": "https://doi.org/10.5194/egusphere-egu24-12981",
+          "score": 25.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/1912.09363v3",
+          "title": "Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting",
+          "year": "2019",
+          "url": "http://arxiv.org/abs/1912.09363v3",
+          "score": 25.0
+        },
+        {
+          "source": "Crossref",
+          "id": "10.58830/ozgur.pub1250.c5080",
+          "title": "Temporal Fusion Transformer (TFT) Kullanılarak İnşaat Maliyet Endeksi Öngörüsü",
+          "year": "2026",
+          "url": "https://doi.org/10.58830/ozgur.pub1250.c5080",
+          "score": 23.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2510.06840v1",
+          "title": "CNN-TFT explained by SHAP with multi-head attention weights for time series forecasting",
+          "year": "2025",
+          "url": "http://arxiv.org/abs/2510.06840v1",
+          "score": 21.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.22541/au.175390529.91420978/v1",
+          "title": "XTFT: A Next-Generation Temporal Fusion Transformer for Uncertainty-Rich Time Series Forecasting",
+          "year": "2025",
+          "url": "https://doi.org/10.22541/au.175390529.91420978/v1",
+          "score": 20.854
+        },
+        {
+          "source": "Crossref",
+          "id": "10.23919/fusion65864.2025.11123992",
+          "title": "Integrating Image-Based Time Series Features with the Temporal Fusion Transformer for Stock Price Prediction",
+          "year": "2025",
+          "url": "https://doi.org/10.23919/fusion65864.2025.11123992",
+          "score": 20.75
+        },
+        {
+          "source": "Crossref",
+          "id": "10.1109/icdmw69685.2025.00040",
+          "title": "Panelformer: An Enhanced Temporal Fusion Transformer for Robust Panel Time Series Forecasting",
+          "year": "2025",
+          "url": "https://doi.org/10.1109/icdmw69685.2025.00040",
+          "score": 20.75
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2110.00361v1",
+          "title": "An analysis of open source software licensing questions in Stack Exchange sites",
+          "year": "2021",
+          "url": "http://arxiv.org/abs/2110.00361v1",
+          "score": 18.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2206.10358v1",
+          "title": "Open Source Software: An Approach to Controlling Usage and Risk in Application Ecosystems",
+          "year": "2022",
+          "url": "http://arxiv.org/abs/2206.10358v1",
+          "score": 18.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2208.01137v1",
+          "title": "Trust Challenges in Reusing Open Source Software: An Interview-based Initial Study",
+          "year": "2022",
+          "url": "http://arxiv.org/abs/2208.01137v1",
+          "score": 18.0
+        }
+      ],
+      "why_it_matters": "An ARIMA-only baseline cannot establish whether modern global or neural forecasters are unnecessary for the observed series family.",
+      "next_checks": [
+        "Compare ARIMA, ETS, N-BEATS/N-HITS and TFT where data scale allows.",
+        "Use the same rolling-origin splits for every model.",
+        "Report mean error and fold dispersion."
+      ],
+      "success_criteria": [
+        "At least one modern baseline is reported.",
+        "Model choice is justified by rolling-origin performance and stability."
+      ],
+      "references": [
+        "N-BEATS forecasting",
+        "N-HiTS forecasting",
+        "Temporal Fusion Transformer benchmark"
+      ],
+      "transplant": "Add an N-HITS or NBEATS baseline (PyTorch Forecasting); compare on rolling-origin MAPE with bootstrap CIs."
+    },
+    {
+      "ts": "2026-05-04T09:29:21",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "probabilistic_forecast_missing",
+      "title": "Point forecasts only — no prediction intervals reported",
+      "evidence": null,
+      "evidence_present": true,
+      "severity": "info",
+      "previous_severity": "info",
+      "severity_changed": false,
+      "evidence_summary": {
+        "type": "structural",
+        "active": true
+      },
+      "queries": [
+        "conformal prediction intervals time series 2025",
+        "quantile loss probabilistic forecasting calibration",
+        "open source software conformal prediction time series forecasting"
+      ],
+      "raw_hits_by_source": {
+        "arXiv": 15,
+        "OpenAlex": 15,
+        "Crossref": 15,
+        "JOSS": 15
+      },
+      "n_raw_hits": 60,
+      "n_papers_kept": 47,
+      "n_new_vs_previous_runs": 18,
+      "n_seen_before": 29,
+      "top_papers": [
+        {
+          "source": "Crossref",
+          "id": "10.2139/ssrn.6463841",
+          "title": "Predictive-SHM: An open-source, extensible software toolkit for multi-sensor structural health monitoring and time-series prediction",
+          "year": "2026",
+          "url": "https://doi.org/10.2139/ssrn.6463841",
+          "score": 34.0
+        },
+        {
+          "source": "Crossref",
+          "id": "10.2139/ssrn.6263102",
+          "title": "RL-ConFormer: Reinforcement Learning-Enhanced Conformal Prediction with Transformer-Based Hybrid Forecasting for Multi-Horizon Time Series",
+          "year": "2026",
+          "url": "https://doi.org/10.2139/ssrn.6263102",
+          "score": 28.5
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2603.10674v1",
+          "title": "Conformal prediction for high-dimensional functional time series: Applications to subnational mortality",
+          "year": "2026",
+          "url": "http://arxiv.org/abs/2603.10674v1",
+          "score": 24.5
+        },
+        {
+          "source": "Crossref",
+          "id": "10.21203/rs.3.rs-9291769/v1",
+          "title": "CP-LLM: Conformal Calibration for Time Series Interval Forecasting with Frozen Large Language Model",
+          "year": "2026",
+          "url": "https://doi.org/10.21203/rs.3.rs-9291769/v1",
+          "score": 24.5
+        },
+        {
+          "source": "Crossref",
+          "id": "10.5194/egusphere-egu24-8166",
+          "title": "Conformal Prediction Intervals For Water Demand Forecasting",
+          "year": "2025",
+          "url": "https://doi.org/10.5194/egusphere-egu24-8166",
+          "score": 20.25
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2601.02769v1",
+          "title": "Fast Conformal Prediction using Conditional Interquantile Intervals",
+          "year": "2026",
+          "url": "http://arxiv.org/abs/2601.02769v1",
+          "score": 19.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2411.17743v1",
+          "title": "Ranking probabilistic forecasting models with different loss functions",
+          "year": "2024",
+          "url": "http://arxiv.org/abs/2411.17743v1",
+          "score": 18.5
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/2212.03463v3",
+          "title": "Sequential Predictive Conformal Inference for Time Series",
+          "year": "2022",
+          "url": "http://arxiv.org/abs/2212.03463v3",
+          "score": 18.0
+        },
+        {
+          "source": "arXiv",
+          "id": "http://arxiv.org/abs/1803.10888v1",
+          "title": "An Empirical Analysis of Constrained Support Vector Quantile Regression for Nonparametric Probabilistic Forecasting of Wind Power",
+          "year": "2018",
+          "url": "http://arxiv.org/abs/1803.10888v1",
+          "score": 18.0
+        },
+        {
+          "source": "OpenAlex",
+          "id": "https://openalex.org/W4403600951",
+          "title": "Exploring Progress in Multivariate Time Series Forecasting: Comprehensive Benchmarking and Heterogeneity Analysis",
+          "year": "2024",
+          "url": "https://doi.org/10.1109/tkde.2024.3484454",
+          "score": 17.734
+        }
+      ],
+      "why_it_matters": "Point forecasts are insufficient for operational decisions; intervals expose whether the model knows when it is uncertain.",
+      "next_checks": [
+        "Add conformal or quantile prediction intervals.",
+        "Report empirical coverage by horizon.",
+        "Check interval width vs coverage trade-off."
+      ],
+      "success_criteria": [
+        "90% intervals achieve near-90% empirical coverage.",
+        "Coverage is reported separately by forecast horizon."
+      ],
+      "references": [
+        "conformal prediction intervals time series",
+        "quantile loss probabilistic forecasting",
+        "multistep conformal forecasting"
+      ],
+      "transplant": "Wrap the forecaster in a conformalised quantile regressor or use quantile loss heads; report empirical coverage at 90%."
+    }
+  ],
+  "sample_papers": [
+    {
+      "ts": "2026-05-04T09:12:16",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "source": "arXiv",
+      "query": "direct vs recursive multi step forecasting strategy",
+      "id": "http://arxiv.org/abs/2511.11461v1",
+      "title": "Epistemic Error Decomposition for Multi-step Time Series Forecasting: Rethinking Bias-Variance in Recursive and Direct Strategies",
+      "abstract": "Multi-step forecasting is often described through a simple rule of thumb: recursive strategies are said to have high bias and low variance, while direct strategies are said to have low bias and high variance. We revisit this belief by decomposing the expected multi-step forecast error into three parts: irreducible noise, a structural approximation gap, and an estimation-variance term. For linear predictors we show that the structural gap is identically zero for any dataset. For nonlinear predictors, however, the repeated composition used in recursion can increase model expressivity, making the structural gap depend on both the model and the data. We further show that the estimation variance of the recursive strategy at any horizon can be written as the one-step variance multiplied by a Jacobian-based amplification factor that measures how sensitive the composed predictor is to parameter error. This perspective explains when recursive forecasting may simultaneously have lower bias and higher variance than direct forecasting. Experiments with multilayer perceptrons on the ETTm1 dataset confirm these findings. The results offer practical guidance for choosing between recursive and direct strategies based on model nonlinearity and noise characteristics, rather than relying on traditional bias-variance intuition.",
+      "year": "2025",
+      "url": "http://arxiv.org/abs/2511.11461v1",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:16",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "source": "arXiv",
+      "query": "direct vs recursive multi step forecasting strategy",
+      "id": "http://arxiv.org/abs/2509.22395v1",
+      "title": "Improving accuracy in short mortality rate series: Exploring Multi-step Forecasting Approaches in Hybrid Systems",
+      "abstract": "The decline in interest rates and economic stabilization has heightened the importance of accurate mortality rate forecasting, particularly in insurance and pension markets. Multi-step-ahead predictions are crucial for public health, demographic planning, and insurance risk assessments; however, they face challenges when data are limited. Hybrid systems that combine statistical and Machine Learning (ML) models offer a promising solution for handling both linear and nonlinear patterns. This study evaluated the impact of different multi-step forecasting approaches (Recursive, Direct, and Multi-Input Multi-Output) and ML models on the accuracy of hybrid systems. Results from 12 datasets and 21 models show that the selection of both the multi-step approach and the ML model is essential for improving performance, with the ARIMA-LSTM hybrid using a recursive approach outperforming other models in most cases.",
+      "year": "2025",
+      "url": "http://arxiv.org/abs/2509.22395v1",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:16",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "source": "arXiv",
+      "query": "direct vs recursive multi step forecasting strategy",
+      "id": "http://arxiv.org/abs/2203.15471v3",
+      "title": "State space models vs. multi-step predictors in predictive control: Are state space models complicating safe data-driven designs?",
+      "abstract": "This paper contrasts recursive state space models and direct multi-step predictors for linear predictive control. We provide a tutorial exposition for both model structures to solve the following problems: 1. stochastic optimal control; 2. system identification; 3. stochastic optimal control based on the estimated model. Throughout the paper, we provide detailed discussions of the benefits and limitations of these two model parametrizations for predictive control and highlight the relation to existing works. Additionally, we derive a novel (partially tight) constraint tightening for stochastic predictive control with parametric uncertainty in the multi-step predictor.",
+      "year": "2022",
+      "url": "http://arxiv.org/abs/2203.15471v3",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:16",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "source": "arXiv",
+      "query": "direct vs recursive multi step forecasting strategy",
+      "id": "http://arxiv.org/abs/2308.05522v1",
+      "title": "Models Matter: The Impact of Single-Step Retrosynthesis on Synthesis Planning",
+      "abstract": "Retrosynthesis consists of breaking down a chemical compound recursively step-by-step into molecular precursors until a set of commercially available molecules is found with the goal to provide a synthesis route. Its two primary research directions, single-step retrosynthesis prediction, which models the chemical reaction logic, and multi-step synthesis planning, which tries to find the correct sequence of reactions, are inherently intertwined. Still, this connection is not reflected in contemporary research. In this work, we combine these two major research directions by applying multiple single-step retrosynthesis models within multi-step synthesis planning and analyzing their impact using public and proprietary reaction data. We find a disconnection between high single-step performance and potential route-finding success, suggesting that single-step models must be evaluated within synthesis planning in the future. Furthermore, we show that the commonly used single-step retrosynthesis benchmark dataset USPTO-50k is insufficient as this evaluation task does not represent model performance and scalability on larger and more diverse datasets. For multi-step synthesis planning, we show that the choice of the single-step model can improve the overall success rate of synthesis planning by up to +28% compared to the commonly used baseline model. Finally, we show that each single-step model finds unique synthesis routes, and differs in aspects such as route-finding success, the number of found synthesis routes, and chemical validity, making the combination of single-step retrosynthesis prediction and multi-step synthesis planning a crucial aspect when developing future methods.",
+      "year": "2023",
+      "url": "http://arxiv.org/abs/2308.05522v1",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:16",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "horizon_degradation",
+      "source": "arXiv",
+      "query": "direct vs recursive multi step forecasting strategy",
+      "id": "http://arxiv.org/abs/2306.06891v1",
+      "title": "Recursion of Thought: A Divide-and-Conquer Approach to Multi-Context Reasoning with Language Models",
+      "abstract": "Generating intermediate steps, or Chain of Thought (CoT), is an effective way to significantly improve language models' (LM) multi-step reasoning capability. However, the CoT lengths can grow rapidly with the problem complexity, easily exceeding the maximum context size. Instead of increasing the context limit, which has already been heavily investigated, we explore an orthogonal direction: making LMs divide a problem into multiple contexts. We propose a new inference framework, called Recursion of Thought (RoT), which introduces several special tokens that the models can output to trigger context-related operations. Extensive experiments with multiple architectures including GPT-3 show that RoT dramatically improves LMs' inference capability to solve problems, whose solution consists of hundreds of thousands of tokens.",
+      "year": "2023",
+      "url": "http://arxiv.org/abs/2306.06891v1",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:22",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "probabilistic_forecast_missing",
+      "source": "arXiv",
+      "query": "conformal prediction intervals time series 2025",
+      "id": "http://arxiv.org/abs/2601.02769v1",
+      "title": "Fast Conformal Prediction using Conditional Interquantile Intervals",
+      "abstract": "We introduce Conformal Interquantile Regression (CIR), a conformal regression method that efficiently constructs near-minimal prediction intervals with guaranteed coverage. CIR leverages black-box machine learning models to estimate outcome distributions through interquantile ranges, transforming these estimates into compact prediction intervals while achieving approximate conditional coverage. We further propose CIR+ (Conditional Interquantile Regression with More Comparison), which enhances CIR by incorporating a width-based selection rule for interquantile intervals. This refinement yields narrower prediction intervals while maintaining comparable coverage, though at the cost of slightly increased computational time. Both methods address key limitations of existing distributional conformal prediction approaches: they handle skewed distributions more effectively than Conformalized Quantile Regression, and they achieve substantially higher computational efficiency than Conformal Histogram Regression by eliminating the need for histogram construction. Extensive experiments on synthetic and real-world datasets demonstrate that our methods optimally balance predictive accuracy and computational efficiency compared to existing approaches.",
+      "year": "2026",
+      "url": "http://arxiv.org/abs/2601.02769v1",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:22",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "probabilistic_forecast_missing",
+      "source": "arXiv",
+      "query": "conformal prediction intervals time series 2025",
+      "id": "http://arxiv.org/abs/2212.03463v3",
+      "title": "Sequential Predictive Conformal Inference for Time Series",
+      "abstract": "We present a new distribution-free conformal prediction algorithm for sequential data (e.g., time series), called the \\textit{sequential predictive conformal inference} (\\texttt{SPCI}). We specifically account for the nature that time series data are non-exchangeable, and thus many existing conformal prediction algorithms are not applicable. The main idea is to adaptively re-estimate the conditional quantile of non-conformity scores (e.g., prediction residuals), upon exploiting the temporal dependence among them. More precisely, we cast the problem of conformal prediction interval as predicting the quantile of a future residual, given a user-specified point prediction algorithm. Theoretically, we establish asymptotic valid conditional coverage upon extending consistency analyses in quantile regression. Using simulation and real-data experiments, we demonstrate a significant reduction in interval width of \\texttt{SPCI} compared to other existing methods under the desired empirical coverage.",
+      "year": "2022",
+      "url": "http://arxiv.org/abs/2212.03463v3",
+      "venue": "",
+      "cited_by_count": 0
+    },
+    {
+      "ts": "2026-05-04T09:12:22",
+      "cycle": 1,
+      "run_tag": "timeseries",
+      "weakness": "probabilistic_forecast_missing",
+      "source": "arXiv",
+      "query": "conformal prediction intervals time series 2025",
+      "id": "http://arxiv.org/abs/2603.10674v1",
+      "title": "Conformal prediction for high-dimensional functional time series: Applications to subnational mortality",
+      "abstract": "In statistics, forecast uncertainty is often quantified using a specified statistical model, though such approaches may be vulnerable to model misspecification, selection bias, and limited finite-sample validity. While bootstrapping can potentially mitigate some of these concerns, it is often computationally demanding. Instead, we take a model-agnostic and distribution-free approach, namely conformal prediction, to construct prediction intervals in high-dimensional functional time series. Among a rich family of conformal prediction methods, we study split and sequential conformal prediction. In split conformal prediction, the data are divided into training, validation, and test sets, where the validation set is used to select optimal tuning parameters by calibrating empirical coverage probabilities to match nominal levels; after this, prediction intervals are constructed for the test set, and their accuracy is evaluated. In contrast, sequential conformal prediction removes the need for a validation set by updating predictive quantiles sequentially via an autoregressive process. Using subnational age-specific log-mortality data from Japan and Canada, we compare the finite-sample forecast performance of these two conformal methods using empirical coverage probability and the mean interval score.",
+      "year": "2026",
+      "url": "http://arxiv.org/abs/2603.10674v1",
+      "venue": "",
+      "cited_by_count": 0
+    }
+  ],
+  "pdf_generated_locally": "checkpoints/timeseries_lappato_mcb_report.pdf"
+}
