@@ -57,9 +57,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/lappato-mcb/lappato_mcb"
-Issues = "https://github.com/lappato-mcb/lappato_mcb/issues"
-Documentation = "https://github.com/lappato-mcb/lappato_mcb#readme"
+Homepage = "https://github.com/massimiliano-caretti/Lappato_MCB"
+Repository = "https://github.com/massimiliano-caretti/Lappato_MCB"
+Issues = "https://github.com/massimiliano-caretti/Lappato_MCB/issues"
+Documentation = "https://github.com/massimiliano-caretti/Lappato_MCB#readme"
+Changelog = "https://github.com/massimiliano-caretti/Lappato_MCB/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 packages = { find = { include = ["lappato_mcb", "lappato_mcb.*"] } }
