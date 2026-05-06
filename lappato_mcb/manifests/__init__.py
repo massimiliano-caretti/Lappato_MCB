@@ -14,12 +14,26 @@ from __future__ import annotations
 
 from .anomaly_detection import MANIFEST as ANOMALY_DETECTION_MANIFEST
 from .anomaly_detection import RUN_TAG as ANOMALY_DETECTION_TAG
+from .astronomy import MANIFEST as ASTRONOMY_MANIFEST
+from .astronomy import RUN_TAG as ASTRONOMY_TAG
+from .biochemistry import MANIFEST as BIOCHEMISTRY_MANIFEST
+from .biochemistry import RUN_TAG as BIOCHEMISTRY_TAG
+from .biology import MANIFEST as BIOLOGY_MANIFEST
+from .biology import RUN_TAG as BIOLOGY_TAG
 from .causal_ml import MANIFEST as CAUSAL_ML_MANIFEST
 from .causal_ml import RUN_TAG as CAUSAL_ML_TAG
+from .chemistry import MANIFEST as CHEMISTRY_MANIFEST
+from .chemistry import RUN_TAG as CHEMISTRY_TAG
 from .clustering import MANIFEST as CLUSTERING_MANIFEST
 from .clustering import RUN_TAG as CLUSTERING_TAG
 from .cybersecurity import MANIFEST as CYBERSECURITY_MANIFEST
 from .cybersecurity import RUN_TAG as CYBERSECURITY_TAG
+from .earth_climate import MANIFEST as EARTH_CLIMATE_MANIFEST
+from .earth_climate import RUN_TAG as EARTH_CLIMATE_TAG
+from .econometrics import MANIFEST as ECONOMETRICS_MANIFEST
+from .econometrics import RUN_TAG as ECONOMETRICS_TAG
+from .epidemiology import MANIFEST as EPIDEMIOLOGY_MANIFEST
+from .epidemiology import RUN_TAG as EPIDEMIOLOGY_TAG
 from .fairness import MANIFEST as FAIRNESS_MANIFEST
 from .fairness import RUN_TAG as FAIRNESS_TAG
 from .geospatial import MANIFEST as GEOSPATIAL_MANIFEST
@@ -28,16 +42,34 @@ from .graph_ml import MANIFEST as GRAPH_ML_MANIFEST
 from .graph_ml import RUN_TAG as GRAPH_ML_TAG
 from .llm_eval import MANIFEST as LLM_EVAL_MANIFEST
 from .llm_eval import RUN_TAG as LLM_EVAL_TAG
+from .materials_science import MANIFEST as MATERIALS_SCIENCE_MANIFEST
+from .materials_science import RUN_TAG as MATERIALS_SCIENCE_TAG
+from .mathematics import MANIFEST as MATHEMATICS_MANIFEST
+from .mathematics import RUN_TAG as MATHEMATICS_TAG
 from .medical_imaging import MANIFEST as MEDICAL_IMAGING_MANIFEST
 from .medical_imaging import RUN_TAG as MEDICAL_IMAGING_TAG
+from .neuroscience import MANIFEST as NEUROSCIENCE_MANIFEST
+from .neuroscience import RUN_TAG as NEUROSCIENCE_TAG
 from .nlp import MANIFEST as NLP_MANIFEST
 from .nlp import RUN_TAG as NLP_TAG
+from .pharmacology import MANIFEST as PHARMACOLOGY_MANIFEST
+from .pharmacology import RUN_TAG as PHARMACOLOGY_TAG
+from .physics import MANIFEST as PHYSICS_MANIFEST
+from .physics import RUN_TAG as PHYSICS_TAG
+from .pipeline_health import MANIFEST as PIPELINE_HEALTH_MANIFEST
+from .pipeline_health import RUN_TAG as PIPELINE_HEALTH_TAG
+from .quantum_computing import MANIFEST as QUANTUM_COMPUTING_MANIFEST
+from .quantum_computing import RUN_TAG as QUANTUM_COMPUTING_TAG
 from .rag_eval import MANIFEST as RAG_EVAL_MANIFEST
 from .rag_eval import RUN_TAG as RAG_EVAL_TAG
 from .recommender import MANIFEST as RECOMMENDER_MANIFEST
 from .recommender import RUN_TAG as RECOMMENDER_TAG
 from .rl_eval import MANIFEST as RL_EVAL_MANIFEST
 from .rl_eval import RUN_TAG as RL_EVAL_TAG
+from .robotics import MANIFEST as ROBOTICS_MANIFEST
+from .robotics import RUN_TAG as ROBOTICS_TAG
+from .social_science import MANIFEST as SOCIAL_SCIENCE_MANIFEST
+from .social_science import RUN_TAG as SOCIAL_SCIENCE_TAG
 from .speech_audio import MANIFEST as SPEECH_AUDIO_MANIFEST
 from .speech_audio import RUN_TAG as SPEECH_AUDIO_TAG
 from .survival import MANIFEST as SURVIVAL_MANIFEST
@@ -57,18 +89,34 @@ from .wdbc import RUN_TAG as WDBC_TAG
 # coexist without collision.
 REGISTRY: dict[str, tuple[list[dict], str]] = {
     "anomaly_detection": (ANOMALY_DETECTION_MANIFEST, ANOMALY_DETECTION_TAG),
+    "astronomy":         (ASTRONOMY_MANIFEST,         ASTRONOMY_TAG),
+    "biochemistry":      (BIOCHEMISTRY_MANIFEST,      BIOCHEMISTRY_TAG),
+    "biology":           (BIOLOGY_MANIFEST,           BIOLOGY_TAG),
     "causal_ml":         (CAUSAL_ML_MANIFEST,         CAUSAL_ML_TAG),
+    "chemistry":         (CHEMISTRY_MANIFEST,         CHEMISTRY_TAG),
     "clustering":        (CLUSTERING_MANIFEST,        CLUSTERING_TAG),
     "cybersecurity":     (CYBERSECURITY_MANIFEST,     CYBERSECURITY_TAG),
+    "earth_climate":     (EARTH_CLIMATE_MANIFEST,     EARTH_CLIMATE_TAG),
+    "econometrics":      (ECONOMETRICS_MANIFEST,      ECONOMETRICS_TAG),
+    "epidemiology":      (EPIDEMIOLOGY_MANIFEST,      EPIDEMIOLOGY_TAG),
     "fairness":          (FAIRNESS_MANIFEST,          FAIRNESS_TAG),
     "geospatial":        (GEOSPATIAL_MANIFEST,        GEOSPATIAL_TAG),
     "graph_ml":          (GRAPH_ML_MANIFEST,          GRAPH_ML_TAG),
     "llm_eval":          (LLM_EVAL_MANIFEST,          LLM_EVAL_TAG),
+    "materials_science": (MATERIALS_SCIENCE_MANIFEST, MATERIALS_SCIENCE_TAG),
+    "mathematics":       (MATHEMATICS_MANIFEST,       MATHEMATICS_TAG),
     "medical_imaging":   (MEDICAL_IMAGING_MANIFEST,   MEDICAL_IMAGING_TAG),
+    "neuroscience":      (NEUROSCIENCE_MANIFEST,      NEUROSCIENCE_TAG),
     "nlp":               (NLP_MANIFEST,               NLP_TAG),
+    "pharmacology":      (PHARMACOLOGY_MANIFEST,      PHARMACOLOGY_TAG),
+    "physics":           (PHYSICS_MANIFEST,           PHYSICS_TAG),
+    "pipeline_health":   (PIPELINE_HEALTH_MANIFEST,   PIPELINE_HEALTH_TAG),
+    "quantum_computing": (QUANTUM_COMPUTING_MANIFEST, QUANTUM_COMPUTING_TAG),
     "rag_eval":          (RAG_EVAL_MANIFEST,          RAG_EVAL_TAG),
     "recommender":       (RECOMMENDER_MANIFEST,       RECOMMENDER_TAG),
     "rl_eval":           (RL_EVAL_MANIFEST,           RL_EVAL_TAG),
+    "robotics":          (ROBOTICS_MANIFEST,          ROBOTICS_TAG),
+    "social_science":    (SOCIAL_SCIENCE_MANIFEST,    SOCIAL_SCIENCE_TAG),
     "speech_audio":      (SPEECH_AUDIO_MANIFEST,      SPEECH_AUDIO_TAG),
     "survival":          (SURVIVAL_MANIFEST,          SURVIVAL_TAG),
     "tabular_generic":   (TABULAR_GENERIC_MANIFEST,   TABULAR_GENERIC_TAG),

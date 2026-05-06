@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Mapping
 
-from ._common import max_value, min_value, summary
+from ._common import max_value, min_value, summary, values
 
 RUN_TAG = "causal_ml"
 
@@ -29,7 +29,8 @@ def _imbalance_summary(path: Path) -> dict:
 
 
 def _positivity_violation(path: Path) -> bool:
-    return min_value(path, "propensity", "propensity_score") < THRESHOLDS["min_propensity_warning"]
+    vals = values(path, "propensity", "propensity_score")
+    return bool(vals) and min(vals) < THRESHOLDS["min_propensity_warning"]
 
 
 def _positivity_summary(path: Path) -> dict:

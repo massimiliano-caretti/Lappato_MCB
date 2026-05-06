@@ -68,8 +68,8 @@ lappato_mcb.stop()
 
 - `lappato_mcb/`: installable library package.
 - `lappato_mcb/core.py`: daemon-thread harvesting core.
-- `lappato_mcb/manifests/`: weakness manifests for supported domains
-  (WDBC, NLP, time series).
+- `lappato_mcb/manifests/`: weakness manifests for 35 supported domains —
+  see [`Supported manifest domains`](#supported-manifest-domains) below.
 - `lappato_mcb/cache.py`: local corpus cache and offline replay support.
 - `lappato_mcb/fingerprint.py`: cross-source title deduplication
   (character-trigram + Jaccard).
@@ -78,6 +78,67 @@ lappato_mcb.stop()
   analysis and reporting utilities.
 - `examples/`: runnable experimental pipelines and baseline evaluation.
 - `tests/`: stdlib unit tests for the library core.
+
+## Supported manifest domains
+
+LAPPATO_MCB ships **35 plug-style manifests** out of the box. Each
+manifest is a stdlib-only Python module under `lappato_mcb/manifests/`
+that exposes evidence-gated weakness detectors with tunable thresholds
+(`override_thresholds`). Pick one with `manifests.get("<tag>")`.
+
+**Methodology / cross-cutting**
+
+| Tag | Focus | Detectors |
+| --- | --- | ---: |
+| `pipeline_health` | Domain-agnostic statistical pipeline diagnostics — both classical bottlenecks (class imbalance, cross-seed variance) and *hidden* ones (train-test overlap, label noise, prediction collapse, prevalence shift, loss/metric divergence, HP overfitting, dead features, threshold-on-test). | 16 |
+| `tabular_generic` | Generic tabular fallback (calibration, drift, leakage / missingness audits). | 5 |
+
+**Mainstream supervised / unsupervised / evaluation**
+
+| Tag | Focus |
+| --- | --- |
+| `nlp` | text classification + token attribution |
+| `vision` | image-classification diagnostics |
+| `timeseries` | forecasting residuals, ACF, horizon |
+| `recommender` | top-K, coverage, popularity bias |
+| `clustering` | unsupervised cluster-quality |
+| `anomaly_detection` | outlier / novelty detection |
+| `survival` | survival, C-index, calibration |
+| `causal_ml` | causal-inference / treatment-effect |
+| `fairness` | group fairness, demographic parity, EOpp |
+| `graph_ml` | node / edge classification, link prediction |
+| `rl_eval` | RL policy-evaluation diagnostics |
+| `llm_eval` | LLM evaluation harness |
+| `rag_eval` | RAG retrieval + answer faithfulness |
+| `speech_audio` | ASR / audio classification |
+| `cybersecurity` | intrusion / malware detection |
+| `geospatial` | spatial autocorrelation, CRS, leakage |
+| `medical_imaging` | radiology classification + segmentation |
+| `wdbc` | reference manifest on the Wisconsin Breast-Cancer cohort |
+
+**Scientific domains**
+
+| Tag | Focus |
+| --- | --- |
+| `mathematics` | conditioning, convergence, discretization |
+| `physics` | conservation laws, CFL, equilibration, dimensions |
+| `chemistry` | structure validity, applicability domain, reaction balance |
+| `biochemistry` | enzyme kinetics, pathways, RMSD, assay QC |
+| `biology` | batch effects, replicates, phylogenetic correction |
+| `earth_climate` | model bias, water balance, extremes, ensembles |
+| `astronomy` | PSF residuals, completeness, selection function |
+| `materials_science` | k-point / basis convergence, MLIPs, hull stability |
+| `neuroscience` | motion, subject splits, smoothing, MC correction |
+| `epidemiology` | case-definition shifts, reporting delay, underreporting |
+| `econometrics` | weak IV, parallel trends, clustered SEs, RDD |
+| `social_science` | effect-size inflation, response rate, p-curve |
+| `robotics` | sim2real gap, safety violations, action smoothness |
+| `quantum_computing` | fidelity, gate error, barren plateaus |
+| `pharmacology` | dose-response, PK concordance, DDI, endpoints |
+
+The full registry is exposed via `lappato_mcb.manifests.REGISTRY`. Adding
+a new domain is a two-step change (drop a `<tag>.py` file, register it).
+See `.github/ISSUE_TEMPLATE/new_manifest.md` for the contract.
 
 ## Examples
 

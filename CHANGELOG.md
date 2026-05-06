@@ -4,6 +4,69 @@ All notable changes to LAPPATO_MCB are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] — 2026-05-06
+
+Bottleneck-coverage release. The manifest registry grows from 19 to **35
+domains** and the new domain-agnostic `pipeline_health` manifest is
+expanded from 8 to 16 detectors so that subtle / hidden methodological
+bottlenecks are visible by default. Framework code, public API, and the
+existing manifests are unchanged.
+
+### Added
+
+- **`pipeline_health` extended from 8 to 16 detectors** (covers both
+  obvious and hidden bottlenecks, all stdlib-only and domain-agnostic):
+  - `train_test_overlap_detected` — entity / sample leakage across splits
+  - `label_noise_detected` — inter-annotator disagreement above the floor
+  - `prediction_confidence_collapsed` — extreme-mass or uniform-collapse
+    histograms
+  - `train_eval_prevalence_shift` — class-prior delta across splits
+  - `loss_metric_divergence` — train loss improves but eval metric does
+    not follow
+  - `hyperparameter_overfit_to_validation` — best HP trial sits far above
+    trial mean
+  - `constant_or_dead_features` — share of zero-variance features above
+    threshold
+  - `threshold_picked_on_test_set` — operating-point selected on the same
+    split that reports final metrics
+- **Six science-foundation manifests** (introduced earlier in this minor
+  cycle, kept under one release tag for a single registry bump):
+  - `pipeline_health`, `mathematics`, `physics`, `chemistry`,
+    `biochemistry`, `biology`
+- **Ten additional scientific-domain manifests**:
+  - `earth_climate` — climate / atmospheric / ocean / hydrology
+  - `astronomy` — surveys, transients, simulations
+  - `materials_science` — DFT / MD / MLIPs / hull stability
+  - `neuroscience` — fMRI / EEG / decoding pipelines
+  - `epidemiology` — surveillance, R(t), interventions
+  - `econometrics` — IV, panel, DiD, RDD
+  - `social_science` — survey + replication diagnostics
+  - `robotics` — sim2real, safety, control evaluation
+  - `quantum_computing` — circuit fidelity, noise, barren plateaus
+  - `pharmacology` — PK/PD, dose-response, trial endpoints
+- **Sentinel test suite** (`tests/test_new_manifests.py`) with positive
+  fire-paths and negative fail-closed paths for every new detector,
+  threshold round-trip checks, and a registry-wide schema validator.
+
+### Changed
+
+- `tests/test_lappato_mcb.py` invariant
+  `test_each_manifest_has_five_entries` is now
+  `test_each_manifest_has_at_least_five_entries` so that
+  `pipeline_health` (16 detectors) and any future expansion can coexist
+  with the cross-domain comparability rule.
+- `EXPECTED_MANIFEST_DOMAINS` lifted from 19 → 35.
+- README gains a `Supported manifest domains` section that lists the
+  full registry by category.
+
+### Backwards compatibility
+
+- Constructor signature, manifest schema, weakness-card schema and
+  meta-log columns are unchanged.
+- All previously registered domains remain importable under their
+  existing tags.
+- All new manifests follow the same plug-style contract (no core edits).
+
 ## [1.1.0] — 2026-05-04
 
 Domain expansion release. The manifest registry grows from 3 to 19

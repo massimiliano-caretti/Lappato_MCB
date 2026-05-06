@@ -186,18 +186,34 @@ class CacheTests(unittest.TestCase):
 # ─── manifests/__init__.py ─────────────────────────────────────────────
 EXPECTED_MANIFEST_DOMAINS = {
     "anomaly_detection",
+    "astronomy",
+    "biochemistry",
+    "biology",
     "causal_ml",
+    "chemistry",
     "clustering",
     "cybersecurity",
+    "earth_climate",
+    "econometrics",
+    "epidemiology",
     "fairness",
     "geospatial",
     "graph_ml",
     "llm_eval",
+    "materials_science",
+    "mathematics",
     "medical_imaging",
+    "neuroscience",
     "nlp",
+    "pharmacology",
+    "physics",
+    "pipeline_health",
+    "quantum_computing",
     "rag_eval",
     "recommender",
     "rl_eval",
+    "robotics",
+    "social_science",
     "speech_audio",
     "survival",
     "tabular_generic",
@@ -212,11 +228,15 @@ class ManifestRegistryTests(unittest.TestCase):
     def test_manifest_domains_registered(self):
         self.assertEqual(set(manifests.REGISTRY), EXPECTED_MANIFEST_DOMAINS)
 
-    def test_each_manifest_has_five_entries(self):
-        # Cross-domain comparability is part of the design.
+    def test_each_manifest_has_at_least_five_entries(self):
+        # Cross-domain comparability is part of the design: every
+        # manifest exposes at least five detectors. Domain-agnostic
+        # manifests (e.g. pipeline_health) carry more.
         for name, (m, _) in manifests.REGISTRY.items():
-            self.assertEqual(len(m), 5,
-                             f"manifest {name!r} has {len(m)} entries, expected 5")
+            self.assertGreaterEqual(
+                len(m), 5,
+                f"manifest {name!r} has {len(m)} entries, expected >= 5",
+            )
 
     def test_all_entries_have_required_keys(self):
         required = {"id", "title", "queries", "transplant"}
