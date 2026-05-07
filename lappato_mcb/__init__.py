@@ -16,7 +16,7 @@ from .core import (
     ScoreWeights,
 )
 
-__version__ = "1.1.0"
+__version__ = "1.5.0"
 
 __all__ = [
     "LAPPATO_MCB",
