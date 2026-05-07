@@ -4,64 +4,32 @@
   "description": "Hand-curated topics for the time-series manifest. See docs/gold_sets/README.md.",
   "topics_by_weakness": {
     "residual_autocorrelation": [
-      {
-        "name": "Ljung-Box test",
-        "must_match_keywords": ["ljung", "box"],
-        "rationale": "Ljung & Box 1978 — canonical residual-autocorrelation test."
-      },
-      {
-        "name": "ARIMA / SARIMA residual whitening",
-        "must_match_keywords": ["arima"],
-        "rationale": "Standard family for residual-structure correction."
-      }
+      {"name": "Ljung-Box test", "must_match_keywords": ["ljung", "box"], "rationale": "Ljung & Box 1978 — canonical residual-autocorrelation test."},
+      {"name": "ARIMA residual whitening", "must_match_keywords": ["arima"], "rationale": "Standard family for residual-structure correction."},
+      {"name": "Durbin-Watson", "must_match_keywords": ["durbin", "watson"], "rationale": "Classical first-order autocorrelation diagnostic."},
+      {"name": "Newey-West HAC errors", "must_match_keywords": ["newey", "west"], "rationale": "HAC standard errors when residuals are correlated."}
     ],
     "heteroscedastic_residuals": [
-      {
-        "name": "GARCH volatility clustering",
-        "must_match_keywords": ["garch"],
-        "rationale": "Bollerslev 1986 — heteroscedasticity-aware modelling."
-      },
-      {
-        "name": "variance-stabilising transforms",
-        "must_match_keywords": ["variance"],
-        "rationale": "Box-Cox / log transforms for variance stabilisation."
-      }
+      {"name": "GARCH volatility clustering", "must_match_keywords": ["garch"], "rationale": "Bollerslev 1986 — heteroscedasticity-aware modelling."},
+      {"name": "variance-stabilising transforms", "must_match_keywords": ["variance"], "rationale": "Box-Cox / log transforms for variance stabilisation."},
+      {"name": "ARCH model", "must_match_keywords": ["arch"], "rationale": "Engle 1982 — ARCH conditional heteroscedasticity."},
+      {"name": "weighted least squares", "must_match_keywords": ["weighted", "least"], "rationale": "Standard correction for heteroscedasticity."}
     ],
     "horizon_degradation": [
-      {
-        "name": "direct vs recursive multi-step",
-        "must_match_keywords": ["multi", "step"],
-        "rationale": "Marcellino et al. 2006 — direct vs recursive comparison."
-      },
-      {
-        "name": "sequence-to-sequence forecasting",
-        "must_match_keywords": ["sequence"],
-        "rationale": "Mainstream multi-horizon neural family."
-      }
+      {"name": "direct vs recursive multi-step", "must_match_keywords": ["multi", "step"], "rationale": "Marcellino et al. 2006 — direct vs recursive comparison."},
+      {"name": "sequence-to-sequence forecasting", "must_match_keywords": ["sequence"], "rationale": "Mainstream multi-horizon neural family."},
+      {"name": "long-horizon forecasting", "must_match_keywords": ["long", "horizon"], "rationale": "Long-horizon literature for transformer / patch-based models."}
     ],
     "ts_model_alternatives": [
-      {
-        "name": "N-BEATS / N-HITS",
-        "must_match_keywords": ["beats"],
-        "rationale": "Oreshkin et al. 2020 / Challu et al. 2023 — modern univariate forecasters."
-      },
-      {
-        "name": "Temporal Fusion Transformer",
-        "must_match_keywords": ["temporal", "fusion"],
-        "rationale": "Lim et al. 2021 — TFT multi-horizon transformer."
-      }
+      {"name": "N-BEATS / N-HITS", "must_match_keywords": ["beats"], "rationale": "Oreshkin et al. 2020 / Challu et al. 2023 — modern forecasters."},
+      {"name": "Temporal Fusion Transformer", "must_match_keywords": ["temporal", "fusion"], "rationale": "Lim et al. 2021 — TFT multi-horizon transformer."},
+      {"name": "Prophet", "must_match_keywords": ["prophet"], "rationale": "Taylor & Letham 2018 — additive trend/seasonality baseline."},
+      {"name": "exponential smoothing", "must_match_keywords": ["exponential", "smoothing"], "rationale": "ETS / Holt-Winters — classical baseline."}
     ],
     "probabilistic_forecast_missing": [
-      {
-        "name": "conformal prediction intervals",
-        "must_match_keywords": ["conformal"],
-        "rationale": "Vovk et al. — distribution-free prediction intervals."
-      },
-      {
-        "name": "quantile regression forecasting",
-        "must_match_keywords": ["quantile"],
-        "rationale": "Quantile loss / quantile-regression forests for probabilistic forecasting."
-      }
+      {"name": "conformal prediction intervals", "must_match_keywords": ["conformal"], "rationale": "Vovk et al. — distribution-free intervals."},
+      {"name": "quantile regression forecasting", "must_match_keywords": ["quantile"], "rationale": "Quantile loss / forests for probabilistic forecasting."},
+      {"name": "DeepAR", "must_match_keywords": ["deepar"], "rationale": "Salinas et al. — autoregressive RNN for probabilistic forecasts."}
     ]
   }
 }

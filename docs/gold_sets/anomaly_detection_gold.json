@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "anomaly_detection",
+  "description": "Anomaly / novelty detection methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "false_positive_burden": [
+      {"name": "alert fatigue precision", "must_match_keywords": ["alert", "fatigue"], "rationale": "SOC / monitoring literature on FP burden."},
+      {"name": "precision at k", "must_match_keywords": ["precision", "at"], "rationale": "Standard top-K precision in anomaly review."}
+    ],
+    "rare_event_recall_low": [
+      {"name": "rare event detection", "must_match_keywords": ["rare", "event"], "rationale": "Core literature on rare-event recall."},
+      {"name": "PR-AUC anomaly", "must_match_keywords": ["pr", "auc"], "rationale": "PR-AUC under heavy imbalance."},
+      {"name": "extreme value statistics", "must_match_keywords": ["extreme", "value"], "rationale": "EVT for tail-event detection."}
+    ],
+    "threshold_instability": [
+      {"name": "score normalization anomaly", "must_match_keywords": ["score", "normaliz"], "rationale": "Kriegel et al. — anomaly score normalisation."},
+      {"name": "extreme value threshold", "must_match_keywords": ["extreme", "value"], "rationale": "EVT-based thresholding for anomaly scores."}
+    ],
+    "contamination_sensitivity_missing": [
+      {"name": "isolation forest contamination", "must_match_keywords": ["isolation", "forest"], "rationale": "Liu et al. — iForest with explicit contamination prior."},
+      {"name": "contamination rate sensitivity", "must_match_keywords": ["contamination"], "rationale": "Standard sensitivity-to-contamination check."}
+    ],
+    "drift_monitoring_missing": [
+      {"name": "concept drift detection", "must_match_keywords": ["concept", "drift"], "rationale": "Gama et al. — concept-drift survey."},
+      {"name": "ADWIN streaming drift", "must_match_keywords": ["adwin"], "rationale": "Bifet & Gavaldà — streaming drift detector."},
+      {"name": "data drift monitoring", "must_match_keywords": ["data", "drift"], "rationale": "Generic recall on production drift."}
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "chemistry",
+  "description": "Cheminformatics / computational chemistry methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "structure_validity_low": [
+      {"name": "RDKit sanitization", "must_match_keywords": ["rdkit"], "rationale": "RDKit — open-source chem toolkit."},
+      {"name": "SMILES validity generative", "must_match_keywords": ["smiles"], "rationale": "Generative-chemistry validity literature."},
+      {"name": "molecular validity benchmark", "must_match_keywords": ["validity"], "rationale": "Validity / uniqueness / novelty triple."}
+    ],
+    "chemical_space_coverage_low": [
+      {"name": "applicability domain QSAR", "must_match_keywords": ["applicability", "domain"], "rationale": "Tropsha — AD framework."},
+      {"name": "chemical space coverage", "must_match_keywords": ["chemical", "space"], "rationale": "Chemical-space sampling literature."},
+      {"name": "Tanimoto similarity nearest neighbor", "must_match_keywords": ["tanimoto"], "rationale": "Tanimoto — fingerprint similarity."}
+    ],
+    "thermodynamic_consistency_violation": [
+      {"name": "thermodynamic cycle closure", "must_match_keywords": ["cycle"], "rationale": "Thermo-cycle closure literature."},
+      {"name": "free energy perturbation", "must_match_keywords": ["free", "energy"], "rationale": "FEP for thermodynamic consistency."},
+      {"name": "Hess law thermochemistry", "must_match_keywords": ["hess"], "rationale": "Hess's-law-based consistency tests."}
+    ],
+    "reaction_balance_violation": [
+      {"name": "atom mapping reaction", "must_match_keywords": ["atom", "mapping"], "rationale": "Atom-atom mapping literature."},
+      {"name": "reaction template", "must_match_keywords": ["reaction", "template"], "rationale": "Template-based reaction validation."}
+    ],
+    "stereochemistry_information_dropped": [
+      {"name": "stereochemistry SMILES", "must_match_keywords": ["stereochemistry"], "rationale": "Stereo-aware molecular representation."},
+      {"name": "chirality enantiomer", "must_match_keywords": ["chirality"], "rationale": "Chirality literature in cheminformatics."}
+    ]
+  }
+}

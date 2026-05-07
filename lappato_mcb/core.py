@@ -37,11 +37,77 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Protocol, runtime_checkable
 
 from .cache import CorpusCache
 from .fingerprint import DEFAULT_JACCARD_TAU, TitleDeduper
 from .meta_log import CycleMetrics, MetaLogWriter
+
+
+# ─── Reranker plug-in interface (Phase 0 — stdlib-only contract) ──────
+# Optional embedding-aware reranker. The core never imports an
+# implementation; users opt in by passing an object that satisfies the
+# Reranker Protocol to the LAPPATO_MCB constructor. Default behaviour
+# (``reranker=None``) is bit-identical to v1.4 — no rerank, no extra
+# field in weakness cards. The default implementation lives in the
+# extras package ``lappato_mcb[embed]`` (proposed for Phase 2); third
+# parties can plug their own retriever as long as it satisfies this
+# Protocol.
+#
+# Determinism contract (Reproducibility expert's veto over breaches):
+#   - same inputs ⇒ same output ordering, on every run, every machine;
+#   - the reranker MUST NOT mutate ``hits`` in-place;
+#   - the reranker MUST return one float per hit, in the same order;
+#   - returning NaN / +inf is treated as "no signal" (skipped from blend);
+#   - raising any exception ⇒ graceful degrade to lexical-only ranking.
+@runtime_checkable
+class Reranker(Protocol):
+    """Minimum contract for an optional embedding-aware reranker.
+
+    Implementations live OUTSIDE ``lappato_mcb/core.py``. The core
+    only depends on the call shape, never on a concrete class.
+    """
+
+    def score(self, query: str, hits: list[dict]) -> list[float]:
+        """Return one numeric score per hit, in the same order.
+
+        Higher = more relevant. Score scale is implementation-defined
+        but should typically lie in ``[0, 1]`` for cosine-similarity
+        rerankers. Implementations can include identifying metadata
+        as attributes (``model_sha``, ``model_version``,
+        ``model_name``) for the weakness-card audit trail; they
+        MUST NOT block on network I/O.
+        """
+        ...
+
+
+# Below this threshold, the embedding signal is treated as "the
+# model isn't sure" and the lexical ranking is left untouched. Set
+# conservatively to favour graceful degrade.
+_DEFAULT_RERANKER_FLOOR = 0.30
+_DEFAULT_RERANKER_WEIGHT = 0.5
+
+# Blend modes supported by ``_apply_reranker``.
+#
+#   "additive"  — Phase 0 default (back-compat). Computes
+#                 ``lappato_score = lex + weight * max(rerank − floor, 0)``.
+#                 The reranker can only ADD score (never demote).
+#                 Floor is honoured. Conservative.
+#
+#   "rrf"       — Phase 0.6 addition (Cormack, Clarke & Buettcher,
+#                 SIGIR 2009). Computes
+#                 ``lappato_score = 1/(60 + rank_lex)
+#                                 + weight * 1/(60 + rank_rerank)``.
+#                 Scale-invariant — combines two heterogeneous
+#                 rankings via ranks rather than raw scores. Floor
+#                 is IGNORED (would be semantically out of place
+#                 against ranks). On the Phase 0.5 benchmark this
+#                 mode delivered +0.34 R@5 on the hard scenario
+#                 vs. the additive default; documented in
+#                 ``docs/reranker_benchmark_phase05.md``.
+_VALID_BLEND_MODES = ("additive", "rrf")
+_DEFAULT_BLEND_MODE = "additive"
+_RRF_K_CONST = 60  # Cormack et al. 2009 default; not user-tunable.
 
 # ─── Polite-use defaults ───────────────────────────────────────────────
 # arXiv recommends >=3 s between queries; OpenAlex grants polite-pool
@@ -418,7 +484,17 @@ class LAPPATO_MCB:
         fp_tau: float = DEFAULT_JACCARD_TAU,
         score_weights: ScoreWeights | None = None,
         http_max_retries: int = _HTTP_MAX_RETRIES,
+        reranker: Reranker | None = None,
+        reranker_weight: float = _DEFAULT_RERANKER_WEIGHT,
+        reranker_floor: float = _DEFAULT_RERANKER_FLOOR,
+        blend_mode: str = _DEFAULT_BLEND_MODE,
     ):
+        if blend_mode not in _VALID_BLEND_MODES:
+            raise ValueError(
+                f"blend_mode must be one of {_VALID_BLEND_MODES}, got "
+                f"{blend_mode!r}. See docs/reranker_benchmark_phase05.md "
+                f"for the empirical comparison."
+            )
         self._root = Path(project_root)
         self._checkpoints = self._root / "checkpoints"
         self._run_tag = run_tag
@@ -458,6 +534,24 @@ class LAPPATO_MCB:
         # Tunable knobs (relevance score weights + HTTP retry policy).
         self._score_weights = score_weights or DEFAULT_SCORE_WEIGHTS
         self._http_max_retries = max(0, int(http_max_retries))
+
+        # Optional embedding-aware reranker. None ⇒ behaviour identical
+        # to v1.4 (lexical-only, bit-for-bit). The reranker contract
+        # is the Reranker Protocol declared at module top.
+        self._reranker = reranker
+        self._reranker_weight = float(reranker_weight)
+        self._reranker_floor = float(reranker_floor)
+        # Phase 0.6: which blending strategy ``_apply_reranker`` will
+        # use. See ``_VALID_BLEND_MODES`` above for the trade-offs.
+        self._blend_mode = blend_mode
+        # Audit trail metadata captured once at init so weakness cards
+        # can record which reranker (if any) shaped the ranking.
+        self._reranker_audit: dict[str, str] = {}
+        if reranker is not None:
+            for attr in ("model_name", "model_version", "model_sha"):
+                v = getattr(reranker, attr, None)
+                if v is not None:
+                    self._reranker_audit[attr] = str(v)
 
         # Quantitative self-instrumentation.
         self._meta = MetaLogWriter(self._meta_log_path)
@@ -609,6 +703,12 @@ class LAPPATO_MCB:
             if self._stop.is_set():
                 break
 
+        # Apply the optional embedding-aware reranker before sorting
+        # so that the visible top-N reflects the blended ranking.
+        # Default (``reranker=None``) is a no-op and the lexical
+        # ordering wins bit-for-bit, matching v1.4 behaviour.
+        rerank_contributed = self._apply_reranker(new_papers)
+
         if not new_papers:
             out.append("_No new literature this cycle._\n")
         else:
@@ -672,6 +772,26 @@ class LAPPATO_MCB:
             "references": list(w.get("references", []) or []),
             "transplant": w.get("transplant", ""),
         }
+        # Reranker audit trail (Phase 0 + 0.6). Only emitted when a
+        # reranker is configured; absent in the default
+        # v1.4-compatible path so existing card consumers stay
+        # unaffected. ``blend_mode`` lets a downstream consumer
+        # interpret the scale of ``lappato_score`` in ``top_papers``:
+        #   - additive: lexical baseline + clipped boost (≈ 0..10)
+        #   - rrf:      sum of reciprocal ranks       (≈ 0..0.04)
+        if self._reranker is not None:
+            card["reranker"] = {
+                "configured": True,
+                "contributed": bool(rerank_contributed),
+                "blend_mode": self._blend_mode,
+                "weight": self._reranker_weight,
+                "floor": (
+                    self._reranker_floor
+                    if self._blend_mode == "additive"
+                    else None
+                ),
+                **self._reranker_audit,
+            }
         return out, card
 
     # ── fetch + filter pipeline ────────────────────────────────────
@@ -736,10 +856,182 @@ class LAPPATO_MCB:
         if gid:
             self._seen_global_ids.add(gid)
         hit["lappato_score"] = _score_hit(query, hit, self._score_weights)
+        # Attach the matching query so an optional reranker (Phase 0
+        # plug-in point) can score (query, title) pairs without
+        # changing the persisted sidecar schema. The field is ignored
+        # by every consumer in the v1.4 pipeline.
+        hit["lappato_matched_query"] = query
         metrics.n_papers_kept += 1
         metrics.mark_first_paper()
         self._record_paper(weakness_id, source, query, hit)
         return hit
+
+    # ── reranker plug-in (Phase 0 + 0.6) ───────────────────────────
+    @staticmethod
+    def _rrf_ranks(
+        scores: list[float],
+        original_indices: list[int] | None = None,
+    ) -> list[int]:
+        """Return 1-based ranks for ``scores`` (higher score = better rank).
+
+        Tie-breaking is **stable** by original index so the rank
+        produced for the same input is deterministic across runs and
+        Python implementations.
+        """
+        n = len(scores)
+        if original_indices is None:
+            original_indices = list(range(n))
+        # Sort indices by (-score, original_index) — ascending rank.
+        order = sorted(range(n), key=lambda i: (-scores[i], original_indices[i]))
+        ranks = [0] * n
+        for rank, idx in enumerate(order, start=1):
+            ranks[idx] = rank
+        return ranks
+
+    def _apply_reranker(
+        self,
+        new_papers: list[tuple[str, dict]],
+    ) -> bool:
+        """Blend an optional embedding-aware reranker into ``lappato_score``.
+
+        Mutates each paper's ``lappato_score`` in place when a
+        reranker is configured. Returns ``True`` if the reranker
+        contributed any signal, ``False`` otherwise (no reranker,
+        no papers, reranker raised, no usable scores).
+
+        Determinism contract — the reranker:
+          - is called once per matched query, with all papers from
+            that query in their existing order;
+          - must return one float per paper, same order;
+          - any exception is swallowed and the lexical ranking is
+            kept (graceful degrade);
+          - NaN / +/-Inf scores are skipped from the blend.
+
+        Two blend modes (selected at construction time via
+        ``blend_mode``):
+
+          ``additive`` (default, back-compatible with v1.4)::
+
+              lappato_score = lex + weight * max(rerank - floor, 0)
+
+          The reranker only *adds* signal when it is confident
+          (above ``reranker_floor``). It cannot demote a paper
+          below its lexical baseline. Conservative; preferred when
+          the reranker is unproven.
+
+          ``rrf`` (Cormack et al. SIGIR 2009 Reciprocal Rank Fusion)::
+
+              lappato_score = 1/(60 + rank_lex)
+                            + weight * 1/(60 + rank_rerank)
+
+          Scale-invariant fusion of the lexical and reranker
+          rankings. Floor is ignored (RRF works on ranks). On the
+          Phase 0.5 benchmark this mode delivered +0.34 R@5 on the
+          hard scenario vs. additive default; see
+          ``docs/reranker_benchmark_phase05.md``.
+        """
+        if self._reranker is None or not new_papers:
+            return False
+
+        # Group papers by their matching query so each call to
+        # ``score`` is over a homogeneous (query, hits) pair.
+        groups: dict[str, list[tuple[str, dict]]] = {}
+        for src, p in new_papers:
+            q = p.get("lappato_matched_query") or ""
+            groups.setdefault(q, []).append((src, p))
+
+        contributed = False
+        for q, group in groups.items():
+            hits_only = [p for _, p in group]
+            try:
+                scores = self._reranker.score(q, hits_only)
+            except Exception:
+                # Honour the graceful-degrade contract: the lexical
+                # ranking continues exactly as without a reranker.
+                continue
+            if not isinstance(scores, list) or len(scores) != len(hits_only):
+                continue
+
+            # Sanitize the reranker output: anything non-finite is
+            # treated as "no signal" (0.0). This keeps both blend
+            # modes well-defined in edge cases.
+            sanitized: list[float] = []
+            any_finite = False
+            for s in scores:
+                try:
+                    fs = float(s)
+                except (TypeError, ValueError):
+                    fs = 0.0
+                if fs != fs or fs in (float("inf"), float("-inf")):
+                    fs = 0.0
+                else:
+                    any_finite = True
+                sanitized.append(fs)
+            if not any_finite:
+                continue
+
+            if self._blend_mode == "additive":
+                contributed |= self._apply_additive_blend(group, sanitized)
+            else:  # "rrf" — validated at construction time
+                contributed |= self._apply_rrf_blend(group, sanitized)
+        return contributed
+
+    def _apply_additive_blend(
+        self,
+        group: list[tuple[str, dict]],
+        rerank: list[float],
+    ) -> bool:
+        """Phase 0 additive blend; one paper at a time, floor-clipped.
+
+        Returns True iff at least one paper received a contribution
+        > 0 (i.e. the reranker score was above ``reranker_floor``).
+        """
+        contributed = False
+        for (_, paper), fs in zip(group, rerank):
+            contribution = max(fs - self._reranker_floor, 0.0)
+            if contribution <= 0.0:
+                paper["lappato_rerank_score"] = fs
+                continue
+            paper["lappato_score"] = (
+                float(paper.get("lappato_score", 0.0))
+                + self._reranker_weight * contribution
+            )
+            paper["lappato_rerank_score"] = fs
+            contributed = True
+        return contributed
+
+    def _apply_rrf_blend(
+        self,
+        group: list[tuple[str, dict]],
+        rerank: list[float],
+    ) -> bool:
+        """Phase 0.6 Reciprocal Rank Fusion (Cormack et al. 2009).
+
+        Combines the lexical ranking and the reranker ranking via
+        sums of reciprocal ranks. Scale-invariant; ``reranker_floor``
+        is ignored (would be semantically out of place against ranks).
+
+        Mutates ``lappato_score`` to the fused score. Always returns
+        True when at least one paper is in the group, since RRF
+        always produces a (potentially identical) ranking.
+        """
+        if not group:
+            return False
+        lex = [float(p.get("lappato_score", 0.0)) for _, p in group]
+        # Stable tie-breaking by original position keeps RRF
+        # deterministic when several papers share a score.
+        n = len(group)
+        original_idx = list(range(n))
+        lex_ranks = self._rrf_ranks(lex, original_idx)
+        rerank_ranks = self._rrf_ranks(rerank, original_idx)
+        for (_, paper), lr, rr, rs in zip(group, lex_ranks, rerank_ranks, rerank):
+            fused = (
+                1.0 / (_RRF_K_CONST + lr)
+                + self._reranker_weight * 1.0 / (_RRF_K_CONST + rr)
+            )
+            paper["lappato_score"] = fused
+            paper["lappato_rerank_score"] = rs
+        return True
 
     # ── evidence-gated literature retrieval helpers ─────────────────
     def _load_context(self) -> dict:

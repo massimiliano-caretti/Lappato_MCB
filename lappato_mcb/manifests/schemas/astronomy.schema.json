@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "domain": "astronomy",
+  "description": "Astronomy / astrophysics survey + simulation diagnostics.",
+  "evidence_files": {
+    "astro_psf_residuals.csv": {
+      "description": "Per-object PSF-fit residual.",
+      "columns": [
+        {"name": "object", "aliases": [], "type": "string", "required": false},
+        {"name": "psf_residual", "aliases": ["residual", "chi2_psf"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["psf_residual_high"]
+    },
+    "astro_completeness.csv": {
+      "description": "Magnitude-binned survey completeness.",
+      "columns": [
+        {"name": "magnitude", "aliases": [], "type": "number", "required": false},
+        {"name": "completeness", "aliases": ["detection_efficiency"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["completeness_low"]
+    },
+    "astro_selection_function.csv": {
+      "description": "Per-zone selection probability.",
+      "columns": [
+        {"name": "zone", "aliases": [], "type": "string", "required": false},
+        {"name": "selection_probability", "aliases": ["selection"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["selection_function_inhomogeneous"]
+    },
+    "astro_signal_significance.csv": {
+      "description": "Per-candidate detection sigma.",
+      "columns": [
+        {"name": "candidate", "aliases": [], "type": "string", "required": false},
+        {"name": "sigma", "aliases": ["snr", "significance"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_signal_significance"]
+    },
+    "astro_simulation_resolution.csv": {
+      "description": "Simulation resolution vs structure size.",
+      "columns": [
+        {"name": "box", "aliases": [], "type": "string", "required": false},
+        {"name": "resolution_min", "aliases": ["softening", "cell_size"], "type": "number", "required": true},
+        {"name": "structure_size", "aliases": ["halo_radius", "feature_size"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["simulation_resolution_inadequate"]
+    }
+  }
+}

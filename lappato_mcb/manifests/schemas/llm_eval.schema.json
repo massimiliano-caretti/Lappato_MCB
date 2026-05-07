@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "llm_eval",
+  "description": "LLM evaluation harness diagnostics.",
+  "evidence_files": {
+    "llm_hallucination.csv": {
+      "description": "Per-prompt hallucination / unsupported-claim rate.",
+      "columns": [
+        {"name": "hallucination_rate", "aliases": ["unsupported_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["hallucination_rate_high"]
+    },
+    "llm_safety.csv": {
+      "description": "Per-prompt unsafe-output rate.",
+      "columns": [
+        {"name": "toxicity_rate", "aliases": ["unsafe_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["safety_failure_rate"]
+    },
+    "llm_prompt_variants.csv": {
+      "description": "Score across prompt variants.",
+      "columns": [
+        {"name": "score", "aliases": ["pass_rate", "accuracy"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["prompt_instability"]
+    }
+  }
+}

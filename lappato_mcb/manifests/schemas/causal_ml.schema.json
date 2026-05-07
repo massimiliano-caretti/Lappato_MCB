@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "causal_ml",
+  "description": "Causal-inference / treatment-effect diagnostics.",
+  "evidence_files": {
+    "causal_balance.csv": {
+      "description": "Per-covariate standardized mean differences.",
+      "columns": [
+        {"name": "smd", "aliases": ["standardized_mean_difference"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["covariate_imbalance"]
+    },
+    "causal_propensity.csv": {
+      "description": "Propensity-score distribution.",
+      "columns": [
+        {"name": "propensity", "aliases": ["propensity_score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["positivity_violation"]
+    },
+    "causal_placebo.csv": {
+      "description": "Placebo / negative-control effect estimates.",
+      "columns": [
+        {"name": "abs_effect", "aliases": ["absolute_effect"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["placebo_test_failure"]
+    }
+  }
+}

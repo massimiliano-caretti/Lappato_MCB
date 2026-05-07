@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "graph_ml",
+  "description": "Graph-ML diagnostics.",
+  "evidence_files": {
+    "graph_split.csv": {
+      "description": "Cross-split edge-leakage rates.",
+      "columns": [
+        {"name": "leakage_edge_rate", "aliases": ["cross_split_edge_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["graph_split_leakage"]
+    },
+    "graph_embeddings.csv": {
+      "description": "Per-layer embedding variance / pairwise distance.",
+      "columns": [
+        {"name": "embedding_variance", "aliases": ["pairwise_distance"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["oversmoothing_signal"]
+    },
+    "graph_homophily.csv": {
+      "description": "Per-graph label homophily.",
+      "columns": [
+        {"name": "homophily", "aliases": ["label_homophily"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["homophily_mismatch"]
+    }
+  }
+}

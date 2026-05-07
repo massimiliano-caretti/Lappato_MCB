@@ -30,7 +30,7 @@ Run:
     # measure recall on a previously-completed run
     python examples/measure_recall.py --domain wdbc
 
-    # combined report across all three bundled domains
+    # combined report across every domain that has a gold set on disk
     python examples/measure_recall.py --domain all
 """
 from __future__ import annotations
@@ -47,7 +47,27 @@ ROOT = Path(__file__).resolve().parents[1]
 GOLD_DIR = ROOT / "docs" / "gold_sets"
 CHECKPOINTS = ROOT / "checkpoints"
 
-KNOWN_DOMAINS = ("wdbc", "nlp", "timeseries")
+
+def _discover_domains() -> tuple[str, ...]:
+    """Return every domain that has a ``<tag>_gold.json`` next to this file.
+
+    The harness used to hard-code the three bundled domains; with the
+    expansion to 35 manifests + 35 gold sets we now enumerate them
+    dynamically. The original three remain importable under the same
+    names — the only behavioural change is that ``--domain all``
+    iterates over every gold set found on disk.
+    """
+    if not GOLD_DIR.exists():
+        return ()
+    tags: list[str] = []
+    for path in sorted(GOLD_DIR.glob("*_gold.json")):
+        tag = path.name[: -len("_gold.json")]
+        if tag:
+            tags.append(tag)
+    return tuple(tags)
+
+
+KNOWN_DOMAINS = _discover_domains() or ("wdbc", "nlp", "timeseries")
 
 
 def _load_gold(domain: str) -> dict:

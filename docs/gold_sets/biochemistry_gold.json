@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "biochemistry",
+  "description": "Biochemistry / enzyme / protein methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "enzyme_kinetics_outlier": [
+      {"name": "Michaelis-Menten kinetics", "must_match_keywords": ["michaelis"], "rationale": "MM canonical kinetic model."},
+      {"name": "BRENDA enzyme database", "must_match_keywords": ["brenda"], "rationale": "Schomburg et al. — curated enzyme DB."},
+      {"name": "Km Vmax curation", "must_match_keywords": ["km"], "rationale": "Km curation literature."}
+    ],
+    "pathway_completeness_low": [
+      {"name": "metabolic gap filling", "must_match_keywords": ["gap", "filling"], "rationale": "GapFill / GapFind for metabolic networks."},
+      {"name": "KEGG pathway", "must_match_keywords": ["kegg"], "rationale": "Kanehisa — KEGG reference pathways."},
+      {"name": "MetaCyc metabolic database", "must_match_keywords": ["metacyc"], "rationale": "Caspi et al. — MetaCyc reference."}
+    ],
+    "structural_alignment_rmsd_high": [
+      {"name": "TM-score structural alignment", "must_match_keywords": ["tm", "score"], "rationale": "Zhang & Skolnick — TM-score."},
+      {"name": "GDT global distance", "must_match_keywords": ["gdt"], "rationale": "GDT-TS in CASP."},
+      {"name": "RMSD protein superposition", "must_match_keywords": ["rmsd"], "rationale": "Generic RMSD literature."}
+    ],
+    "assay_replicate_inconsistency": [
+      {"name": "Z' factor screening", "must_match_keywords": ["z'", "factor"], "rationale": "Zhang et al. — Z' factor."},
+      {"name": "high throughput screening QC", "must_match_keywords": ["screening"], "rationale": "HTS QC literature."},
+      {"name": "biological replicate variance", "must_match_keywords": ["replicate"], "rationale": "Replicate-variance literature."}
+    ],
+    "assay_conditions_mismatch": [
+      {"name": "in vitro in vivo extrapolation", "must_match_keywords": ["in", "vitro"], "rationale": "IVIVE literature in pharmacology."},
+      {"name": "physiological conditions assay", "must_match_keywords": ["physiological"], "rationale": "Assay-relevance framing."}
+    ]
+  }
+}

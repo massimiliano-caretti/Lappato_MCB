@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "geospatial",
+  "description": "Geospatial / remote-sensing diagnostics.",
+  "evidence_files": {
+    "geospatial_regions.csv": {
+      "description": "Per-region performance metrics.",
+      "columns": [
+        {"name": "auc", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false},
+        {"name": "rmse", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["spatial_generalization_gap"]
+    },
+    "geospatial_time.csv": {
+      "description": "Time-ordered error metrics.",
+      "columns": [
+        {"name": "rmse", "aliases": ["error", "mape"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["temporal_transfer_degradation"]
+    },
+    "geospatial_masks.csv": {
+      "description": "Per-mask cloud / shadow error rates.",
+      "columns": [
+        {"name": "cloud_error_rate", "aliases": ["masked_error_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["cloud_mask_failures"]
+    }
+  }
+}

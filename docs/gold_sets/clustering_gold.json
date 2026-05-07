@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "clustering",
+  "description": "Unsupervised clustering quality topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "weak_cluster_separation": [
+      {"name": "silhouette score", "must_match_keywords": ["silhouette"], "rationale": "Rousseeuw 1987 — canonical separation metric."},
+      {"name": "Davies-Bouldin index", "must_match_keywords": ["davies", "bouldin"], "rationale": "Davies & Bouldin 1979 — within/between ratio."},
+      {"name": "Calinski-Harabasz", "must_match_keywords": ["calinski", "harabasz"], "rationale": "Variance-ratio criterion for clustering."}
+    ],
+    "cluster_instability": [
+      {"name": "cluster stability bootstrap", "must_match_keywords": ["stability"], "rationale": "Hennig — cluster-stability framework."},
+      {"name": "adjusted Rand index", "must_match_keywords": ["adjusted", "rand"], "rationale": "Hubert & Arabie — ARI for cluster agreement."},
+      {"name": "normalized mutual information", "must_match_keywords": ["mutual", "information"], "rationale": "Standard cluster comparison metric."}
+    ],
+    "noise_share_high": [
+      {"name": "DBSCAN noise points", "must_match_keywords": ["dbscan"], "rationale": "Ester et al. — explicit noise label."},
+      {"name": "HDBSCAN", "must_match_keywords": ["hdbscan"], "rationale": "Campello et al. — hierarchical density-based clustering."}
+    ],
+    "external_validation_missing": [
+      {"name": "external cluster validation", "must_match_keywords": ["external", "validation"], "rationale": "Halkidi et al. — external validation index review."},
+      {"name": "purity clustering", "must_match_keywords": ["purity"], "rationale": "Standard external metric vs labelled subset."}
+    ],
+    "embedding_sensitivity_missing": [
+      {"name": "UMAP", "must_match_keywords": ["umap"], "rationale": "McInnes et al. — UMAP embedding for clustering."},
+      {"name": "t-SNE perplexity", "must_match_keywords": ["sne"], "rationale": "Van der Maaten — t-SNE sensitivity to perplexity."},
+      {"name": "embedding dimensionality reduction", "must_match_keywords": ["dimensionality", "reduction"], "rationale": "Generic recall on embedding choice."}
+    ]
+  }
+}

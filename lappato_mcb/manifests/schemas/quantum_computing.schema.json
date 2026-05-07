@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "domain": "quantum_computing",
+  "description": "NISQ / variational / QML diagnostics.",
+  "evidence_files": {
+    "quantum_fidelity.csv": {
+      "description": "Per-circuit reported fidelity.",
+      "columns": [
+        {"name": "circuit", "aliases": [], "type": "string", "required": false},
+        {"name": "fidelity", "aliases": ["process_fidelity", "average_fidelity"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["fidelity_low"]
+    },
+    "quantum_noise.csv": {
+      "description": "Per-gate error rate.",
+      "columns": [
+        {"name": "gate", "aliases": [], "type": "string", "required": false},
+        {"name": "error_rate", "aliases": ["gate_error", "epc"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["gate_error_high"]
+    },
+    "quantum_shot_count.csv": {
+      "description": "Per-observable shot count + std error.",
+      "columns": [
+        {"name": "observable", "aliases": [], "type": "string", "required": false},
+        {"name": "n_shots", "aliases": [], "type": "number", "required": false},
+        {"name": "std_error", "aliases": ["shot_std", "uncertainty"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["shot_noise_high"]
+    },
+    "quantum_barren_plateau.csv": {
+      "description": "Per-layer gradient variance.",
+      "columns": [
+        {"name": "layer", "aliases": [], "type": "string", "required": false},
+        {"name": "gradient_variance", "aliases": ["var_grad"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["barren_plateau"]
+    },
+    "quantum_compilation.csv": {
+      "description": "Compiled circuit depth vs native-gate count.",
+      "columns": [
+        {"name": "circuit", "aliases": [], "type": "string", "required": false},
+        {"name": "depth", "aliases": ["circuit_depth"], "type": "number", "required": true},
+        {"name": "native_gates", "aliases": ["n_native"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["compilation_inefficient"]
+    }
+  }
+}

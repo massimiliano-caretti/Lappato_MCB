@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "domain": "epidemiology",
+  "description": "Surveillance / outbreak / intervention diagnostics.",
+  "evidence_files": {
+    "epi_case_definition.csv": {
+      "description": "Per-period active case definition.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": false},
+        {"name": "case_definition_id", "aliases": ["definition"], "type": "string", "required": true}
+      ],
+      "used_by_detectors": ["case_definition_changed"]
+    },
+    "epi_reporting_delay.csv": {
+      "description": "Per-date reporting delay.",
+      "columns": [
+        {"name": "date", "aliases": [], "type": "string", "required": false},
+        {"name": "delay_days", "aliases": ["reporting_delay"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["reporting_delay_high"]
+    },
+    "epi_serial_correlation.csv": {
+      "description": "Residual autocorrelation by lag.",
+      "columns": [
+        {"name": "lag", "aliases": [], "type": "number", "required": false},
+        {"name": "autocorr", "aliases": ["acf", "rho"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["serial_correlation_high"]
+    },
+    "epi_underreporting.csv": {
+      "description": "Reported vs estimated true counts.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": false},
+        {"name": "reported", "aliases": [], "type": "number", "required": true},
+        {"name": "estimated_true", "aliases": ["true"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["underreporting_high"]
+    },
+    "epi_intervention_overlap.csv": {
+      "description": "Per-intervention start/end days.",
+      "columns": [
+        {"name": "intervention", "aliases": [], "type": "string", "required": false},
+        {"name": "start", "aliases": ["start_day"], "type": "number", "required": true},
+        {"name": "end", "aliases": ["end_day"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["intervention_overlap_present"]
+    }
+  }
+}

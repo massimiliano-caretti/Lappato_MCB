@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "domain": "biology",
+  "description": "Genomics / ecology / evolutionary-biology diagnostics.",
+  "evidence_files": {
+    "bio_batch_variance.csv": {
+      "description": "Variance partition across batches.",
+      "columns": [
+        {"name": "source", "aliases": ["level"], "type": "string", "required": true},
+        {"name": "variance", "aliases": ["var"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["batch_effect_detected"]
+    },
+    "bio_replicates.csv": {
+      "description": "Replicate counts per condition.",
+      "columns": [
+        {"name": "condition", "aliases": [], "type": "string", "required": false},
+        {"name": "n_replicates", "aliases": ["replicates", "n"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_biological_replicate_n"]
+    },
+    "bio_geneset_overlap.csv": {
+      "description": "Pairwise gene-set overlap (Jaccard).",
+      "columns": [
+        {"name": "set_a", "aliases": [], "type": "string", "required": false},
+        {"name": "set_b", "aliases": [], "type": "string", "required": false},
+        {"name": "jaccard", "aliases": ["overlap", "share"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["gene_set_overlap_high"]
+    },
+    "bio_phylogenetic.csv": {
+      "description": "Per-analysis phylogenetic-correction flag (1/0).",
+      "columns": [
+        {"name": "analysis", "aliases": [], "type": "string", "required": false},
+        {"name": "phylogenetic_correction", "aliases": ["pgls", "corrected"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["phylogenetic_signal_unmeasured"]
+    },
+    "bio_contamination.csv": {
+      "description": "Per-sample contamination share.",
+      "columns": [
+        {"name": "sample", "aliases": [], "type": "string", "required": false},
+        {"name": "contam_share", "aliases": ["contamination", "alien_share"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["contamination_warning"]
+    }
+  }
+}

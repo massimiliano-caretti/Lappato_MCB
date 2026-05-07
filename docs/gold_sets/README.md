@@ -19,13 +19,32 @@ coverage.
 
 ## File layout
 
-One file per registered manifest domain:
+One file per registered manifest domain — the v1.3 release expanded
+the gold-set catalogue from 3 to **35 files**, one for every manifest
+in `lappato_mcb.manifests.REGISTRY`. Across those files there are
+**~500 hand-curated topics** (10–15 per 5-detector manifest, 32 for
+the 16-detector `pipeline_health`).
 
-| File | Domain | Weaknesses covered |
-| --- | --- | --- |
-| `wdbc_gold.json` | `wdbc` | calibration, class imbalance, marker redundancy, tabular alternatives, decision-curve analysis |
-| `nlp_gold.json` | `nlp` | per-class F1 spread, confusable classes, stopword dominance, embedding alternatives, calibration (text) |
-| `timeseries_gold.json` | `timeseries` | residual ACF, heteroscedasticity, horizon degradation, model alternatives, probabilistic forecasting |
+The harness in [`examples/measure_recall.py`](../../examples/measure_recall.py)
+discovers gold sets dynamically by globbing
+`docs/gold_sets/*_gold.json`. Adding a new gold set is a one-file
+change — no harness edit needed.
+
+Coverage at a glance (auto-derived):
+
+```bash
+python -c "
+import json, glob, os
+for p in sorted(glob.glob('docs/gold_sets/*_gold.json')):
+    g = json.load(open(p))
+    n = sum(len(v) for v in g['topics_by_weakness'].values())
+    print(f'{os.path.basename(p):36s} topics={n}')
+"
+```
+
+For a sanity check that every gold-set key still maps to a real
+detector ID after a manifest edit, run
+`python -m unittest tests.test_gold_sets`.
 
 ## Schema
 

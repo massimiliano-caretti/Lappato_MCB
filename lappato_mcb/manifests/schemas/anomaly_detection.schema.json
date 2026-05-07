@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "anomaly_detection",
+  "description": "Outlier / novelty detection diagnostics.",
+  "evidence_files": {
+    "anomaly_rates.csv": {
+      "description": "Per-window false-positive rates.",
+      "columns": [
+        {"name": "false_positive_rate", "aliases": ["fpr"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["false_positive_burden"]
+    },
+    "anomaly_recall.csv": {
+      "description": "Per-anomaly-type recall.",
+      "columns": [
+        {"name": "recall", "aliases": ["true_positive_rate", "tpr"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["rare_event_recall_low"]
+    },
+    "anomaly_thresholds.csv": {
+      "description": "Time-ordered anomaly thresholds.",
+      "columns": [
+        {"name": "threshold", "aliases": ["score_cutoff"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["threshold_instability"]
+    }
+  }
+}

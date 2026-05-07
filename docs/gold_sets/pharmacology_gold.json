@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "pharmacology",
+  "description": "PK/PD / dose-response / clinical-trial methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "dose_response_undersampled": [
+      {"name": "Hill equation dose response", "must_match_keywords": ["hill"], "rationale": "Hill equation for dose-response."},
+      {"name": "EC50 IC50 confidence", "must_match_keywords": ["ec50"], "rationale": "EC50 / IC50 estimation literature."},
+      {"name": "dose response design", "must_match_keywords": ["dose", "response"], "rationale": "Generic dose-response design."}
+    ],
+    "pk_concordance_low": [
+      {"name": "PBPK model evaluation", "must_match_keywords": ["pbpk"], "rationale": "Physiologically based PK literature."},
+      {"name": "population pharmacokinetics", "must_match_keywords": ["population", "pharmacokinetics"], "rationale": "Pop-PK literature."},
+      {"name": "AUC fold error", "must_match_keywords": ["auc"], "rationale": "AUC fold-error reporting."}
+    ],
+    "ddi_high": [
+      {"name": "drug drug interaction CYP", "must_match_keywords": ["cyp"], "rationale": "CYP-mediated DDI literature."},
+      {"name": "P-gp transporter", "must_match_keywords": ["transporter"], "rationale": "Transporter-mediated DDI literature."}
+    ],
+    "extrapolation_high": [
+      {"name": "applicability domain ADMET", "must_match_keywords": ["admet"], "rationale": "ADMET applicability domain."},
+      {"name": "Tanimoto distance drug discovery", "must_match_keywords": ["tanimoto"], "rationale": "Tanimoto distance for chemical-OOD."},
+      {"name": "out of distribution drug discovery", "must_match_keywords": ["out", "distribution"], "rationale": "OOD literature for drug discovery."}
+    ],
+    "trial_endpoint_unspecified": [
+      {"name": "ICH E9 estimand", "must_match_keywords": ["e9"], "rationale": "ICH E9(R1) estimand framework."},
+      {"name": "primary endpoint clinical trial", "must_match_keywords": ["primary", "endpoint"], "rationale": "Primary-endpoint reporting literature."},
+      {"name": "statistical analysis plan", "must_match_keywords": ["analysis", "plan"], "rationale": "Pre-specified SAP literature."}
+    ]
+  }
+}

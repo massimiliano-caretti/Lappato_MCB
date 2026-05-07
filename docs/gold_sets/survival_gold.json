@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "survival",
+  "description": "Survival-analysis methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "low_discrimination": [
+      {"name": "Harrell concordance", "must_match_keywords": ["harrell"], "rationale": "Harrell's C-index — canonical discrimination metric."},
+      {"name": "C-index survival", "must_match_keywords": ["concordance"], "rationale": "Survival C-index reporting."},
+      {"name": "DeepSurv neural", "must_match_keywords": ["deepsurv"], "rationale": "Katzman et al. — DeepSurv."}
+    ],
+    "survival_calibration_slope_off": [
+      {"name": "calibration survival model", "must_match_keywords": ["calibration"], "rationale": "Steyerberg — survival calibration."},
+      {"name": "calibration slope intercept", "must_match_keywords": ["slope"], "rationale": "Standard calibration-slope decomposition."}
+    ],
+    "proportional_hazards_violation": [
+      {"name": "Schoenfeld residuals", "must_match_keywords": ["schoenfeld"], "rationale": "Schoenfeld test for PH assumption."},
+      {"name": "proportional hazards assumption", "must_match_keywords": ["proportional", "hazards"], "rationale": "Cox PH assumption literature."},
+      {"name": "time varying coefficient", "must_match_keywords": ["time", "varying"], "rationale": "Time-varying-coef remediation."}
+    ],
+    "censoring_audit_missing": [
+      {"name": "informative censoring", "must_match_keywords": ["censoring"], "rationale": "Informative-censoring literature."},
+      {"name": "inverse probability censoring weighting", "must_match_keywords": ["inverse", "probability"], "rationale": "IPCW estimator."}
+    ],
+    "competing_risks_missing": [
+      {"name": "Fine and Gray competing risks", "must_match_keywords": ["fine", "gray"], "rationale": "Fine & Gray subdistribution hazard."},
+      {"name": "cumulative incidence function", "must_match_keywords": ["cumulative", "incidence"], "rationale": "CIF for competing risks."}
+    ]
+  }
+}

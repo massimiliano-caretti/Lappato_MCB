@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "domain": "tabular_generic",
+  "description": "Generic tabular-ML diagnostics.",
+  "evidence_files": {
+    "tabular_calibration.csv": {
+      "description": "Per-fold Brier / ECE.",
+      "columns": [
+        {"name": "brier", "aliases": ["brier_score"], "type": "number", "required": false},
+        {"name": "ece", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["probability_calibration"]
+    },
+    "tabular_imbalance.csv": {
+      "description": "Per-class share or support count.",
+      "columns": [
+        {"name": "class", "aliases": [], "type": "string", "required": false},
+        {"name": "share", "aliases": [], "type": "number", "required": false},
+        {"name": "support", "aliases": ["count"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["class_imbalance"]
+    },
+    "tabular_drift.csv": {
+      "description": "Per-feature drift metrics.",
+      "columns": [
+        {"name": "feature", "aliases": [], "type": "string", "required": false},
+        {"name": "psi", "aliases": [], "type": "number", "required": false},
+        {"name": "ks", "aliases": ["ks_stat"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["feature_drift"]
+    }
+  }
+}

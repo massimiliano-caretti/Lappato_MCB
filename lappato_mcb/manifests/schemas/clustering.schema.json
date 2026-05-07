@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "clustering",
+  "description": "Unsupervised clustering quality diagnostics.",
+  "evidence_files": {
+    "clustering_quality.csv": {
+      "description": "Per-clustering silhouette scores.",
+      "columns": [
+        {"name": "silhouette", "aliases": ["silhouette_score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["weak_cluster_separation"]
+    },
+    "clustering_stability.csv": {
+      "description": "Cluster stability metrics across resamples.",
+      "columns": [
+        {"name": "ari", "aliases": ["nmi", "stability"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["cluster_instability"]
+    },
+    "clustering_noise.csv": {
+      "description": "Share of points labelled noise / outlier.",
+      "columns": [
+        {"name": "noise_share", "aliases": ["outlier_share"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["noise_share_high"]
+    }
+  }
+}

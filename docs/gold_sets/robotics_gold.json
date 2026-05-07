@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "robotics",
+  "description": "Robotics / control / sim2real methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "sim2real_gap_high": [
+      {"name": "domain randomization", "must_match_keywords": ["domain", "randomization"], "rationale": "Tobin et al. — domain randomisation."},
+      {"name": "sim to real transfer", "must_match_keywords": ["sim", "real"], "rationale": "Generic sim2real literature."},
+      {"name": "system identification robotics", "must_match_keywords": ["system", "identification"], "rationale": "SysID for sim2real correction."}
+    ],
+    "safety_violation_high": [
+      {"name": "safe reinforcement learning", "must_match_keywords": ["safe", "reinforcement"], "rationale": "Safe-RL survey literature."},
+      {"name": "control barrier function safe", "must_match_keywords": ["barrier", "function"], "rationale": "CBF-based safety filters."},
+      {"name": "shielded reinforcement learning", "must_match_keywords": ["shielded"], "rationale": "Alshiekh et al. — shielding for RL."}
+    ],
+    "action_saturation_high": [
+      {"name": "tanh squashed policy", "must_match_keywords": ["tanh"], "rationale": "Tanh-squashed Gaussian policy."},
+      {"name": "action regularization RL", "must_match_keywords": ["action", "regulariz"], "rationale": "Action-rate / smoothness regularisation."}
+    ],
+    "action_jitter_high": [
+      {"name": "smoothness reward robotics", "must_match_keywords": ["smoothness"], "rationale": "Smoothness-reward literature."},
+      {"name": "low pass filter control", "must_match_keywords": ["low", "pass"], "rationale": "Low-pass filtering on actions."}
+    ],
+    "few_eval_seeds": [
+      {"name": "deep RL reproducibility seeds", "must_match_keywords": ["reproducibility"], "rationale": "Henderson et al. — RL that matters."},
+      {"name": "rliable evaluation", "must_match_keywords": ["rliable"], "rationale": "Agarwal et al. — rliable for RL stats."}
+    ]
+  }
+}

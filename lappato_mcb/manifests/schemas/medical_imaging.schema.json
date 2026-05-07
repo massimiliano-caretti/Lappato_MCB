@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "medical_imaging",
+  "description": "Medical-imaging classification + segmentation diagnostics.",
+  "evidence_files": {
+    "medical_segmentation.csv": {
+      "description": "Per-image segmentation overlap (Dice / IoU).",
+      "columns": [
+        {"name": "dice", "aliases": ["iou"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_segmentation_overlap"]
+    },
+    "medical_lesion_size.csv": {
+      "description": "Per-size-bin recall on small lesions / objects.",
+      "columns": [
+        {"name": "small_lesion_recall", "aliases": ["small_object_recall"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["small_lesion_recall_low"]
+    },
+    "medical_site_performance.csv": {
+      "description": "Per-site / per-scanner performance metrics.",
+      "columns": [
+        {"name": "auc", "aliases": [], "type": "number", "required": false},
+        {"name": "dice", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["site_shift"]
+    }
+  }
+}

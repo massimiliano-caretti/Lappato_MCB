@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "fairness",
+  "description": "Group-fairness methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "subgroup_performance_gap": [
+      {"name": "subgroup robustness", "must_match_keywords": ["subgroup"], "rationale": "Sagawa et al. — group DRO."},
+      {"name": "Gender Shades", "must_match_keywords": ["gender", "shades"], "rationale": "Buolamwini & Gebru — subgroup performance audit."},
+      {"name": "worst case subgroup", "must_match_keywords": ["worst", "case"], "rationale": "Worst-group accuracy framing."}
+    ],
+    "equal_opportunity_gap": [
+      {"name": "equal opportunity Hardt", "must_match_keywords": ["equal", "opportunity"], "rationale": "Hardt et al. 2016 — equal-opportunity definition."},
+      {"name": "demographic parity", "must_match_keywords": ["demographic", "parity"], "rationale": "Standard parity-based fairness criterion."},
+      {"name": "equalized odds", "must_match_keywords": ["equalized", "odds"], "rationale": "Equalized odds — companion criterion."}
+    ],
+    "subgroup_calibration_gap": [
+      {"name": "fairness calibration", "must_match_keywords": ["fairness", "calibration"], "rationale": "Pleiss et al. — calibration vs equal odds tradeoff."},
+      {"name": "multicalibration", "must_match_keywords": ["multicalibration"], "rationale": "Hébert-Johnson et al. — multicalibration framework."}
+    ],
+    "sensitive_attribute_policy_missing": [
+      {"name": "fairness without demographics", "must_match_keywords": ["without", "demographics"], "rationale": "Lahoti et al. — ARL without sensitive attrs."},
+      {"name": "GDPR sensitive attribute", "must_match_keywords": ["gdpr"], "rationale": "Privacy/compliance constraints on attribute use."},
+      {"name": "proxy attribute fairness", "must_match_keywords": ["proxy"], "rationale": "Proxy-attribute literature when direct attrs missing."}
+    ],
+    "intersectional_audit_missing": [
+      {"name": "intersectional fairness", "must_match_keywords": ["intersectional"], "rationale": "Buolamwini & Gebru / Foulds et al. — intersectional analysis."},
+      {"name": "subgroup fairness Kearns", "must_match_keywords": ["kearns"], "rationale": "Kearns et al. — preventing fairness gerrymandering."}
+    ]
+  }
+}

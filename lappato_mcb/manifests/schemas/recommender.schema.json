@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "recommender",
+  "description": "Recommender-system diagnostics.",
+  "evidence_files": {
+    "recommender_cold_start.csv": {
+      "description": "Per-cold-cohort recall.",
+      "columns": [
+        {"name": "cold_start_recall", "aliases": ["new_item_recall", "new_user_recall"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["cold_start_recall_low"]
+    },
+    "recommender_popularity.csv": {
+      "description": "Top-decile popularity share in recommendations.",
+      "columns": [
+        {"name": "top_decile_recommendation_share", "aliases": ["popularity_share"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["popularity_bias"]
+    },
+    "recommender_coverage.csv": {
+      "description": "Per-window catalog coverage.",
+      "columns": [
+        {"name": "catalog_coverage", "aliases": ["item_coverage"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["catalog_coverage_low"]
+    }
+  }
+}

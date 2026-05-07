@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "domain": "physics",
+  "description": "Computational-physics simulation diagnostics (DFT, MD, MC, FEM, CFD).",
+  "evidence_files": {
+    "physics_conservation.csv": {
+      "description": "Trajectory of a conserved quantity per step.",
+      "columns": [
+        {"name": "step", "aliases": [], "type": "number", "required": false},
+        {"name": "energy", "aliases": ["momentum", "mass", "charge", "total_energy"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["conservation_law_violation"]
+    },
+    "physics_timestep.csv": {
+      "description": "Per-step CFL / stability metric.",
+      "columns": [
+        {"name": "dt", "aliases": ["timestep"], "type": "number", "required": false},
+        {"name": "cfl", "aliases": ["courant", "stability_number"], "type": "number", "required": false},
+        {"name": "stable", "aliases": ["is_stable"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["timestep_or_cfl_violation"]
+    },
+    "physics_boundary.csv": {
+      "description": "Interior vs boundary-cell field values.",
+      "columns": [
+        {"name": "cell", "aliases": [], "type": "string", "required": false},
+        {"name": "interior_value", "aliases": ["interior", "bulk"], "type": "number", "required": true},
+        {"name": "boundary_value", "aliases": ["boundary", "edge"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["boundary_condition_artifact"]
+    },
+    "physics_equilibration.csv": {
+      "description": "Time series of an autocorrelated observable.",
+      "columns": [
+        {"name": "step", "aliases": [], "type": "number", "required": false},
+        {"name": "observable", "aliases": ["energy", "magnetisation", "value"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["equilibration_insufficient"]
+    },
+    "physics_dimensions.csv": {
+      "description": "LHS vs RHS units for derived quantities.",
+      "columns": [
+        {"name": "quantity", "aliases": [], "type": "string", "required": false},
+        {"name": "units_lhs", "aliases": ["lhs"], "type": "string", "required": true},
+        {"name": "units_rhs", "aliases": ["rhs"], "type": "string", "required": true}
+      ],
+      "used_by_detectors": ["dimensional_inconsistency"]
+    }
+  }
+}

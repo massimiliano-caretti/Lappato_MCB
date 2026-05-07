@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "graph_ml",
+  "description": "Graph-ML methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "graph_split_leakage": [
+      {"name": "graph data leakage", "must_match_keywords": ["graph", "leakage"], "rationale": "Edge / neighborhood leakage in GNN evaluation."},
+      {"name": "transductive vs inductive", "must_match_keywords": ["transductive"], "rationale": "Transductive eval pitfalls."},
+      {"name": "OGB benchmark split", "must_match_keywords": ["ogb"], "rationale": "Hu et al. — OGB scaffolded splits."}
+    ],
+    "oversmoothing_signal": [
+      {"name": "oversmoothing GNN", "must_match_keywords": ["oversmoothing"], "rationale": "Li et al. — oversmoothing depth literature."},
+      {"name": "graph attention residual", "must_match_keywords": ["residual"], "rationale": "Residual connections to mitigate oversmoothing."},
+      {"name": "Dirichlet energy GNN", "must_match_keywords": ["dirichlet"], "rationale": "Dirichlet energy — formal oversmoothing measure."}
+    ],
+    "homophily_mismatch": [
+      {"name": "heterophily GNN", "must_match_keywords": ["heterophily"], "rationale": "Zhu et al. — heterophily-aware GNNs."},
+      {"name": "homophily graph neural", "must_match_keywords": ["homophily"], "rationale": "Generic recall on homophily literature."}
+    ],
+    "inductive_generalization_missing": [
+      {"name": "GraphSAGE inductive", "must_match_keywords": ["graphsage"], "rationale": "Hamilton et al. — inductive node embeddings."},
+      {"name": "inductive node classification", "must_match_keywords": ["inductive"], "rationale": "Inductive eval setup literature."}
+    ],
+    "explainability_missing": [
+      {"name": "GNNExplainer", "must_match_keywords": ["gnnexplainer"], "rationale": "Ying et al. — GNN explainability framework."},
+      {"name": "graph attention explanation", "must_match_keywords": ["attention"], "rationale": "Attention-based GNN interpretability."},
+      {"name": "subgraph explanation", "must_match_keywords": ["subgraph"], "rationale": "Subgraph-level explanation methods."}
+    ]
+  }
+}

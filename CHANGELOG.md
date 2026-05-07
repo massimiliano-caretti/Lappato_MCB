@@ -4,6 +4,225 @@ All notable changes to LAPPATO_MCB are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] — 2026-05-07
+
+Phase 0.6 — closes the negative finding from Phase 0.5. The Phase 0
+additive blend (`lex + w · max(rerank − floor, 0)`) was demonstrated
+to produce **+0.0000** uplift on the synthetic hard scenario across
+35 domains: the integer-scale lexical baseline simply dominates the
+fractional reranker contribution. Phase 0.5 measured that the
+reranker signal is in fact strong (+0.40 R@5 in isolation) but
+schiacciato by the additive blend.
+
+This release adds **Reciprocal Rank Fusion** (Cormack, Clarke &
+Buettcher, SIGIR 2009) as an opt-in blend mode in the core. RRF is
+scale-invariant — it operates on ranks, not raw scores — and on
+the same Phase 0.5 benchmark delivers **+0.34 R@5** (lex + 2× rerank
+weight) without degrading the easy scenario. Still zero new
+dependencies, still stdlib-only.
+
+### Added
+
+- **`blend_mode` argument** on `LAPPATO_MCB.__init__`, accepting
+  `"additive"` (default — back-compat with v1.4) or `"rrf"`. Invalid
+  values raise `ValueError` with a pointer to the benchmark report.
+- **RRF blend implementation** in `LAPPATO_MCB._apply_rrf_blend`,
+  with stable tie-breaking by original index for full determinism.
+  Uses `_RRF_K_CONST = 60` (Cormack default).
+- **`_rrf_ranks` static method** on `LAPPATO_MCB` — small stdlib
+  helper that returns 1-based ranks with deterministic tie-breaks.
+- **`blend_mode` field** in the weakness-card audit trail. Lets
+  downstream consumers interpret `lappato_score` scale (≈ 0..10 for
+  additive vs. ≈ 0..0.04 for RRF). The `floor` field is `null`
+  in RRF mode (semantically inapplicable to rank fusion).
+- **11 new tests** in `tests/test_reranker_protocol.py` covering:
+  blend-mode validation (typo → `ValueError`, default = additive),
+  `_rrf_ranks` determinism (descending by score, stable ties, empty
+  input), RRF mode reorders correctly when reranker signals, card
+  records `blend_mode`, RRF + no reranker collapses to lex,
+  determinism across runs, easy case unchanged.
+
+### Changed
+
+- `_apply_reranker` is now a small dispatcher: branches on
+  `self._blend_mode` to either `_apply_additive_blend` (the v1.4
+  semantics, factored out) or `_apply_rrf_blend` (the new path).
+  Both honour the same graceful-degrade contract on crash / NaN /
+  malformed reranker output.
+- The `additive` path still respects `reranker_floor` exactly as
+  v1.4 did; behaviour for users who don't pass `blend_mode` is
+  bit-identical.
+
+### Honest scope
+
+- Phase 0.6 makes the existing `Reranker` Protocol **actually
+  useful** — the additive blend in v1.4 was empirically a no-op for
+  realistic reranker signals.
+- Phase 1/2 (extras `[embed]` with ONNX MiniLM) remains
+  **deferred**. The Phase 0.5 benchmark suggests a stdlib-only
+  trigram reranker + RRF already recovers ~80% of the available
+  signal on the synthetic hard fixtures. Real-world online
+  benchmarks are still the gate that would justify the 120 MB
+  dependency footprint of `[embed]`.
+
+### Backwards compatibility
+
+- Constructor signature is additive: `blend_mode` defaults to
+  `"additive"`. Code that doesn't pass it gets v1.4 behaviour.
+- All v1.4 cards, manifests, gold sets, schemas, and meta-log
+  columns are unchanged.
+- `lappato_score` scale changes only when the user explicitly
+  opts into `blend_mode="rrf"`. The card's `reranker.blend_mode`
+  field documents which scale is in effect.
+- 209/209 tests pass (was 198/198 in v1.4).
+
+## [1.4.0] — 2026-05-07
+
+Closing-the-loop release. Three concrete weaknesses called out in
+the v1.3 self-audit are addressed in code, with honest scoping for
+the parts that cannot be fully fixed without real-world datasets.
+Framework code, public API and existing manifests are unchanged.
+
+### Added
+
+- **Validator → suggester** (`examples/validate_evidence_csv.py`).
+  When a required column is missing on a present file *or* an
+  evidence file is absent, the validator now emits a
+  copy-pasteable `csv.DictWriter` snippet that uses the canonical
+  column names from the schema, lists every alias as a comment,
+  and parses out of the box (placeholders are `None`). Closes the
+  loop with the README's three-line AI prompt: paste the validator
+  output into a chat panel and the assistant has everything it needs
+  to wire the emitter in. A `--no-suggest` flag preserves the v1.3
+  terse output.
+- **Boundary-case tests for v1.2 detectors**
+  (`tests/test_detector_thresholds.py`). 32 new tests covering 32
+  numeric detectors across `pipeline_health`, `physics`,
+  `chemistry`, `materials_science`, `neuroscience` and
+  `epidemiology`. Each test generates a CSV at the detector's
+  documented threshold ± ε and asserts fire / no-fire behaviour.
+  Threshold values come from each manifest's `THRESHOLDS` dict, so
+  a default-value change automatically updates the boundary
+  fixture. Honest scope: this is a *threshold-contract test*, not
+  validation against real-world labelled data. A detector can pass
+  every boundary test and still be measuring the wrong thing — but
+  it cannot lie about *where* it fires.
+- **Synthetic-corpus recall runner**
+  (`examples/measure_recall_synthetic.py`). Builds a per-domain
+  corpus where every gold-set topic is verbatim embedded in a
+  synthetic paper title + abstract, then runs the full
+  `evaluate_domain` machinery. Result: macro recall = 1.000 on
+  every one of the 35 domains across all 505 topics. Honest scope:
+  this is a *gold-set self-consistency floor* and an *end-to-end
+  plumbing check across all 35 domains*, not a measure of real
+  arXiv / OpenAlex / Crossref retrieval — for that, run
+  `examples/measure_recall.py` against a real harvest.
+- **`tests/test_synthetic_recall_floor.py`** — 3 tests assert the
+  100% synthetic-recall contract holds on every domain. A malformed
+  gold-set topic (empty keywords, typo, accidental stopword
+  collision) immediately surfaces in the failure message with the
+  topic name.
+
+### Changed
+
+- `examples/validate_evidence_csv.py::validate_checkpoints` now
+  retains `file_spec` + `filename` on each result so
+  `render_report` can emit suggestions without re-loading the
+  schema. Behaviour is additive — existing callers that ignored
+  these fields are unaffected.
+- `tests/test_gold_sets.py` gains a `ValidatorSuggesterTests` class
+  (5 tests).
+
+### Honest scope of v1.4
+
+This release improves *infrastructure for measurement*; it does not
+add real-world measurement. Specifically:
+
+- Detectors are now boundary-tested but **still not validated
+  against real datasets per domain**. Replacing this with empirical
+  validation requires per-domain ground truth that no one has
+  produced for LAPPATO_MCB yet.
+- Recall is now end-to-end runnable on every domain (synthetic
+  corpus) but the **real online recall numbers are still
+  un-measured**. Anyone with a `LAPPATO_MCB_MAILTO` set + network
+  access can now run `examples/measure_recall.py` per domain to
+  produce them; the bottleneck has moved from "infrastructure" to
+  "an evening of online runs".
+
+### Backwards compatibility
+
+- Constructor signature, manifest schema, weakness-card schema,
+  meta-log columns and gold-set / schema layouts are unchanged.
+- The validator's default behaviour switched from "no snippet" to
+  "with snippet"; pass `--no-suggest` to opt out.
+- 172/172 tests pass (was 132/132 in v1.3).
+
+## [1.3.0] — 2026-05-07
+
+Validation-coverage release. The bundled gold-set catalogue grows
+from 3 to **35 files** with **~500 hand-curated topics** total, and a
+versioned **JSON Schema** for evidence CSVs ships per manifest with a
+matching validator in `examples/`. Framework code, public API and
+existing manifests are unchanged.
+
+### Added
+
+- **35 gold-set files** under `docs/gold_sets/` — one per registered
+  manifest (was 3). Each file lists 10–15 hand-curated topics per
+  manifest (32 for the 16-detector `pipeline_health`), each topic
+  with `must_match_keywords` + a one-line `rationale`. Total of
+  about 500 topics across the catalogue.
+- **`examples/measure_recall.py` discovers gold sets dynamically** —
+  the harness now globs `docs/gold_sets/*_gold.json` instead of a
+  hard-coded 3-domain tuple, so adding a new gold set is a one-file
+  change.
+- **JSON Schemas for evidence CSVs**: 35 files under
+  `lappato_mcb/manifests/schemas/<tag>.schema.json`. Each file lists,
+  per evidence CSV, the canonical column names, accepted aliases,
+  column type (`string` / `number`), required-vs-optional flag, and
+  which detectors read the file. The format is versioned
+  (`schema_version`), so future column changes can ship a deprecation
+  notice rather than silently break consumers.
+- **`examples/validate_evidence_csv.py`** — stdlib-only validator
+  that reports, for any candidate `checkpoints/` folder:
+  - which evidence files are present;
+  - which expected files are missing (and which detectors stay
+    inactive as a result);
+  - which required columns are missing on present files;
+  - which alias / non-canonical column names were accepted.
+  Exits non-zero only when a present file is missing required
+  columns; missing files are reported but never fail the run, in
+  keeping with the daemon's fail-closed contract.
+- **Honest "two-line" caveat in `README.md`.** A new section spells
+  out that `start()` / `stop()` is the integration cost only when the
+  host pipeline already emits the CSV evidence files the chosen
+  manifest expects. The full adoption recipe is now a three-step
+  list, with a pointer to the schemas + validator for step 3.
+- **Tests** (`tests/test_gold_sets.py`) covering: every domain has a
+  gold set + schema; every gold-set key maps to a real detector id;
+  every schema covers every evidence file used by its manifest;
+  every schema's `used_by_detectors` references real ids; the
+  validator passes on synthetic-good folders, fails on missing-
+  required-columns folders, and accepts alias columns.
+
+### Changed
+
+- `tests/test_lappato_mcb.py::test_evaluate_domain_skips_inactive_weaknesses`
+  relaxed from `recall >= 0.66` to `recall >= 0.50` because the
+  expanded `wdbc` gold set has 5 topics for `low_calibration` (was
+  3); the synthetic test paper now matches 3 of them.
+- `docs/gold_sets/README.md` rewritten to describe the dynamic
+  discovery behaviour and the new ~500-topic scale.
+
+### Backwards compatibility
+
+- Constructor signature, manifest schema, weakness-card schema and
+  meta-log columns are unchanged.
+- The original three gold sets remain importable under their
+  existing tags.
+- New schemas are additive: a host pipeline that already produced
+  CSVs the detectors accepted is unaffected.
+
 ## [1.2.0] — 2026-05-06
 
 Bottleneck-coverage release. The manifest registry grows from 19 to **35

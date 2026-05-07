@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "rl_eval",
+  "description": "RL policy-evaluation diagnostics.",
+  "evidence_files": {
+    "rl_seed_returns.csv": {
+      "description": "Per-seed episode return / reward.",
+      "columns": [
+        {"name": "return", "aliases": ["reward", "score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["seed_instability"]
+    },
+    "rl_safety.csv": {
+      "description": "Per-rollout safety-constraint violation rate.",
+      "columns": [
+        {"name": "violation_rate", "aliases": ["unsafe_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["safety_constraint_violations"]
+    },
+    "rl_ope.csv": {
+      "description": "Off-policy evaluation absolute error.",
+      "columns": [
+        {"name": "absolute_error", "aliases": ["ope_error"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["off_policy_eval_error"]
+    }
+  }
+}

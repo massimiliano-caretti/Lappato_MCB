@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "domain": "earth_climate",
+  "description": "Climate / atmosphere / ocean / hydrology diagnostics.",
+  "evidence_files": {
+    "climate_bias.csv": {
+      "description": "Per-variable model vs observation bias.",
+      "columns": [
+        {"name": "variable", "aliases": [], "type": "string", "required": false},
+        {"name": "model", "aliases": [], "type": "string", "required": false},
+        {"name": "observation", "aliases": [], "type": "string", "required": false},
+        {"name": "bias", "aliases": ["absolute_bias"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["model_observation_bias_high"]
+    },
+    "climate_water_balance.csv": {
+      "description": "Precipitation, evapotranspiration, runoff, storage change per period.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": false},
+        {"name": "P", "aliases": ["precipitation"], "type": "number", "required": true},
+        {"name": "E", "aliases": ["evapotranspiration"], "type": "number", "required": true},
+        {"name": "Q", "aliases": ["runoff"], "type": "number", "required": true},
+        {"name": "dS", "aliases": ["storage_change"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["water_balance_violation"]
+    },
+    "climate_extremes.csv": {
+      "description": "Model vs observed 99th-percentile extremes.",
+      "columns": [
+        {"name": "variable", "aliases": [], "type": "string", "required": false},
+        {"name": "model_99p", "aliases": ["model_extreme"], "type": "number", "required": true},
+        {"name": "obs_99p", "aliases": ["obs_extreme"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["extremes_underestimated"]
+    },
+    "climate_ensemble.csv": {
+      "description": "Ensemble spread vs forecast skill.",
+      "columns": [
+        {"name": "variable", "aliases": [], "type": "string", "required": false},
+        {"name": "ensemble_spread", "aliases": ["spread"], "type": "number", "required": true},
+        {"name": "ensemble_skill", "aliases": ["skill", "rmse"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["ensemble_underdispersive"]
+    },
+    "climate_downscaling_train_period.csv": {
+      "description": "Train / test calibration periods.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": true},
+        {"name": "start_year", "aliases": [], "type": "number", "required": true},
+        {"name": "end_year", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["downscaling_train_period_overlap"]
+    }
+  }
+}

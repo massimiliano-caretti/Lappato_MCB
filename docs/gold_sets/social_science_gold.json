@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "social_science",
+  "description": "Social-science / psychology methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "effect_size_inflation": [
+      {"name": "small telescopes Simonsohn", "must_match_keywords": ["small", "telescopes"], "rationale": "Simonsohn — small-telescopes replication test."},
+      {"name": "PET-PEESE meta analysis", "must_match_keywords": ["peese"], "rationale": "Stanley & Doucouliagos PET-PEESE."},
+      {"name": "winner's curse psychology", "must_match_keywords": ["winner"], "rationale": "Winner's-curse / inflation literature."}
+    ],
+    "response_rate_low": [
+      {"name": "non response bias survey", "must_match_keywords": ["non", "response"], "rationale": "Non-response-bias literature."},
+      {"name": "raking weights survey", "must_match_keywords": ["raking"], "rationale": "Raking / iterative proportional fitting."},
+      {"name": "post stratification", "must_match_keywords": ["post", "stratification"], "rationale": "Post-stratification correction."}
+    ],
+    "construct_reliability_low": [
+      {"name": "Cronbach alpha reliability", "must_match_keywords": ["cronbach"], "rationale": "Cronbach — alpha reliability."},
+      {"name": "McDonald omega reliability", "must_match_keywords": ["mcdonald"], "rationale": "McDonald — omega reliability."},
+      {"name": "confirmatory factor analysis", "must_match_keywords": ["confirmatory", "factor"], "rationale": "CFA for construct validation."}
+    ],
+    "p_hacking_pattern": [
+      {"name": "p-curve analysis", "must_match_keywords": ["p", "curve"], "rationale": "Simonsohn et al. — p-curve."},
+      {"name": "z-curve analysis", "must_match_keywords": ["z", "curve"], "rationale": "Bartoš & Schimmack — z-curve."},
+      {"name": "selective reporting psychology", "must_match_keywords": ["selective"], "rationale": "Selective-reporting / file-drawer literature."}
+    ],
+    "demand_characteristics_present": [
+      {"name": "demand characteristics", "must_match_keywords": ["demand", "characteristics"], "rationale": "Orne — demand-characteristics literature."},
+      {"name": "experimenter blinding", "must_match_keywords": ["blinding"], "rationale": "Blinding literature in experimental design."}
+    ]
+  }
+}

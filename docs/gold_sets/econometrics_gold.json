@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domain": "econometrics",
+  "description": "Econometric identification methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "weak_instrument": [
+      {"name": "Stock Yogo weak instrument", "must_match_keywords": ["stock", "yogo"], "rationale": "Stock & Yogo critical values."},
+      {"name": "Anderson Rubin", "must_match_keywords": ["anderson", "rubin"], "rationale": "AR weak-IV-robust inference."},
+      {"name": "Kleibergen Paap", "must_match_keywords": ["kleibergen"], "rationale": "Kleibergen-Paap rk-F."}
+    ],
+    "parallel_trends_violation": [
+      {"name": "honest difference in differences", "must_match_keywords": ["honest"], "rationale": "Rambachan & Roth — honest DiD."},
+      {"name": "Callaway Sant'Anna staggered", "must_match_keywords": ["callaway"], "rationale": "Callaway & Sant'Anna staggered DiD."},
+      {"name": "Goodman Bacon decomposition", "must_match_keywords": ["goodman", "bacon"], "rationale": "Goodman-Bacon DiD decomposition."}
+    ],
+    "standard_errors_understated": [
+      {"name": "cluster robust standard errors", "must_match_keywords": ["cluster", "robust"], "rationale": "Cameron & Miller — cluster SEs."},
+      {"name": "wild cluster bootstrap", "must_match_keywords": ["wild", "cluster"], "rationale": "Cameron et al. — wild cluster bootstrap."},
+      {"name": "Moulton effect grouped", "must_match_keywords": ["moulton"], "rationale": "Moulton — grouped-error inflation."}
+    ],
+    "rdd_bandwidth_sensitive": [
+      {"name": "Calonico Cattaneo Titiunik", "must_match_keywords": ["calonico"], "rationale": "CCT bias-correction in RDD."},
+      {"name": "Imbens Kalyanaraman bandwidth", "must_match_keywords": ["imbens", "kalyanaraman"], "rationale": "IK optimal bandwidth."},
+      {"name": "regression discontinuity design", "must_match_keywords": ["regression", "discontinuity"], "rationale": "Generic RDD recall."}
+    ],
+    "panel_attrition_high": [
+      {"name": "Heckman selection model", "must_match_keywords": ["heckman"], "rationale": "Heckman selection bias literature."},
+      {"name": "inverse probability attrition", "must_match_keywords": ["inverse", "probability"], "rationale": "IPW for attrition correction."},
+      {"name": "panel attrition bias", "must_match_keywords": ["attrition"], "rationale": "Panel-attrition literature."}
+    ]
+  }
+}

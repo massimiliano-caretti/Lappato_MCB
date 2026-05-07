@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "materials_science",
+  "description": "DFT / MD / MLIP / phase-stability methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "kpoint_unconverged": [
+      {"name": "Monkhorst-Pack mesh", "must_match_keywords": ["monkhorst"], "rationale": "Monkhorst & Pack — k-point sampling."},
+      {"name": "k-point convergence DFT", "must_match_keywords": ["k", "point"], "rationale": "k-point convergence study standard."},
+      {"name": "Brillouin zone sampling", "must_match_keywords": ["brillouin"], "rationale": "BZ-sampling literature."}
+    ],
+    "basis_unconverged": [
+      {"name": "plane wave cutoff convergence", "must_match_keywords": ["plane", "wave"], "rationale": "PW-cutoff convergence literature."},
+      {"name": "basis set superposition error", "must_match_keywords": ["basis", "set"], "rationale": "BSSE in DFT literature."}
+    ],
+    "force_residuals_high": [
+      {"name": "machine learning interatomic potential", "must_match_keywords": ["interatomic"], "rationale": "MLIP literature."},
+      {"name": "MLIP active learning", "must_match_keywords": ["active", "learning"], "rationale": "Active-learning for MLIPs."},
+      {"name": "Gaussian approximation potential", "must_match_keywords": ["gap"], "rationale": "Bartók et al. — GAP framework."}
+    ],
+    "phase_stability_violated": [
+      {"name": "convex hull phase diagram", "must_match_keywords": ["convex", "hull"], "rationale": "Convex-hull phase stability."},
+      {"name": "energy above hull", "must_match_keywords": ["energy", "above"], "rationale": "Standard hull-distance metric."},
+      {"name": "Materials Project DFT", "must_match_keywords": ["materials", "project"], "rationale": "Jain et al. — Materials Project."}
+    ],
+    "extrapolation_warning": [
+      {"name": "applicability domain materials", "must_match_keywords": ["applicability"], "rationale": "AD applied to materials."},
+      {"name": "uncertainty quantification MLIP", "must_match_keywords": ["uncertainty"], "rationale": "UQ in MLIP literature."}
+    ]
+  }
+}

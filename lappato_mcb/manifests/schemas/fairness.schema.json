@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "fairness",
+  "description": "Group-fairness diagnostics.",
+  "evidence_files": {
+    "fairness_subgroups.csv": {
+      "description": "Per-subgroup performance metrics.",
+      "columns": [
+        {"name": "auc", "aliases": [], "type": "number", "required": false},
+        {"name": "accuracy", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["subgroup_performance_gap"]
+    },
+    "fairness_equal_opportunity.csv": {
+      "description": "Per-subgroup TPR / recall / sensitivity.",
+      "columns": [
+        {"name": "tpr", "aliases": ["recall", "sensitivity"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["equal_opportunity_gap"]
+    },
+    "fairness_calibration.csv": {
+      "description": "Per-subgroup calibration error.",
+      "columns": [
+        {"name": "ece", "aliases": ["brier"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["subgroup_calibration_gap"]
+    }
+  }
+}

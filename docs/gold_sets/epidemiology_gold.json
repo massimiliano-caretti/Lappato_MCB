@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "epidemiology",
+  "description": "Epidemiology / surveillance / outbreak methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "case_definition_changed": [
+      {"name": "case definition surveillance", "must_match_keywords": ["case", "definition"], "rationale": "Surveillance case-definition literature."},
+      {"name": "ascertainment bias outbreak", "must_match_keywords": ["ascertainment"], "rationale": "Ascertainment-bias literature."}
+    ],
+    "reporting_delay_high": [
+      {"name": "nowcasting infectious disease", "must_match_keywords": ["nowcasting"], "rationale": "Nowcasting literature for surveillance."},
+      {"name": "right truncation epidemic", "must_match_keywords": ["right", "truncation"], "rationale": "Right-truncation correction methods."},
+      {"name": "reporting delay distribution", "must_match_keywords": ["reporting", "delay"], "rationale": "Delay-distribution estimation."}
+    ],
+    "serial_correlation_high": [
+      {"name": "Newey West", "must_match_keywords": ["newey", "west"], "rationale": "HAC standard errors for autocorrelated series."},
+      {"name": "AR(1) residuals epidemiology", "must_match_keywords": ["autoregressive"], "rationale": "Autoregressive residuals in epi modelling."}
+    ],
+    "underreporting_high": [
+      {"name": "capture recapture epidemiology", "must_match_keywords": ["capture", "recapture"], "rationale": "CRC for under-ascertainment."},
+      {"name": "underreporting outbreak", "must_match_keywords": ["underreporting"], "rationale": "Outbreak underreporting literature."},
+      {"name": "ascertainment fraction", "must_match_keywords": ["ascertainment", "fraction"], "rationale": "Standard ascertainment-fraction estimation."}
+    ],
+    "intervention_overlap_present": [
+      {"name": "synthetic control method", "must_match_keywords": ["synthetic", "control"], "rationale": "Abadie — synthetic control."},
+      {"name": "co-intervention bias public health", "must_match_keywords": ["co", "intervention"], "rationale": "Co-intervention bias literature."}
+    ]
+  }
+}

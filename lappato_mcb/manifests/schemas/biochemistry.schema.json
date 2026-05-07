@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "domain": "biochemistry",
+  "description": "Enzyme / pathway / protein / assay diagnostics.",
+  "evidence_files": {
+    "biochem_kinetics.csv": {
+      "description": "Per-enzyme kinetic constants.",
+      "columns": [
+        {"name": "enzyme", "aliases": [], "type": "string", "required": false},
+        {"name": "Km", "aliases": ["km"], "type": "number", "required": false},
+        {"name": "Vmax", "aliases": ["vmax"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["enzyme_kinetics_outlier"]
+    },
+    "biochem_pathway.csv": {
+      "description": "Per-pathway expected vs observed intermediate counts.",
+      "columns": [
+        {"name": "pathway", "aliases": [], "type": "string", "required": false},
+        {"name": "n_expected", "aliases": ["expected"], "type": "number", "required": true},
+        {"name": "n_observed", "aliases": ["observed"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["pathway_completeness_low"]
+    },
+    "biochem_alignment.csv": {
+      "description": "Pairwise structural-alignment RMSD.",
+      "columns": [
+        {"name": "pair", "aliases": [], "type": "string", "required": false},
+        {"name": "rmsd", "aliases": ["RMSD"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["structural_alignment_rmsd_high"]
+    },
+    "biochem_assay_replicates.csv": {
+      "description": "Replicate measurements per compound.",
+      "columns": [
+        {"name": "compound", "aliases": ["id"], "type": "string", "required": true},
+        {"name": "replicate", "aliases": [], "type": "string", "required": false},
+        {"name": "response", "aliases": ["value", "signal"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["assay_replicate_inconsistency"]
+    },
+    "biochem_assay_conditions.csv": {
+      "description": "Assay condition vs target biological condition.",
+      "columns": [
+        {"name": "parameter", "aliases": [], "type": "string", "required": false},
+        {"name": "assay_value", "aliases": ["assay"], "type": "number", "required": true},
+        {"name": "target_value", "aliases": ["target"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["assay_conditions_mismatch"]
+    }
+  }
+}

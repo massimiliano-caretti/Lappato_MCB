@@ -1,77 +1,36 @@
 {
   "schema_version": 1,
   "domain": "nlp",
-  "description": "Hand-curated topics for the NLP (20newsgroups) manifest. See docs/gold_sets/README.md.",
+  "description": "Hand-curated topics for the NLP manifest. See docs/gold_sets/README.md.",
   "topics_by_weakness": {
     "per_class_f1_spread": [
-      {
-        "name": "long-tail text classification",
-        "must_match_keywords": ["long", "tail"],
-        "rationale": "Standard framing for per-class F1 imbalance."
-      },
-      {
-        "name": "macro-F1 model selection",
-        "must_match_keywords": ["macro", "f1"],
-        "rationale": "Direct match for the manifest's success criterion."
-      },
-      {
-        "name": "class weighting in multiclass",
-        "must_match_keywords": ["class", "weight"],
-        "rationale": "Canonical mitigation for per-class spread."
-      }
+      {"name": "long-tail text classification", "must_match_keywords": ["long", "tail"], "rationale": "Standard framing for per-class F1 imbalance."},
+      {"name": "macro-F1 model selection", "must_match_keywords": ["macro", "f1"], "rationale": "Direct match for the success criterion."},
+      {"name": "class weighting in multiclass", "must_match_keywords": ["class", "weight"], "rationale": "Canonical mitigation for per-class spread."},
+      {"name": "label smoothing", "must_match_keywords": ["label", "smoothing"], "rationale": "Szegedy et al. — generic regulariser for sharp class distributions."}
     ],
     "confusable_classes": [
-      {
-        "name": "hierarchical text classification",
-        "must_match_keywords": ["hierarchical", "classification"],
-        "rationale": "Decomposing confusable pairs via taxonomy."
-      },
-      {
-        "name": "contrastive learning",
-        "must_match_keywords": ["contrastive"],
-        "rationale": "Pulls apart nearby class boundaries."
-      }
+      {"name": "hierarchical text classification", "must_match_keywords": ["hierarchical", "classification"], "rationale": "Decomposing confusable pairs via taxonomy."},
+      {"name": "contrastive learning", "must_match_keywords": ["contrastive"], "rationale": "Pulls apart nearby class boundaries."},
+      {"name": "confusion matrix analysis", "must_match_keywords": ["confusion", "matrix"], "rationale": "Standard inspection for confusable pairs."},
+      {"name": "metric learning text", "must_match_keywords": ["metric", "learning"], "rationale": "Distance-based separation for similar classes."}
     ],
     "stopword_dominance": [
-      {
-        "name": "TF-IDF preprocessing",
-        "must_match_keywords": ["tf", "idf"],
-        "rationale": "Mainstream baseline preprocessing pipeline."
-      },
-      {
-        "name": "stopword removal",
-        "must_match_keywords": ["stopword"],
-        "rationale": "Direct topic of the weakness."
-      },
-      {
-        "name": "character n-grams",
-        "must_match_keywords": ["character", "gram"],
-        "rationale": "Alternative representation that dilutes function-word dominance."
-      }
+      {"name": "TF-IDF preprocessing", "must_match_keywords": ["tf", "idf"], "rationale": "Mainstream baseline preprocessing pipeline."},
+      {"name": "stopword removal", "must_match_keywords": ["stopword"], "rationale": "Direct topic of the weakness."},
+      {"name": "character n-grams", "must_match_keywords": ["character", "gram"], "rationale": "Alternative representation that dilutes function words."},
+      {"name": "subword BPE", "must_match_keywords": ["subword"], "rationale": "Sennrich et al. — modern tokenisation alternative."}
     ],
     "embedding_alternatives": [
-      {
-        "name": "sentence transformers",
-        "must_match_keywords": ["sentence", "transformer"],
-        "rationale": "Reimers & Gurevych 2019 — Sentence-BERT family."
-      },
-      {
-        "name": "fastText embeddings",
-        "must_match_keywords": ["fasttext"],
-        "rationale": "Joulin et al. 2017 — efficient text classification baseline."
-      }
+      {"name": "sentence transformers", "must_match_keywords": ["sentence", "transformer"], "rationale": "Reimers & Gurevych 2019 — Sentence-BERT family."},
+      {"name": "fastText embeddings", "must_match_keywords": ["fasttext"], "rationale": "Joulin et al. 2017 — efficient text classification baseline."},
+      {"name": "BERT classification", "must_match_keywords": ["bert"], "rationale": "Devlin et al. 2019 — canonical contextual embedding."},
+      {"name": "word2vec", "must_match_keywords": ["word2vec"], "rationale": "Mikolov et al. — classic distributional baseline."}
     ],
     "calibration_missing_text": [
-      {
-        "name": "temperature scaling",
-        "must_match_keywords": ["temperature", "scaling"],
-        "rationale": "Guo et al. 2017 — modern post-hoc NN calibration."
-      },
-      {
-        "name": "expected calibration error",
-        "must_match_keywords": ["expected", "calibration"],
-        "rationale": "Standard scalar metric for classifier calibration."
-      }
+      {"name": "temperature scaling", "must_match_keywords": ["temperature", "scaling"], "rationale": "Guo et al. 2017 — modern post-hoc NN calibration."},
+      {"name": "expected calibration error", "must_match_keywords": ["expected", "calibration"], "rationale": "Standard scalar metric for classifier calibration."},
+      {"name": "miscalibration deep network", "must_match_keywords": ["miscalibration"], "rationale": "Foundational diagnosis paper for NN overconfidence."}
     ]
   }
 }

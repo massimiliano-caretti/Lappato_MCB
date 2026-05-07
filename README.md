@@ -29,6 +29,108 @@ documented `mailto` mechanisms and included in the User-Agent.
 
 ---
 
+## What LAPPATO_MCB does (state at v1.5)
+
+A consolidated, honest summary of what the library can and cannot do
+today, before the rest of the README dives into the details.
+
+### What it does
+
+1. **Watches a `checkpoints/` folder** during your ML training /
+   evaluation run, polling at a configurable interval.
+2. **Activates `evidence_check` detectors** declared in a *manifest*
+   when the diagnostic CSVs they gate on cross numeric thresholds
+   (literature-cited, override-able). Each detector is fail-closed:
+   missing or malformed CSVs leave it inactive — never spuriously
+   firing.
+3. **Targets four public scholarly indices** with weakness-specific
+   queries: arXiv, OpenAlex, Crossref, and (via Crossref ISSN
+   filtering) JOSS as a software channel. No paid APIs, no LLM, no
+   embeddings in the core path.
+4. **Deduplicates across sources** with character-trigram + Jaccard
+   title fingerprinting (`fingerprint.py`), so the same paper
+   indexed by both arXiv and OpenAlex is counted once.
+5. **Optionally reranks the harvested papers** through a pluggable
+   `Reranker` Protocol. A stdlib-only baseline
+   (`TrigramJaccardReranker`) ships in the box; users can plug their
+   own (e.g. an embedding model). The Phase 0.5 micro-benchmark
+   measured **+0.34 R@5** on a 35-domain × 505-topic synthetic hard
+   set when `blend_mode="rrf"` is enabled (Reciprocal Rank Fusion,
+   Cormack et al. SIGIR 2009). See
+   [`docs/reranker_benchmark_phase05.md`](docs/reranker_benchmark_phase05.md).
+6. **Emits structured weakness cards** (JSONL + a `latest.json`
+   summary) per detected weakness, containing: rendered queries,
+   per-source raw hit counts, ranked top papers, severity, evidence
+   summary, transplant sketch, and (when a reranker is wired) an
+   audit trail with `model_name`, `model_version`, `model_sha`,
+   `blend_mode`. These cards are the contract that downstream
+   tooling (or AI assistants — see below) consumes.
+7. **Self-instruments per cycle** via a CSV meta-log
+   (`meta_log.py`) with the number of queries, raw hits per source,
+   dedup blocks (id + trigram), papers kept, time-to-first-paper,
+   per-source HTTP error counters.
+8. **Supports offline replay** against a local corpus
+   (`corpus.jsonl`) so re-runs against a frozen snapshot are
+   bit-for-bit deterministic.
+9. **Validates the host-pipeline contract** with a versioned
+   per-manifest **JSON Schema** (one file per manifest under
+   [`lappato_mcb/manifests/schemas/`](lappato_mcb/manifests/schemas/))
+   plus a stdlib-only validator
+   ([`examples/validate_evidence_csv.py`](examples/validate_evidence_csv.py))
+   that **emits copy-pasteable `csv.DictWriter` snippets** when an
+   evidence file is missing or malformed.
+10. **Ships 35 manifests** covering mainstream ML, evaluation,
+    fairness, anomaly detection, and 16 scientific domains; **186
+    detectors** total; **35 hand-curated gold sets** for recall
+    sanity checks (~500 topics).
+
+### What it does NOT do
+
+- No paper summarisation. No autonomous research agent. No
+  automatic rewriting of the host model.
+- No semantic ranking by default. The bundled `TrigramJaccardReranker`
+  catches morphological variants but not true synonyms; an
+  embedding-based reranker (Phase 1/2 — currently deferred) would
+  cover more, at the cost of ~120 MB of dependencies.
+- No paid API keys, no cloud backend, no LLM in the core retrieval
+  path.
+- No measurement of real-world online retrieval quality. The only
+  recall numbers in this repo are on the synthetic gold-sets
+  (Phase 0.5), which are by design easy: they are a *floor*, not a
+  measure. Real online benchmarks against arXiv / OpenAlex /
+  Crossref are the open empirical question.
+- No empirical study of efficacy on real pipelines. The
+  weakness-to-fix loop is documented as a workflow, not yet
+  validated by an n>1 deployment study.
+
+### Numbers (v1.5)
+
+| Component | Count |
+| --- | ---: |
+| Registered manifest domains | **35** |
+| Detectors total | **186** |
+| Bundled gold sets | **35** files, **~505** topics |
+| Per-manifest evidence-CSV JSON Schemas | **35** |
+| Tests passing | **209/209** in ~1.1 s |
+| Stdlib-only daemon core | yes — `urllib`, `csv`, `json`, `threading`, `xml.etree` |
+| New dependencies in v1.4 + v1.5 | **0** |
+
+### Quick map of the surface
+
+```
+LAPPATO_MCB ─┐
+             ├─ daemon: start() / stop() / run_once()
+             ├─ manifests: 35 domain catalogues, plug-style
+             ├─ rerankers: optional, Protocol-based, stdlib baseline shipped
+             ├─ schemas: versioned evidence-CSV contract per manifest
+             ├─ validator: stdlib-only, emits suggester snippets on FAIL
+             ├─ gold sets: 505 topics, used by measure_recall harnesses
+             ├─ corpus cache: append-only JSONL + offline replay
+             └─ meta-log: self-instrumentation per cycle
+```
+
+---
+
 ## Install
 
 ```bash
@@ -63,6 +165,176 @@ lappato_mcb.start()
 # project_root / "checkpoints".
 lappato_mcb.stop()
 ```
+
+### Honest scope of the two-line integration
+
+The two-line `start()` / `stop()` integration is real, but it is **not
+the full adoption cost**. LAPPATO_MCB only fires its detectors when
+the host pipeline writes CSV evidence files into `checkpoints/` with
+the column names a manifest expects (e.g. `framewise_displacement`
+for `neuroscience`, `cfl` for `physics`, `closure_error` for
+`chemistry`). Without those CSVs, the daemon runs but every detector
+stays silent and no weakness card is produced.
+
+Practically, adopting LAPPATO_MCB on a real pipeline is a three-step
+job:
+
+1. **Wire `start()` / `stop()`** around the training / evaluation loop
+   (the documented two lines).
+2. **Pick the manifest** for your domain (`get_manifest("<tag>")` —
+   one line; 35 manifests ship in `lappato_mcb.manifests`).
+3. **Add CSV emitters** to your pipeline so each evidence file the
+   manifest expects (e.g. `pipeline_class_counts.csv`,
+   `pipeline_cv_metrics.csv`) lands under `checkpoints/`. The required
+   columns and aliases are specified per-manifest in the JSON Schemas
+   under [`lappato_mcb/manifests/schemas/`](lappato_mcb/manifests/schemas/)
+   and can be checked against any candidate CSV with
+   [`examples/validate_evidence_csv.py`](examples/validate_evidence_csv.py).
+
+Step 3 is where most of the real work lives. For a project that
+already logs the relevant diagnostics to CSV, it is a few extra
+`csv.DictWriter` calls. For a project that only logs to a tracking
+service (MLflow / W&B / TensorBoard), expect to add a small adapter
+that mirrors the same numbers to a flat CSV. The reference manifests
+documents which columns are required vs optional, and aliases the
+common alternative names (`accuracy` vs `acc`, `count` vs `support`)
+so existing log conventions usually need only minor renames.
+
+#### Letting an AI coding assistant write the CSV emitters for you
+
+If you'd rather not write step 3 by hand, the JSON Schemas under
+[`lappato_mcb/manifests/schemas/`](lappato_mcb/manifests/schemas/)
+were designed to be readable by AI coding assistants — Claude,
+ChatGPT, Gemini, Qwen, Copilot — running inside your editor (Cursor,
+Visual Studio Code, JetBrains IDEs, Zed). The schema is the contract;
+the assistant just translates it into `csv.DictWriter` calls placed
+where your pipeline already computes the numbers.
+
+Open the chat panel of your editor with your training/eval files in
+context, then paste the **three-line prompt** below. Replace
+`<DOMAIN>` with the manifest tag you picked in step 2 (e.g.
+`pipeline_health`, `medical_imaging`, `neuroscience`):
+
+> 1. Read `lappato_mcb/manifests/schemas/<DOMAIN>.schema.json`: it
+>    lists every evidence CSV my pipeline must emit under
+>    `checkpoints/`, with canonical column names, accepted aliases,
+>    and which detector consumes each file.
+> 2. For every CSV in that schema, find the place in my pipeline
+>    where the matching numbers are already computed and add a stdlib
+>    `csv.DictWriter` call that writes them to
+>    `<project_root>/checkpoints/<filename>` using the canonical
+>    column names — do not add new dependencies, do not change
+>    existing model or evaluation logic, and do not invent metrics
+>    that aren't already computed.
+> 3. Verify with
+>    `python examples/validate_evidence_csv.py --domain <DOMAIN> --checkpoints checkpoints/`
+>    — every present file must report `[ OK ]` and zero `[FAIL]`
+>    lines; missing files are acceptable, they just leave the
+>    corresponding detectors inactive.
+
+The prompt is domain-agnostic on purpose: it works for every one of
+the 35 manifests because the contract lives in the schema, not in
+the prompt. Three properties make it production-grade:
+
+- **Single source of truth.** It points the model at the versioned
+  schema instead of restating column names — no drift if the schema
+  evolves.
+- **Least-privilege scope.** Explicit "do not change existing logic /
+  do not invent metrics" lines keep the model from refactoring
+  surrounding code or fabricating numbers your pipeline doesn't have.
+- **Verifiable success.** The third line gives the model a concrete,
+  scriptable acceptance test (the validator) instead of relying on
+  the model to self-judge.
+
+After the assistant finishes, run the validator yourself once more
+to confirm the report. The CSVs are then ready for `start()` /
+`stop()` to consume.
+
+## Using a reranker (optional)
+
+When the lexical retrieval misses papers whose terminology differs
+from the manifest's queries (morphological variants, near-synonyms),
+LAPPATO_MCB lets you plug an **optional reranker** that scores each
+harvested paper against the matched query. The contract is a small
+`Reranker` Protocol — any object with a deterministic
+`score(query, hits) -> list[float]` method qualifies.
+
+A stdlib-only baseline ships in the box:
+
+```python
+from pathlib import Path
+from lappato_mcb import LAPPATO_MCB
+from lappato_mcb.manifests import get as get_manifest
+from lappato_mcb.rerankers.trigram import TrigramJaccardReranker
+
+manifest, run_tag = get_manifest("timeseries")
+
+lappato_mcb = LAPPATO_MCB(
+    project_root=Path("."),
+    manifest=manifest,
+    run_tag=run_tag,
+    reranker=TrigramJaccardReranker(),  # zero new deps
+    blend_mode="rrf",                   # recommended for real use
+    reranker_weight=2.0,                # semantic-first hybrid
+)
+```
+
+### Two blend modes
+
+`LAPPATO_MCB` exposes a `blend_mode` argument controlling **how** the
+reranker score is combined with the lexical score:
+
+| Mode | Formula | When to use |
+| --- | --- | --- |
+| `"additive"` (default, v1.4 semantics) | `lex + w · max(rerank − floor, 0)` | Conservative. The reranker can only ADD score — it never demotes a paper below its lexical baseline. Best when the reranker is unproven. |
+| `"rrf"` (recommended for real reranking) | `1/(60 + rank_lex) + w · 1/(60 + rank_rerank)` | Reciprocal Rank Fusion (Cormack et al. SIGIR 2009). Scale-invariant — combines two heterogeneous rankings via ranks rather than raw scores. Floor is ignored. |
+
+The default is `"additive"` for backward compatibility. The
+[v1.4 micro-benchmark](docs/reranker_benchmark_phase05.md) measured
+that on the bundled synthetic hard fixtures (505 topics across 35
+domains), `"rrf"` lifts Recall@5 by **+0.34** versus the lexical
+baseline, while `"additive"` produces **+0.0000** because the
+integer-scale lexical score dominates the fractional reranker
+contribution. **If you wire a reranker, use `blend_mode="rrf"`.**
+
+### Audit trail
+
+When a reranker is configured, every weakness card gains a
+`reranker` block that records the blend mode, weight, floor, and
+identifying metadata exposed by the reranker (`model_name`,
+`model_version`, `model_sha`):
+
+```json
+"reranker": {
+  "configured": true,
+  "contributed": true,
+  "blend_mode": "rrf",
+  "weight": 2.0,
+  "floor": null,
+  "model_name": "trigram-jaccard",
+  "model_version": "1.0",
+  "model_sha": "stdlib-builtin"
+}
+```
+
+This is the audit trail that lets downstream tooling reason about
+the ranking it sees: `lappato_score` scale depends on `blend_mode`
+(≈ 0–10 for `additive`, ≈ 0–0.04 for `rrf`).
+
+### Bringing your own reranker
+
+Any object satisfying the Protocol works — including, in future, a
+sentence-transformer / ONNX-based reranker if/when LAPPATO_MCB ships
+the proposed `[embed]` extras. Until then, you can already plug your
+own implementation with whatever embedding stack you prefer; the
+core never imports it. Three simple rules:
+
+- `score(query, hits)` returns one finite float per hit, in the same order;
+- exceptions are silently swallowed (graceful degrade to lexical);
+- the implementation should be deterministic (no GPU non-determinism, no random ops).
+
+See [`lappato_mcb/rerankers/trigram.py`](lappato_mcb/rerankers/trigram.py)
+for a zero-dependency reference implementation in ~70 lines.
 
 ## Repository Layout
 

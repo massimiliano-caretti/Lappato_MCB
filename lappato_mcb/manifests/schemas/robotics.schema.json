@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "domain": "robotics",
+  "description": "Control / locomotion / manipulation / sim2real diagnostics.",
+  "evidence_files": {
+    "robotics_sim2real_gap.csv": {
+      "description": "Per-task simulation vs real-robot score.",
+      "columns": [
+        {"name": "task", "aliases": [], "type": "string", "required": false},
+        {"name": "sim_score", "aliases": ["sim", "simulation"], "type": "number", "required": true},
+        {"name": "real_score", "aliases": ["real", "deployed"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["sim2real_gap_high"]
+    },
+    "robotics_safety_violations.csv": {
+      "description": "Per-rollout safety-violation counts.",
+      "columns": [
+        {"name": "rollout", "aliases": [], "type": "string", "required": false},
+        {"name": "collisions", "aliases": ["n_collisions"], "type": "number", "required": false},
+        {"name": "torque_limit", "aliases": ["n_torque_violation"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["safety_violation_high"]
+    },
+    "robotics_action_saturation.csv": {
+      "description": "Per-timestep share of saturated actions.",
+      "columns": [
+        {"name": "timestep", "aliases": [], "type": "number", "required": false},
+        {"name": "share_at_limit", "aliases": ["saturation"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["action_saturation_high"]
+    },
+    "robotics_jitter.csv": {
+      "description": "Per-rollout action-jitter measure.",
+      "columns": [
+        {"name": "rollout", "aliases": [], "type": "string", "required": false},
+        {"name": "action_jitter", "aliases": ["jitter"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["action_jitter_high"]
+    },
+    "robotics_evaluation_seeds.csv": {
+      "description": "Per-seed evaluation success rate.",
+      "columns": [
+        {"name": "seed", "aliases": [], "type": "string", "required": true},
+        {"name": "success_rate", "aliases": ["success"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["few_eval_seeds"]
+    }
+  }
+}

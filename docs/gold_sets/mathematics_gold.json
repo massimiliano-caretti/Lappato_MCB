@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "mathematics",
+  "description": "Numerical / symbolic mathematics methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "numerical_instability": [
+      {"name": "matrix conditioning", "must_match_keywords": ["condition", "number"], "rationale": "Standard linear-algebra ill-conditioning literature."},
+      {"name": "Tikhonov regularization", "must_match_keywords": ["tikhonov"], "rationale": "Tikhonov — regularised inverse for ill-posed problems."},
+      {"name": "ill-posed inverse", "must_match_keywords": ["ill", "posed"], "rationale": "Hadamard ill-posed problem literature."}
+    ],
+    "convergence_failure": [
+      {"name": "stopping criterion optimization", "must_match_keywords": ["stopping"], "rationale": "Standard convergence/stopping literature."},
+      {"name": "gradient clipping NaN", "must_match_keywords": ["clipping"], "rationale": "Gradient-clipping for stability."},
+      {"name": "line search Wolfe", "must_match_keywords": ["wolfe"], "rationale": "Wolfe conditions for line-search."}
+    ],
+    "discretization_error": [
+      {"name": "Richardson extrapolation", "must_match_keywords": ["richardson"], "rationale": "Richardson extrapolation for discretisation refinement."},
+      {"name": "mesh refinement convergence", "must_match_keywords": ["mesh"], "rationale": "Mesh-refinement study standard."},
+      {"name": "convergence order PDE", "must_match_keywords": ["convergence", "order"], "rationale": "Empirical convergence-order literature."}
+    ],
+    "benchmark_orders_of_magnitude_mismatch": [
+      {"name": "verification validation scientific computing", "must_match_keywords": ["verification"], "rationale": "Oberkampf & Roy V&V framework."},
+      {"name": "reproducibility computational mathematics", "must_match_keywords": ["reproducibility"], "rationale": "Comp-math reproducibility literature."}
+    ],
+    "proof_assumption_unverified": [
+      {"name": "automated theorem proving", "must_match_keywords": ["theorem", "proving"], "rationale": "ATP / interactive proof literature."},
+      {"name": "computer algebra side conditions", "must_match_keywords": ["computer", "algebra"], "rationale": "Side-condition checks in CAS."},
+      {"name": "Lean Coq formalization", "must_match_keywords": ["lean"], "rationale": "Modern formalisation systems."}
+    ]
+  }
+}

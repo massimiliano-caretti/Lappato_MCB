@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "domain": "mathematics",
+  "description": "Numerical analysis, optimisation, symbolic computation diagnostics.",
+  "evidence_files": {
+    "math_conditioning.csv": {
+      "description": "Condition number per matrix / operator.",
+      "columns": [
+        {"name": "matrix", "aliases": [], "type": "string", "required": false},
+        {"name": "condition_number", "aliases": ["kappa", "cond"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["numerical_instability"]
+    },
+    "math_convergence.csv": {
+      "description": "Iteration trace of an optimisation / iterative solver.",
+      "columns": [
+        {"name": "iter", "aliases": ["iteration", "step"], "type": "number", "required": false},
+        {"name": "loss", "aliases": ["residual", "objective", "error"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["convergence_failure"]
+    },
+    "math_discretization.csv": {
+      "description": "Discretisation-level / mesh-level error.",
+      "columns": [
+        {"name": "level", "aliases": ["grid_level", "step_size"], "type": "string", "required": false},
+        {"name": "error", "aliases": ["global_error", "step_error"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["discretization_error"]
+    },
+    "math_benchmark.csv": {
+      "description": "Reference vs reported benchmark values.",
+      "columns": [
+        {"name": "method", "aliases": [], "type": "string", "required": false},
+        {"name": "reference_value", "aliases": ["reference", "ground_truth"], "type": "number", "required": true},
+        {"name": "reported_value", "aliases": ["reported", "computed_value"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["benchmark_orders_of_magnitude_mismatch"]
+    },
+    "math_assumption_audit.csv": {
+      "description": "Per-assumption verification flag (1/0).",
+      "columns": [
+        {"name": "assumption", "aliases": [], "type": "string", "required": false},
+        {"name": "verified", "aliases": ["validated", "checked"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["proof_assumption_unverified"]
+    }
+  }
+}

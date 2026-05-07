@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "domain": "pipeline_health",
+  "description": "Domain-agnostic statistical diagnostics for any ML pipeline.",
+  "evidence_files": {
+    "pipeline_class_counts.csv": {
+      "description": "Per-class sample counts. Optional 'split' column enables prevalence-shift detection.",
+      "columns": [
+        {"name": "class", "aliases": ["label", "name"], "type": "string", "required": true},
+        {"name": "count", "aliases": ["support", "n", "size"], "type": "number", "required": true},
+        {"name": "split", "aliases": ["set"], "type": "string", "required": false}
+      ],
+      "used_by_detectors": ["small_minority_class", "severe_class_imbalance", "small_cohort_size", "train_eval_prevalence_shift"]
+    },
+    "pipeline_cv_metrics.csv": {
+      "description": "Per-seed / per-fold cross-validation metrics.",
+      "columns": [
+        {"name": "seed", "aliases": ["fold"], "type": "string", "required": false},
+        {"name": "accuracy", "aliases": ["acc"], "type": "number", "required": false},
+        {"name": "balanced_accuracy", "aliases": ["bac"], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false},
+        {"name": "auc", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["high_cross_seed_variance", "single_split_used", "acc_BAC_gap_high"]
+    },
+    "pipeline_feature_importance.csv": {
+      "description": "Feature-importance table.",
+      "columns": [
+        {"name": "feature", "aliases": [], "type": "string", "required": true},
+        {"name": "gain", "aliases": ["importance", "weight"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["feature_importance_concentration"]
+    },
+    "pipeline_external_validation.csv": {
+      "description": "Internal-vs-external split metrics.",
+      "columns": [
+        {"name": "split", "aliases": ["set"], "type": "string", "required": true},
+        {"name": "auc", "aliases": [], "type": "number", "required": false},
+        {"name": "accuracy", "aliases": [], "type": "number", "required": false},
+        {"name": "balanced_accuracy", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["external_test_calibration_drop"]
+    },
+    "pipeline_split_overlap.csv": {
+      "description": "Per-id membership in train and test splits (1/0).",
+      "columns": [
+        {"name": "id", "aliases": [], "type": "string", "required": true},
+        {"name": "train", "aliases": ["in_train"], "type": "number", "required": true},
+        {"name": "test", "aliases": ["in_test"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["train_test_overlap_detected"]
+    },
+    "pipeline_label_noise.csv": {
+      "description": "Per-item annotator agreement, or a direct disagreement rate.",
+      "columns": [
+        {"name": "item", "aliases": [], "type": "string", "required": false},
+        {"name": "annotators_agree", "aliases": ["agree"], "type": "number", "required": false},
+        {"name": "disagreement", "aliases": ["disagreement_rate", "noise_rate"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["label_noise_detected"]
+    },
+    "pipeline_prediction_distribution.csv": {
+      "description": "Histogram of predicted-confidence values (bin centre + share).",
+      "columns": [
+        {"name": "bin", "aliases": ["bin_center", "p"], "type": "number", "required": true},
+        {"name": "share", "aliases": ["fraction", "count"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["prediction_confidence_collapsed"]
+    },
+    "pipeline_threshold_audit.csv": {
+      "description": "Records which split each threshold-related stage used.",
+      "columns": [
+        {"name": "stage", "aliases": [], "type": "string", "required": true},
+        {"name": "split", "aliases": ["set"], "type": "string", "required": true}
+      ],
+      "used_by_detectors": ["threshold_picked_on_test_set"]
+    },
+    "pipeline_hyperparameter_search.csv": {
+      "description": "One row per HP trial with its validation score.",
+      "columns": [
+        {"name": "trial", "aliases": [], "type": "string", "required": false},
+        {"name": "score", "aliases": ["validation_score", "metric"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["hyperparameter_overfit_to_validation"]
+    },
+    "pipeline_feature_variance.csv": {
+      "description": "Per-feature variance.",
+      "columns": [
+        {"name": "feature", "aliases": [], "type": "string", "required": true},
+        {"name": "variance", "aliases": ["var", "std"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["constant_or_dead_features"]
+    },
+    "pipeline_loss_curve.csv": {
+      "description": "Training loss + matching evaluation metric per epoch.",
+      "columns": [
+        {"name": "epoch", "aliases": [], "type": "number", "required": false},
+        {"name": "train_loss", "aliases": ["loss", "training_loss"], "type": "number", "required": true},
+        {"name": "eval_metric", "aliases": ["val_metric", "validation_metric", "auc", "f1", "accuracy"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["loss_metric_divergence"]
+    }
+  }
+}

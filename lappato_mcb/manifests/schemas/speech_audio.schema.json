@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domain": "speech_audio",
+  "description": "Speech / audio recognition diagnostics.",
+  "evidence_files": {
+    "speech_error_rates.csv": {
+      "description": "Per-slice WER / CER.",
+      "columns": [
+        {"name": "wer", "aliases": ["cer"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["high_transcription_error"]
+    },
+    "speech_noise.csv": {
+      "description": "Per-noise-condition performance metrics.",
+      "columns": [
+        {"name": "wer", "aliases": [], "type": "number", "required": false},
+        {"name": "accuracy", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["noise_robustness_gap"]
+    },
+    "speech_speakers.csv": {
+      "description": "Per-speaker-group metrics.",
+      "columns": [
+        {"name": "wer", "aliases": [], "type": "number", "required": false},
+        {"name": "accuracy", "aliases": [], "type": "number", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["speaker_group_gap"]
+    }
+  }
+}

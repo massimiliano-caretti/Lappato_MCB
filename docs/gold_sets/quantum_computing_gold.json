@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "quantum_computing",
+  "description": "NISQ / variational quantum / QML methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "fidelity_low": [
+      {"name": "randomized benchmarking", "must_match_keywords": ["randomized", "benchmarking"], "rationale": "Magesan et al. — RB."},
+      {"name": "process fidelity quantum", "must_match_keywords": ["process", "fidelity"], "rationale": "Process-fidelity literature."},
+      {"name": "zero noise extrapolation", "must_match_keywords": ["zero", "noise"], "rationale": "ZNE error mitigation."}
+    ],
+    "gate_error_high": [
+      {"name": "interleaved randomized benchmarking", "must_match_keywords": ["interleaved"], "rationale": "Interleaved RB for per-gate error."},
+      {"name": "cross talk quantum gates", "must_match_keywords": ["cross", "talk"], "rationale": "Cross-talk literature."},
+      {"name": "dynamical decoupling", "must_match_keywords": ["dynamical", "decoupling"], "rationale": "DD for coherence preservation."}
+    ],
+    "shot_noise_high": [
+      {"name": "classical shadows tomography", "must_match_keywords": ["classical", "shadows"], "rationale": "Huang et al. — classical shadows."},
+      {"name": "operator grouping commuting", "must_match_keywords": ["grouping"], "rationale": "Pauli grouping for shot reduction."}
+    ],
+    "barren_plateau": [
+      {"name": "barren plateau variational", "must_match_keywords": ["barren", "plateau"], "rationale": "McClean et al. — barren plateaus."},
+      {"name": "local cost function VQE", "must_match_keywords": ["local", "cost"], "rationale": "Cerezo et al. — local cost mitigation."},
+      {"name": "identity block initialization", "must_match_keywords": ["identity"], "rationale": "Grant et al. — identity-block init."}
+    ],
+    "compilation_inefficient": [
+      {"name": "quantum circuit transpilation", "must_match_keywords": ["transpilation"], "rationale": "Qiskit / circuit-transpilation literature."},
+      {"name": "qubit routing swap", "must_match_keywords": ["routing"], "rationale": "Qubit-routing literature."},
+      {"name": "native gate set", "must_match_keywords": ["native", "gate"], "rationale": "Native-gate-set targeting."}
+    ]
+  }
+}

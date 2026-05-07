@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "domain": "social_science",
+  "description": "Survey / replication / experimental-psychology diagnostics.",
+  "evidence_files": {
+    "social_effect_inflation.csv": {
+      "description": "Per-study effect size + N + p-value.",
+      "columns": [
+        {"name": "study", "aliases": [], "type": "string", "required": false},
+        {"name": "effect_size", "aliases": ["d", "cohen_d"], "type": "number", "required": true},
+        {"name": "n_subjects", "aliases": ["n", "sample_size"], "type": "number", "required": true},
+        {"name": "p_value", "aliases": ["p"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["effect_size_inflation"]
+    },
+    "social_response_rate.csv": {
+      "description": "Survey invitation vs completion counts.",
+      "columns": [
+        {"name": "survey", "aliases": [], "type": "string", "required": false},
+        {"name": "n_invited", "aliases": ["invited"], "type": "number", "required": true},
+        {"name": "n_completed", "aliases": ["completed", "n_responded"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["response_rate_low"]
+    },
+    "social_construct_reliability.csv": {
+      "description": "Per-construct reliability coefficient.",
+      "columns": [
+        {"name": "construct", "aliases": [], "type": "string", "required": false},
+        {"name": "cronbach_alpha", "aliases": ["alpha", "omega"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["construct_reliability_low"]
+    },
+    "social_p_curve.csv": {
+      "description": "Per-study p-value (for p-curve / z-curve analysis).",
+      "columns": [
+        {"name": "study", "aliases": [], "type": "string", "required": false},
+        {"name": "p_value", "aliases": ["p"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["p_hacking_pattern"]
+    },
+    "social_demand_characteristics.csv": {
+      "description": "Per-arm flag for whether the hypothesis was revealed.",
+      "columns": [
+        {"name": "arm", "aliases": [], "type": "string", "required": false},
+        {"name": "prompt_revealed", "aliases": ["hypothesis_revealed"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["demand_characteristics_present"]
+    }
+  }
+}

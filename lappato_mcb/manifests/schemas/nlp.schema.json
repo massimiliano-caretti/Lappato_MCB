@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "domain": "nlp",
+  "description": "Text-classification diagnostics.",
+  "evidence_files": {
+    "nlp_per_class.csv": {
+      "description": "Per-class precision / recall / F1.",
+      "columns": [
+        {"name": "class", "aliases": ["label"], "type": "string", "required": false},
+        {"name": "f1", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["per_class_f1_spread"]
+    },
+    "nlp_confusion_top.csv": {
+      "description": "Top off-diagonal confusion pairs (sorted by share).",
+      "columns": [
+        {"name": "true", "aliases": [], "type": "string", "required": false},
+        {"name": "predicted", "aliases": [], "type": "string", "required": false},
+        {"name": "count", "aliases": [], "type": "number", "required": false},
+        {"name": "share", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["confusable_classes"]
+    },
+    "nlp_token_importance.csv": {
+      "description": "Top tokens by linear-model coefficient.",
+      "columns": [
+        {"name": "token", "aliases": [], "type": "string", "required": true},
+        {"name": "weight", "aliases": ["coefficient"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["stopword_dominance"]
+    }
+  }
+}

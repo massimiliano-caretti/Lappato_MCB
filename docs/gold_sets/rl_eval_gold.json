@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "rl_eval",
+  "description": "RL policy-evaluation methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "seed_instability": [
+      {"name": "deep RL reproducibility", "must_match_keywords": ["reproducibility"], "rationale": "Henderson et al. — deep RL that matters."},
+      {"name": "rliable evaluation", "must_match_keywords": ["rliable"], "rationale": "Agarwal et al. — rliable for RL stats."},
+      {"name": "stratified bootstrap RL", "must_match_keywords": ["bootstrap"], "rationale": "Bootstrap CIs for RL evaluation."}
+    ],
+    "safety_constraint_violations": [
+      {"name": "safe reinforcement learning", "must_match_keywords": ["safe", "reinforcement"], "rationale": "García & Fernández — safe RL survey."},
+      {"name": "constrained policy optimization", "must_match_keywords": ["constrained"], "rationale": "Achiam et al. — CPO."},
+      {"name": "control barrier function", "must_match_keywords": ["barrier"], "rationale": "CBF-based safety filters."}
+    ],
+    "off_policy_eval_error": [
+      {"name": "off-policy evaluation", "must_match_keywords": ["off", "policy"], "rationale": "Precup et al. — OPE foundational work."},
+      {"name": "doubly robust off-policy", "must_match_keywords": ["doubly", "robust"], "rationale": "Jiang & Li — doubly robust OPE."}
+    ],
+    "reward_hacking_audit_missing": [
+      {"name": "reward hacking", "must_match_keywords": ["reward", "hacking"], "rationale": "Krakovna et al. — specification gaming."},
+      {"name": "Goodhart's law RL", "must_match_keywords": ["goodhart"], "rationale": "Goodhart's law applied to RL rewards."}
+    ],
+    "exploration_diagnostics_missing": [
+      {"name": "exploration curiosity", "must_match_keywords": ["curiosity"], "rationale": "Pathak et al. — intrinsic curiosity module."},
+      {"name": "RND exploration", "must_match_keywords": ["rnd"], "rationale": "Burda et al. — random network distillation."},
+      {"name": "exploration coverage RL", "must_match_keywords": ["coverage"], "rationale": "State-coverage diagnostics."}
+    ]
+  }
+}

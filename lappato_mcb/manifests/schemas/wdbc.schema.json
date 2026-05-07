@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domain": "wdbc",
+  "description": "Reference manifest for the Wisconsin Breast Cancer Diagnostic cohort.",
+  "evidence_files": {
+    "wdbc_per_fold.csv": {
+      "description": "Per-fold class-conditional precision / recall.",
+      "columns": [
+        {"name": "precision_M", "aliases": [], "type": "number", "required": true},
+        {"name": "recall_M", "aliases": [], "type": "number", "required": true},
+        {"name": "precision_B", "aliases": [], "type": "number", "required": true},
+        {"name": "recall_B", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["class_imbalance"]
+    },
+    "wdbc_calibration.csv": {
+      "description": "Per-fold Brier score.",
+      "columns": [
+        {"name": "brier", "aliases": ["brier_score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_calibration"]
+    },
+    "wdbc_feature_importance.csv": {
+      "description": "Top features by gain.",
+      "columns": [
+        {"name": "feature", "aliases": [], "type": "string", "required": true},
+        {"name": "gain", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["marker_redundancy"]
+    }
+  }
+}

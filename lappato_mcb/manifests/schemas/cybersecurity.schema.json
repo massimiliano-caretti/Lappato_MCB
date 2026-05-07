@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "cybersecurity",
+  "description": "Intrusion / malware detection diagnostics.",
+  "evidence_files": {
+    "cyber_alert_rates.csv": {
+      "description": "Per-window false-positive rate.",
+      "columns": [
+        {"name": "false_positive_rate", "aliases": ["fpr"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["alert_false_positive_burden"]
+    },
+    "cyber_attack_families.csv": {
+      "description": "Per-attack-family detection rate.",
+      "columns": [
+        {"name": "recall", "aliases": ["detection_rate", "tpr"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["attack_family_recall_low"]
+    },
+    "cyber_drift.csv": {
+      "description": "Per-window detection threshold (drift over time).",
+      "columns": [
+        {"name": "threshold", "aliases": ["score_cutoff"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["traffic_drift"]
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "vision",
+  "description": "Image-classification diagnostics.",
+  "evidence_files": {
+    "vision_per_class.csv": {
+      "description": "Per-class score (F1 / AP / mAP / Dice).",
+      "columns": [
+        {"name": "f1", "aliases": ["ap", "map", "dice"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_per_class_performance"]
+    },
+    "vision_calibration.csv": {
+      "description": "Per-fold calibration error.",
+      "columns": [
+        {"name": "ece", "aliases": ["calibration_error"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["vision_calibration"]
+    },
+    "vision_augmentation.csv": {
+      "description": "Per-augmentation clean vs augmented gap.",
+      "columns": [
+        {"name": "aug_gap", "aliases": ["clean_aug_gap"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["augmentation_sensitivity"]
+    }
+  }
+}

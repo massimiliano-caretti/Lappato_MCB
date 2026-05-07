@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "geospatial",
+  "description": "Geospatial / remote-sensing methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "spatial_generalization_gap": [
+      {"name": "spatial cross validation", "must_match_keywords": ["spatial", "cross"], "rationale": "Roberts et al. — spatial CV protocol."},
+      {"name": "spatial autocorrelation Moran", "must_match_keywords": ["moran"], "rationale": "Moran's I — spatial autocorrelation diagnostic."},
+      {"name": "block cross validation", "must_match_keywords": ["block", "cross"], "rationale": "Block CV for autocorrelated data."}
+    ],
+    "temporal_transfer_degradation": [
+      {"name": "temporal generalization remote sensing", "must_match_keywords": ["temporal"], "rationale": "Cross-year transfer literature."},
+      {"name": "domain adaptation remote sensing", "must_match_keywords": ["domain", "adaptation"], "rationale": "Tuia et al. — DA in remote sensing."}
+    ],
+    "cloud_mask_failures": [
+      {"name": "Sentinel-2 cloud mask", "must_match_keywords": ["sentinel"], "rationale": "Sentinel-2 cloud-mask failure literature."},
+      {"name": "Fmask cloud detection", "must_match_keywords": ["fmask"], "rationale": "Zhu & Woodcock — Fmask algorithm."},
+      {"name": "cloud shadow mask", "must_match_keywords": ["cloud", "shadow"], "rationale": "Standard cloud-shadow QA topic."}
+    ],
+    "coordinate_leakage_missing": [
+      {"name": "coordinate leakage geospatial", "must_match_keywords": ["coordinate"], "rationale": "Lat/lon leakage in models."},
+      {"name": "spatial leakage", "must_match_keywords": ["spatial", "leakage"], "rationale": "Generic recall on spatial-leakage literature."}
+    ],
+    "resolution_sensitivity_missing": [
+      {"name": "modifiable areal unit problem", "must_match_keywords": ["areal", "unit"], "rationale": "Openshaw — MAUP literature."},
+      {"name": "resolution sensitivity remote sensing", "must_match_keywords": ["resolution"], "rationale": "Pixel-size sensitivity in classification."}
+    ]
+  }
+}

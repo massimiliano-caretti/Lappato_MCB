@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "domain": "pipeline_health",
+  "description": "Domain-agnostic pipeline-health methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "small_minority_class": [
+      {"name": "minimum sample size", "must_match_keywords": ["sample", "size"], "rationale": "Power-analysis literature for small classes."},
+      {"name": "imbalanced learning", "must_match_keywords": ["imbalanced"], "rationale": "Generic recall on the imbalance literature."}
+    ],
+    "high_cross_seed_variance": [
+      {"name": "random seed reproducibility", "must_match_keywords": ["random", "seed"], "rationale": "Henderson et al. — seed-sensitivity literature."},
+      {"name": "reproducibility crisis", "must_match_keywords": ["reproducibility"], "rationale": "Pineau et al. — reproducibility checklist."}
+    ],
+    "single_split_used": [
+      {"name": "cross validation protocol", "must_match_keywords": ["cross", "validation"], "rationale": "Standard multi-fold evaluation framing."},
+      {"name": "nested cross validation", "must_match_keywords": ["nested"], "rationale": "Cawley & Talbot — nested CV for HP selection."}
+    ],
+    "acc_BAC_gap_high": [
+      {"name": "balanced accuracy", "must_match_keywords": ["balanced", "accuracy"], "rationale": "Brodersen et al. — BAC for imbalanced data."},
+      {"name": "macro F1 imbalanced", "must_match_keywords": ["macro", "f1"], "rationale": "Standard imbalance-aware aggregate metric."}
+    ],
+    "severe_class_imbalance": [
+      {"name": "class imbalance survey", "must_match_keywords": ["class", "imbalance"], "rationale": "He & Garcia 2009 — canonical survey."},
+      {"name": "PR-AUC vs ROC-AUC", "must_match_keywords": ["pr", "auc"], "rationale": "Saito & Rehmsmeier — PR-AUC under imbalance."}
+    ],
+    "feature_importance_concentration": [
+      {"name": "feature importance leakage", "must_match_keywords": ["feature", "importance"], "rationale": "Standard leakage-via-importance framing."},
+      {"name": "permutation importance", "must_match_keywords": ["permutation", "importance"], "rationale": "Breiman 2001 — robust importance check."}
+    ],
+    "small_cohort_size": [
+      {"name": "learning curve", "must_match_keywords": ["learning", "curve"], "rationale": "Standard small-sample diagnostic."},
+      {"name": "small sample inference", "must_match_keywords": ["small", "sample"], "rationale": "Riley et al. — small-sample prediction-model guidance."}
+    ],
+    "external_test_calibration_drop": [
+      {"name": "external validation", "must_match_keywords": ["external", "validation"], "rationale": "Steyerberg — internal-vs-external evaluation."},
+      {"name": "transportability", "must_match_keywords": ["transportability"], "rationale": "Pearl & Bareinboim — formal transportability."}
+    ],
+    "train_test_overlap_detected": [
+      {"name": "data leakage", "must_match_keywords": ["data", "leakage"], "rationale": "Kaufman et al. — formal data-leakage taxonomy."},
+      {"name": "grouped cross validation", "must_match_keywords": ["grouped"], "rationale": "Standard entity-aware split protocol."}
+    ],
+    "label_noise_detected": [
+      {"name": "label noise robust learning", "must_match_keywords": ["label", "noise"], "rationale": "Frenay & Verleysen survey on label noise."},
+      {"name": "Cohen's kappa agreement", "must_match_keywords": ["kappa"], "rationale": "Inter-annotator agreement literature."}
+    ],
+    "prediction_confidence_collapsed": [
+      {"name": "miscalibration deep network", "must_match_keywords": ["miscalibration"], "rationale": "Guo et al. — overconfidence in deep nets."},
+      {"name": "temperature scaling", "must_match_keywords": ["temperature", "scaling"], "rationale": "Standard post-hoc fix for collapsed confidence."}
+    ],
+    "train_eval_prevalence_shift": [
+      {"name": "label shift estimation", "must_match_keywords": ["label", "shift"], "rationale": "Lipton et al. — BBSE label shift."},
+      {"name": "prior shift correction", "must_match_keywords": ["prior", "shift"], "rationale": "Saerens et al. — EM-based prior correction."}
+    ],
+    "loss_metric_divergence": [
+      {"name": "surrogate loss alignment", "must_match_keywords": ["surrogate", "loss"], "rationale": "Bartlett et al. — surrogate vs target loss."},
+      {"name": "ranking metric optimization", "must_match_keywords": ["ranking", "metric"], "rationale": "Direct-metric optimisation literature."}
+    ],
+    "hyperparameter_overfit_to_validation": [
+      {"name": "winner's curse hyperparameter", "must_match_keywords": ["winner"], "rationale": "Cawley & Talbot — overfitting validation in HP search."},
+      {"name": "nested cross validation", "must_match_keywords": ["nested"], "rationale": "Standard fix: nested CV separates HP selection."}
+    ],
+    "constant_or_dead_features": [
+      {"name": "low variance feature filter", "must_match_keywords": ["low", "variance"], "rationale": "Generic preprocessing pruning step."},
+      {"name": "feature selection survey", "must_match_keywords": ["feature", "selection"], "rationale": "Guyon & Elisseeff — canonical survey."}
+    ],
+    "threshold_picked_on_test_set": [
+      {"name": "operating point selection", "must_match_keywords": ["operating", "point"], "rationale": "Threshold-tuning bias literature."},
+      {"name": "calibration split", "must_match_keywords": ["calibration"], "rationale": "Standard remediation: dedicated calibration split."}
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "astronomy",
+  "description": "Astronomy / astrophysics methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "psf_residual_high": [
+      {"name": "PSFEx PSF modelling", "must_match_keywords": ["psfex"], "rationale": "Bertin — PSFEx."},
+      {"name": "weak lensing PSF systematics", "must_match_keywords": ["weak", "lensing"], "rationale": "PSF systematics in lensing surveys."},
+      {"name": "point spread function model", "must_match_keywords": ["point", "spread"], "rationale": "Generic PSF-modelling literature."}
+    ],
+    "completeness_low": [
+      {"name": "Malmquist bias", "must_match_keywords": ["malmquist"], "rationale": "Malmquist — flux-limited survey bias."},
+      {"name": "injection recovery completeness", "must_match_keywords": ["injection"], "rationale": "Source injection-recovery literature."}
+    ],
+    "selection_function_inhomogeneous": [
+      {"name": "survey selection function", "must_match_keywords": ["selection", "function"], "rationale": "Selection-function literature."},
+      {"name": "spectroscopic targeting bias", "must_match_keywords": ["spectroscopic"], "rationale": "Targeting bias in spec surveys."},
+      {"name": "angular mask systematics", "must_match_keywords": ["mask"], "rationale": "Angular-mask systematics."}
+    ],
+    "low_signal_significance": [
+      {"name": "look elsewhere effect", "must_match_keywords": ["look", "elsewhere"], "rationale": "Gross & Vitells — LEE in HEP."},
+      {"name": "false alarm rate transient", "must_match_keywords": ["false", "alarm"], "rationale": "FAR in time-domain surveys."},
+      {"name": "5 sigma discovery threshold", "must_match_keywords": ["sigma"], "rationale": "Discovery-threshold literature."}
+    ],
+    "simulation_resolution_inadequate": [
+      {"name": "cosmological simulation convergence", "must_match_keywords": ["cosmological"], "rationale": "Power et al. — convergence in N-body."},
+      {"name": "softening length N-body", "must_match_keywords": ["softening"], "rationale": "Softening-length resolution literature."},
+      {"name": "subgrid physics", "must_match_keywords": ["subgrid"], "rationale": "Subgrid-physics literature."}
+    ]
+  }
+}

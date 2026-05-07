@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "causal_ml",
+  "description": "Causal-inference / treatment-effect topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "covariate_imbalance": [
+      {"name": "standardized mean difference", "must_match_keywords": ["standardized", "mean"], "rationale": "Austin — SMD for balance assessment."},
+      {"name": "propensity score matching", "must_match_keywords": ["propensity", "score"], "rationale": "Rosenbaum & Rubin — PSM canonical reference."},
+      {"name": "inverse probability weighting", "must_match_keywords": ["inverse", "probability"], "rationale": "Hernán & Robins — IPW estimator."}
+    ],
+    "positivity_violation": [
+      {"name": "positivity assumption", "must_match_keywords": ["positivity"], "rationale": "Westreich & Cole — positivity in causal inference."},
+      {"name": "propensity overlap", "must_match_keywords": ["overlap"], "rationale": "Standard overlap diagnostic."},
+      {"name": "trimming propensity", "must_match_keywords": ["trimming"], "rationale": "Crump et al. — overlap trimming."}
+    ],
+    "placebo_test_failure": [
+      {"name": "negative control outcome", "must_match_keywords": ["negative", "control"], "rationale": "Lipsitch et al. — negative-control framework."},
+      {"name": "placebo test causal", "must_match_keywords": ["placebo"], "rationale": "Generic placebo / falsification test."}
+    ],
+    "heterogeneous_effects_missing": [
+      {"name": "causal forest", "must_match_keywords": ["causal", "forest"], "rationale": "Wager & Athey — causal forests for HTE."},
+      {"name": "uplift modeling", "must_match_keywords": ["uplift"], "rationale": "Industrial framing for treatment-effect heterogeneity."},
+      {"name": "meta learner CATE", "must_match_keywords": ["meta", "learner"], "rationale": "Künzel et al. — S/T/X-learner family."}
+    ],
+    "sensitivity_analysis_missing": [
+      {"name": "E-value sensitivity", "must_match_keywords": ["e", "value"], "rationale": "VanderWeele & Ding — E-value bounds."},
+      {"name": "robustness value Cinelli", "must_match_keywords": ["robustness", "value"], "rationale": "Cinelli & Hazlett — robustness value framework."},
+      {"name": "unmeasured confounding sensitivity", "must_match_keywords": ["unmeasured", "confounding"], "rationale": "Standard sensitivity framing."}
+    ]
+  }
+}

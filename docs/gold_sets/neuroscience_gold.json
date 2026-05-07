@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "neuroscience",
+  "description": "fMRI / EEG / decoding methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "motion_high": [
+      {"name": "framewise displacement", "must_match_keywords": ["framewise", "displacement"], "rationale": "Power et al. — FD in fMRI."},
+      {"name": "scrubbing motion fMRI", "must_match_keywords": ["scrubbing"], "rationale": "Power et al. — scrubbing pipeline."},
+      {"name": "ICA artifact EEG", "must_match_keywords": ["ica"], "rationale": "ICA-based motion / artefact removal."}
+    ],
+    "subject_split_violation": [
+      {"name": "leave one subject out", "must_match_keywords": ["leave", "subject"], "rationale": "LOSO CV for neuroimaging decoding."},
+      {"name": "subject level cross validation", "must_match_keywords": ["subject"], "rationale": "Subject-level CV literature."}
+    ],
+    "artifact_share_high": [
+      {"name": "RETROICOR physiological", "must_match_keywords": ["retroicor"], "rationale": "Glover et al. — RETROICOR."},
+      {"name": "EEG artifact rejection", "must_match_keywords": ["artifact"], "rationale": "EEG cleaning literature."},
+      {"name": "blink eye movement EEG", "must_match_keywords": ["blink"], "rationale": "Eye-movement artefact literature."}
+    ],
+    "smoothing_below_voxel": [
+      {"name": "spatial smoothing fMRI", "must_match_keywords": ["smoothing"], "rationale": "Spatial-smoothing literature for fMRI."},
+      {"name": "FWHM kernel fMRI", "must_match_keywords": ["fwhm"], "rationale": "FWHM-kernel choice literature."}
+    ],
+    "multiple_comparison_uncorrected": [
+      {"name": "FDR Benjamini Hochberg", "must_match_keywords": ["fdr"], "rationale": "Benjamini & Hochberg — FDR."},
+      {"name": "TFCE threshold-free", "must_match_keywords": ["tfce"], "rationale": "Smith & Nichols — TFCE."},
+      {"name": "Eklund cluster failure", "must_match_keywords": ["eklund"], "rationale": "Eklund et al. — cluster-thresholding failure."}
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "domain": "cybersecurity",
+  "description": "Intrusion / malware detection topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "alert_false_positive_burden": [
+      {"name": "alert fatigue SOC", "must_match_keywords": ["alert", "fatigue"], "rationale": "Practitioner literature on FP triage cost."},
+      {"name": "precision triage cybersecurity", "must_match_keywords": ["triage"], "rationale": "Standard SOC triage framing."}
+    ],
+    "attack_family_recall_low": [
+      {"name": "intrusion detection recall", "must_match_keywords": ["intrusion", "detection"], "rationale": "Generic IDS literature."},
+      {"name": "MITRE ATT&CK", "must_match_keywords": ["mitre"], "rationale": "ATT&CK taxonomy for attack-family coverage."},
+      {"name": "malware family classification", "must_match_keywords": ["malware", "family"], "rationale": "Family-level recall benchmarks."}
+    ],
+    "traffic_drift": [
+      {"name": "concept drift cybersecurity", "must_match_keywords": ["concept", "drift"], "rationale": "Drift literature applied to traffic."},
+      {"name": "Tesseract evaluation", "must_match_keywords": ["tesseract"], "rationale": "Pendlebury et al. — temporal evaluation in malware."},
+      {"name": "network traffic drift", "must_match_keywords": ["traffic", "drift"], "rationale": "Generic recall on traffic-distribution shift."}
+    ],
+    "adversarial_evasion_missing": [
+      {"name": "adversarial malware evasion", "must_match_keywords": ["adversarial"], "rationale": "Grosse et al. / Demetrio et al. — adversarial malware."},
+      {"name": "evasion attack classifier", "must_match_keywords": ["evasion"], "rationale": "Biggio et al. — evasion attack framework."}
+    ],
+    "dataset_staleness_missing": [
+      {"name": "KDD99 dataset issues", "must_match_keywords": ["kdd"], "rationale": "Tavallaee et al. — KDD99 limitations."},
+      {"name": "CICIDS dataset", "must_match_keywords": ["cicids"], "rationale": "Sharafaldin et al. — modern IDS dataset."},
+      {"name": "dataset staleness intrusion", "must_match_keywords": ["staleness"], "rationale": "Recall on dataset-recency literature."}
+    ]
+  }
+}

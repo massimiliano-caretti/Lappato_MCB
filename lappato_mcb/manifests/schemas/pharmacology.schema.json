@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "domain": "pharmacology",
+  "description": "PK/PD / dose-response / clinical-trial diagnostics.",
+  "evidence_files": {
+    "pharma_dose_response.csv": {
+      "description": "Per-compound dose-response observations.",
+      "columns": [
+        {"name": "compound", "aliases": ["id"], "type": "string", "required": true},
+        {"name": "dose", "aliases": [], "type": "number", "required": false},
+        {"name": "response", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["dose_response_undersampled"]
+    },
+    "pharma_pk_concordance.csv": {
+      "description": "Predicted vs observed AUC per model.",
+      "columns": [
+        {"name": "model", "aliases": [], "type": "string", "required": false},
+        {"name": "observed_auc", "aliases": ["obs", "observed"], "type": "number", "required": true},
+        {"name": "predicted_auc", "aliases": ["pred", "predicted"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["pk_concordance_low"]
+    },
+    "pharma_dde.csv": {
+      "description": "Per-compound drug-drug-interaction score.",
+      "columns": [
+        {"name": "compound", "aliases": [], "type": "string", "required": false},
+        {"name": "interaction_score", "aliases": ["ddi", "ic_score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["ddi_high"]
+    },
+    "pharma_extrapolation.csv": {
+      "description": "Distance to nearest training compound.",
+      "columns": [
+        {"name": "compound", "aliases": [], "type": "string", "required": false},
+        {"name": "nearest_train_distance", "aliases": ["domain_distance"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["extrapolation_high"]
+    },
+    "pharma_trial_endpoint.csv": {
+      "description": "Per-trial primary-endpoint pre-specification flag.",
+      "columns": [
+        {"name": "trial", "aliases": [], "type": "string", "required": false},
+        {"name": "primary_endpoint_specified", "aliases": ["primary_specified"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["trial_endpoint_unspecified"]
+    }
+  }
+}

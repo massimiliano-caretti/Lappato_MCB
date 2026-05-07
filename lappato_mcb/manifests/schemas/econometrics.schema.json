@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "domain": "econometrics",
+  "description": "IV / panel / DiD / RDD identification diagnostics.",
+  "evidence_files": {
+    "econ_iv_strength.csv": {
+      "description": "Per-instrument first-stage F.",
+      "columns": [
+        {"name": "instrument", "aliases": [], "type": "string", "required": false},
+        {"name": "first_stage_F", "aliases": ["F", "f_stat"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["weak_instrument"]
+    },
+    "econ_parallel_trends.csv": {
+      "description": "Pre / post period treated vs control gap.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": true},
+        {"name": "treated", "aliases": [], "type": "number", "required": false},
+        {"name": "control", "aliases": [], "type": "number", "required": false},
+        {"name": "gap", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["parallel_trends_violation"]
+    },
+    "econ_robust_se.csv": {
+      "description": "Naive vs clustered/HAC standard errors.",
+      "columns": [
+        {"name": "cluster", "aliases": [], "type": "string", "required": false},
+        {"name": "n_obs", "aliases": [], "type": "number", "required": false},
+        {"name": "naive_se", "aliases": ["ols_se"], "type": "number", "required": true},
+        {"name": "clustered_se", "aliases": ["robust_se"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["standard_errors_understated"]
+    },
+    "econ_rdd_bandwidth.csv": {
+      "description": "RDD estimate across bandwidth choices.",
+      "columns": [
+        {"name": "bandwidth", "aliases": [], "type": "number", "required": false},
+        {"name": "estimate", "aliases": ["tau"], "type": "number", "required": true},
+        {"name": "std_error", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["rdd_bandwidth_sensitive"]
+    },
+    "econ_panel_attrition.csv": {
+      "description": "Per-period attrition share.",
+      "columns": [
+        {"name": "period", "aliases": [], "type": "string", "required": false},
+        {"name": "n_units", "aliases": [], "type": "number", "required": false},
+        {"name": "attrition_share", "aliases": ["attrition", "drop_share"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["panel_attrition_high"]
+    }
+  }
+}

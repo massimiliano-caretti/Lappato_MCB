@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "survival",
+  "description": "Survival-analysis diagnostics.",
+  "evidence_files": {
+    "survival_discrimination.csv": {
+      "description": "Per-fold C-index / concordance.",
+      "columns": [
+        {"name": "c_index", "aliases": ["concordance"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_discrimination"]
+    },
+    "survival_calibration.csv": {
+      "description": "Per-time-window calibration slope.",
+      "columns": [
+        {"name": "calibration_slope", "aliases": ["slope"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["survival_calibration_slope_off"]
+    },
+    "survival_ph_test.csv": {
+      "description": "Per-covariate Schoenfeld PH-test p-value.",
+      "columns": [
+        {"name": "p", "aliases": ["p_value", "schoenfeld_p"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["proportional_hazards_violation"]
+    }
+  }
+}

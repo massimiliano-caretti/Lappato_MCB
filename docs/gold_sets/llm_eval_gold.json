@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "llm_eval",
+  "description": "LLM evaluation methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "hallucination_rate_high": [
+      {"name": "LLM hallucination survey", "must_match_keywords": ["hallucination"], "rationale": "Ji et al. — hallucination survey."},
+      {"name": "TruthfulQA benchmark", "must_match_keywords": ["truthfulqa"], "rationale": "Lin et al. 2022 — TruthfulQA benchmark."},
+      {"name": "factual consistency evaluation", "must_match_keywords": ["factual"], "rationale": "Factuality / faithfulness metrics literature."}
+    ],
+    "safety_failure_rate": [
+      {"name": "RealToxicityPrompts", "must_match_keywords": ["toxicity"], "rationale": "Gehman et al. — toxicity probing."},
+      {"name": "jailbreak prompt LLM", "must_match_keywords": ["jailbreak"], "rationale": "Jailbreak / red-team literature."},
+      {"name": "constitutional AI", "must_match_keywords": ["constitutional"], "rationale": "Bai et al. — Constitutional AI safety framework."}
+    ],
+    "prompt_instability": [
+      {"name": "prompt sensitivity", "must_match_keywords": ["prompt", "sensitivity"], "rationale": "Sclar et al. — prompt-format sensitivity."},
+      {"name": "chain of thought consistency", "must_match_keywords": ["chain", "thought"], "rationale": "CoT consistency evaluation."}
+    ],
+    "cost_latency_unbounded": [
+      {"name": "LLM serving cost", "must_match_keywords": ["cost"], "rationale": "Production cost-tracking literature."},
+      {"name": "inference latency LLM", "must_match_keywords": ["latency"], "rationale": "Latency benchmarks for LLM serving."},
+      {"name": "model distillation", "must_match_keywords": ["distillation"], "rationale": "Distillation as cost-reduction strategy."}
+    ],
+    "eval_coverage_missing": [
+      {"name": "BIG-bench", "must_match_keywords": ["bench"], "rationale": "Srivastava et al. — BIG-bench evaluation suite."},
+      {"name": "HELM holistic evaluation", "must_match_keywords": ["helm"], "rationale": "Liang et al. — HELM coverage framework."},
+      {"name": "evaluation harness LLM", "must_match_keywords": ["evaluation", "harness"], "rationale": "EleutherAI lm-eval-harness style."}
+    ]
+  }
+}

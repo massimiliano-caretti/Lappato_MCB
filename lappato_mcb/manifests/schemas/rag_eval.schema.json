@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "domain": "rag_eval",
+  "description": "Retrieval-augmented generation evaluation diagnostics.",
+  "evidence_files": {
+    "rag_retrieval.csv": {
+      "description": "Per-query retrieval recall.",
+      "columns": [
+        {"name": "recall_at_k", "aliases": ["hit_rate", "answer_recall"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["low_retrieval_recall"]
+    },
+    "rag_grounding.csv": {
+      "description": "Per-answer unsupported-claim rate.",
+      "columns": [
+        {"name": "unsupported_rate", "aliases": ["faithfulness_error_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["unsupported_answers"]
+    },
+    "rag_citations.csv": {
+      "description": "Per-answer citation-mismatch rate.",
+      "columns": [
+        {"name": "citation_mismatch_rate", "aliases": ["bad_citation_rate"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["citation_mismatch"]
+    }
+  }
+}

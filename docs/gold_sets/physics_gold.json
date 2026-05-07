@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "physics",
+  "description": "Computational physics methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "conservation_law_violation": [
+      {"name": "symplectic integrator", "must_match_keywords": ["symplectic"], "rationale": "Symplectic methods preserve energy."},
+      {"name": "energy conservation MD", "must_match_keywords": ["energy", "conservation"], "rationale": "MD-stability literature."},
+      {"name": "Verlet integrator", "must_match_keywords": ["verlet"], "rationale": "Verlet — canonical MD integrator."}
+    ],
+    "timestep_or_cfl_violation": [
+      {"name": "CFL stability finite volume", "must_match_keywords": ["cfl"], "rationale": "Courant-Friedrichs-Lewy condition."},
+      {"name": "Courant condition", "must_match_keywords": ["courant"], "rationale": "Courant — explicit-scheme stability."},
+      {"name": "adaptive time stepping", "must_match_keywords": ["adaptive", "time"], "rationale": "Adaptive timestep for stability."}
+    ],
+    "boundary_condition_artifact": [
+      {"name": "absorbing boundary condition", "must_match_keywords": ["absorbing"], "rationale": "ABC for wave problems."},
+      {"name": "perfectly matched layer", "must_match_keywords": ["perfectly", "matched"], "rationale": "Berenger — PML for FDTD."},
+      {"name": "periodic boundary simulation", "must_match_keywords": ["periodic"], "rationale": "Periodic BC for bulk simulations."}
+    ],
+    "equilibration_insufficient": [
+      {"name": "autocorrelation Monte Carlo", "must_match_keywords": ["autocorrelation"], "rationale": "Sokal — integrated autocorrelation time."},
+      {"name": "block averaging", "must_match_keywords": ["block", "averaging"], "rationale": "Flyvbjerg & Petersen — block averaging."},
+      {"name": "burn in molecular dynamics", "must_match_keywords": ["burn"], "rationale": "MD burn-in literature."}
+    ],
+    "dimensional_inconsistency": [
+      {"name": "Buckingham pi theorem", "must_match_keywords": ["buckingham"], "rationale": "Buckingham — dimensional analysis."},
+      {"name": "dimensional analysis simulation", "must_match_keywords": ["dimensional", "analysis"], "rationale": "Generic dimensional-audit literature."}
+    ]
+  }
+}

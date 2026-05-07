@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "recommender",
+  "description": "Recommender-system methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "cold_start_recall_low": [
+      {"name": "cold start recommendation", "must_match_keywords": ["cold", "start"], "rationale": "Standard cold-start framing."},
+      {"name": "content-based hybrid", "must_match_keywords": ["content", "based"], "rationale": "Hybrid CF + content as cold-start fix."},
+      {"name": "meta learning recommendation", "must_match_keywords": ["meta", "learning"], "rationale": "MeLU et al. — few-shot user adaptation."}
+    ],
+    "popularity_bias": [
+      {"name": "popularity bias correction", "must_match_keywords": ["popularity", "bias"], "rationale": "Abdollahpouri et al. — popularity-bias literature."},
+      {"name": "inverse propensity recommendation", "must_match_keywords": ["propensity"], "rationale": "Schnabel et al. — IPS for unbiased eval."},
+      {"name": "long-tail recommendation", "must_match_keywords": ["long", "tail"], "rationale": "Long-tail literature for recsys."}
+    ],
+    "catalog_coverage_low": [
+      {"name": "catalog coverage diversity", "must_match_keywords": ["coverage"], "rationale": "Kaminskas & Bridge — diversity / coverage metrics."},
+      {"name": "diversity reranking", "must_match_keywords": ["diversity"], "rationale": "MMR / DPP for catalog diversification."}
+    ],
+    "temporal_leakage_unchecked": [
+      {"name": "temporal split evaluation", "must_match_keywords": ["temporal", "split"], "rationale": "Meng et al. — leakage-free temporal eval."},
+      {"name": "leave-one-out time", "must_match_keywords": ["leave", "out"], "rationale": "Standard leakage-aware protocol."},
+      {"name": "future leakage recommendation", "must_match_keywords": ["leakage"], "rationale": "General leakage literature for recsys."}
+    ],
+    "online_offline_gap_missing": [
+      {"name": "online offline gap recommendation", "must_match_keywords": ["online", "offline"], "rationale": "Gomez-Uribe & Hunt — Netflix-style online-offline gap."},
+      {"name": "interleaved evaluation", "must_match_keywords": ["interleaved"], "rationale": "Radlinski et al. — interleaving for online evaluation."},
+      {"name": "off-policy evaluation recommender", "must_match_keywords": ["off", "policy"], "rationale": "OPE literature for recsys."}
+    ]
+  }
+}

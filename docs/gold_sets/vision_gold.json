@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domain": "vision",
+  "description": "Image-classification methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "low_per_class_performance": [
+      {"name": "long-tail recognition", "must_match_keywords": ["long", "tail"], "rationale": "Liu et al. — long-tail visual recognition."},
+      {"name": "class-balanced loss", "must_match_keywords": ["class", "balanced"], "rationale": "Cui et al. — long-tail reweighting."},
+      {"name": "balanced softmax", "must_match_keywords": ["balanced", "softmax"], "rationale": "Ren et al. — softmax adjustment for long-tail."}
+    ],
+    "vision_calibration": [
+      {"name": "temperature scaling", "must_match_keywords": ["temperature", "scaling"], "rationale": "Guo et al. — modern calibration baseline."},
+      {"name": "deep ensemble calibration", "must_match_keywords": ["deep", "ensemble"], "rationale": "Lakshminarayanan et al. — ensembles improve calibration."},
+      {"name": "expected calibration error", "must_match_keywords": ["expected", "calibration"], "rationale": "ECE reporting."}
+    ],
+    "augmentation_sensitivity": [
+      {"name": "RandAugment", "must_match_keywords": ["randaugment"], "rationale": "Cubuk et al. 2020 — standard augmentation policy."},
+      {"name": "AugMix robustness", "must_match_keywords": ["augmix"], "rationale": "Hendrycks et al. — robustness via augmentation."},
+      {"name": "image augmentation", "must_match_keywords": ["image", "augmentation"], "rationale": "General recall on augmentation literature."}
+    ],
+    "domain_shift_unchecked": [
+      {"name": "domain generalization", "must_match_keywords": ["domain", "generalization"], "rationale": "DomainBed family of benchmarks."},
+      {"name": "ImageNet-C corruptions", "must_match_keywords": ["imagenet", "corrupt"], "rationale": "Hendrycks & Dietterich — corruption robustness."},
+      {"name": "WILDS distribution shift", "must_match_keywords": ["wilds"], "rationale": "Koh et al. 2021 — real-world shift benchmark."}
+    ],
+    "label_noise_audit_missing": [
+      {"name": "label noise robust learning", "must_match_keywords": ["label", "noise"], "rationale": "Frenay & Verleysen survey."},
+      {"name": "noisy labels CIFAR", "must_match_keywords": ["noisy", "label"], "rationale": "Han et al. / co-teaching — noisy-label benchmarks."},
+      {"name": "confident learning", "must_match_keywords": ["confident", "learning"], "rationale": "Northcutt et al. — cleanlab framework."}
+    ]
+  }
+}

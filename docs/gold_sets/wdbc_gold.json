@@ -4,74 +4,35 @@
   "description": "Hand-curated topics that should surface in a healthy WDBC LAPPATO_MCB run. See docs/gold_sets/README.md.",
   "topics_by_weakness": {
     "class_imbalance": [
-      {
-        "name": "class-balanced loss",
-        "must_match_keywords": ["class", "balanced"],
-        "rationale": "Cui et al. 2019 — class-balanced loss for long-tailed classification."
-      },
-      {
-        "name": "focal loss",
-        "must_match_keywords": ["focal", "loss"],
-        "rationale": "Lin et al. 2017 — focal loss as canonical reweighting baseline."
-      },
-      {
-        "name": "imbalanced classification methods",
-        "must_match_keywords": ["imbalanced", "classification"],
-        "rationale": "Generic recall check on the imbalance literature."
-      }
+      {"name": "class-balanced loss", "must_match_keywords": ["class", "balanced"], "rationale": "Cui et al. 2019 — class-balanced loss for long-tailed classification."},
+      {"name": "focal loss", "must_match_keywords": ["focal", "loss"], "rationale": "Lin et al. 2017 — canonical reweighting baseline."},
+      {"name": "imbalanced classification methods", "must_match_keywords": ["imbalanced", "classification"], "rationale": "Generic recall on the imbalance literature."},
+      {"name": "SMOTE oversampling", "must_match_keywords": ["smote"], "rationale": "Chawla et al. 2002 — synthetic minority oversampling."},
+      {"name": "cost-sensitive learning", "must_match_keywords": ["cost", "sensitive"], "rationale": "Standard reweighting framing for clinical risk."}
     ],
     "low_calibration": [
-      {
-        "name": "isotonic calibration",
-        "must_match_keywords": ["isotonic", "calibration"],
-        "rationale": "Zadrozny & Elkan 2001 — standard nonparametric calibration."
-      },
-      {
-        "name": "Brier score",
-        "must_match_keywords": ["brier"],
-        "rationale": "Brier 1950 — proper scoring rule for probability calibration."
-      },
-      {
-        "name": "reliability diagram",
-        "must_match_keywords": ["reliability"],
-        "rationale": "Standard diagnostic for calibration quality."
-      }
+      {"name": "isotonic calibration", "must_match_keywords": ["isotonic", "calibration"], "rationale": "Zadrozny & Elkan 2001 — nonparametric calibration."},
+      {"name": "Brier score", "must_match_keywords": ["brier"], "rationale": "Brier 1950 — proper scoring rule."},
+      {"name": "reliability diagram", "must_match_keywords": ["reliability"], "rationale": "Standard calibration diagnostic."},
+      {"name": "Platt scaling", "must_match_keywords": ["platt"], "rationale": "Platt 1999 — sigmoid recalibration."},
+      {"name": "expected calibration error", "must_match_keywords": ["expected", "calibration"], "rationale": "Naeini et al. 2015 — ECE reporting."}
     ],
     "marker_redundancy": [
-      {
-        "name": "SHAP interaction values",
-        "must_match_keywords": ["shap"],
-        "rationale": "Lundberg et al. — SHAP for feature interactions."
-      },
-      {
-        "name": "group lasso",
-        "must_match_keywords": ["group", "lasso"],
-        "rationale": "Yuan & Lin 2006 — sparse group lasso for correlated features."
-      }
+      {"name": "SHAP interaction values", "must_match_keywords": ["shap"], "rationale": "Lundberg et al. — SHAP for interactions."},
+      {"name": "group lasso", "must_match_keywords": ["group", "lasso"], "rationale": "Yuan & Lin 2006 — sparse group lasso."},
+      {"name": "permutation importance", "must_match_keywords": ["permutation", "importance"], "rationale": "Breiman 2001 — robust importance measure."},
+      {"name": "feature correlation cluster", "must_match_keywords": ["correlated", "feature"], "rationale": "Standard pre-importance correlation audit."}
     ],
     "tabular_baseline_alternatives": [
-      {
-        "name": "TabPFN",
-        "must_match_keywords": ["tabpfn"],
-        "rationale": "Hollmann et al. 2023 — foundation model for small tabular data."
-      },
-      {
-        "name": "CatBoost",
-        "must_match_keywords": ["catboost"],
-        "rationale": "Prokhorenkova et al. 2018 — alternative GBDT to LightGBM."
-      }
+      {"name": "TabPFN", "must_match_keywords": ["tabpfn"], "rationale": "Hollmann et al. 2023 — foundation model for small tabular."},
+      {"name": "CatBoost", "must_match_keywords": ["catboost"], "rationale": "Prokhorenkova et al. 2018 — alternative GBDT."},
+      {"name": "tabular benchmark", "must_match_keywords": ["tabular", "benchmark"], "rationale": "Cross-model tabular comparison literature."},
+      {"name": "AutoGluon tabular", "must_match_keywords": ["autogluon"], "rationale": "Erickson et al. 2020 — AutoML tabular baseline."}
     ],
     "decision_curve_missing": [
-      {
-        "name": "decision curve analysis",
-        "must_match_keywords": ["decision", "curve"],
-        "rationale": "Vickers & Elkin 2006 — net-benefit framework."
-      },
-      {
-        "name": "net benefit",
-        "must_match_keywords": ["net", "benefit"],
-        "rationale": "Standard term in clinical risk-prediction reporting."
-      }
+      {"name": "decision curve analysis", "must_match_keywords": ["decision", "curve"], "rationale": "Vickers & Elkin 2006 — net-benefit framework."},
+      {"name": "net benefit", "must_match_keywords": ["net", "benefit"], "rationale": "Standard term in clinical risk-prediction reporting."},
+      {"name": "TRIPOD reporting", "must_match_keywords": ["tripod"], "rationale": "Collins et al. — reporting checklist for prediction models."}
     ]
   }
 }

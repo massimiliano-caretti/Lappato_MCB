@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "medical_imaging",
+  "description": "Medical-imaging classification / segmentation topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "low_segmentation_overlap": [
+      {"name": "Dice loss segmentation", "must_match_keywords": ["dice", "loss"], "rationale": "Milletari et al. — Dice loss for segmentation."},
+      {"name": "Tversky loss", "must_match_keywords": ["tversky"], "rationale": "Salehi et al. — Tversky for unbalanced segmentation."},
+      {"name": "boundary loss", "must_match_keywords": ["boundary", "loss"], "rationale": "Kervadec et al. — boundary-aware loss."},
+      {"name": "U-Net segmentation", "must_match_keywords": ["u", "net"], "rationale": "Ronneberger et al. — canonical seg architecture."}
+    ],
+    "small_lesion_recall_low": [
+      {"name": "small lesion detection", "must_match_keywords": ["small", "lesion"], "rationale": "Standard small-object recall framing."},
+      {"name": "focal loss segmentation", "must_match_keywords": ["focal"], "rationale": "Focal Tversky for small lesions."}
+    ],
+    "site_shift": [
+      {"name": "scanner domain shift", "must_match_keywords": ["scanner"], "rationale": "Site / scanner shift literature."},
+      {"name": "federated medical imaging", "must_match_keywords": ["federated"], "rationale": "Sheller et al. — federated learning across sites."},
+      {"name": "harmonization MRI", "must_match_keywords": ["harmonization"], "rationale": "Image harmonization across sites."}
+    ],
+    "uncertainty_missing": [
+      {"name": "Monte Carlo dropout", "must_match_keywords": ["dropout"], "rationale": "Gal & Ghahramani — MC-dropout for uncertainty."},
+      {"name": "deep ensemble medical", "must_match_keywords": ["ensemble"], "rationale": "Lakshminarayanan et al. — deep ensembles."},
+      {"name": "selective prediction medical", "must_match_keywords": ["selective"], "rationale": "Selective prediction / abstention literature."}
+    ],
+    "external_validation_missing": [
+      {"name": "TRIPOD AI", "must_match_keywords": ["tripod"], "rationale": "Collins et al. — TRIPOD reporting checklist."},
+      {"name": "external validation medical", "must_match_keywords": ["external", "validation"], "rationale": "Standard radiology external-eval framing."}
+    ]
+  }
+}

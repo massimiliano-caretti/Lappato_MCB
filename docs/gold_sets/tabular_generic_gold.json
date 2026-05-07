@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "domain": "tabular_generic",
+  "description": "Generic tabular ML methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "probability_calibration": [
+      {"name": "Platt scaling", "must_match_keywords": ["platt"], "rationale": "Platt 1999 — sigmoid recalibration."},
+      {"name": "isotonic regression", "must_match_keywords": ["isotonic"], "rationale": "Zadrozny & Elkan — nonparametric calibration."},
+      {"name": "Brier score", "must_match_keywords": ["brier"], "rationale": "Standard calibration scoring rule."},
+      {"name": "expected calibration error", "must_match_keywords": ["expected", "calibration"], "rationale": "ECE reporting standard."}
+    ],
+    "class_imbalance": [
+      {"name": "SMOTE", "must_match_keywords": ["smote"], "rationale": "Chawla et al. 2002 — synthetic minority oversampling."},
+      {"name": "focal loss", "must_match_keywords": ["focal", "loss"], "rationale": "Lin et al. 2017 — reweighting for tabular GBDT too."},
+      {"name": "class weighting", "must_match_keywords": ["class", "weight"], "rationale": "Standard cost-sensitive training."}
+    ],
+    "feature_drift": [
+      {"name": "population stability index", "must_match_keywords": ["population", "stability"], "rationale": "PSI — credit-scoring drift metric."},
+      {"name": "Kolmogorov-Smirnov drift", "must_match_keywords": ["kolmogorov"], "rationale": "KS test for drift detection."},
+      {"name": "covariate shift", "must_match_keywords": ["covariate", "shift"], "rationale": "Sugiyama et al. — formal covariate shift framework."}
+    ],
+    "leakage_audit_missing": [
+      {"name": "target leakage", "must_match_keywords": ["target", "leakage"], "rationale": "Standard tabular leakage failure mode."},
+      {"name": "data leakage Kaufman", "must_match_keywords": ["data", "leakage"], "rationale": "Kaufman et al. — leakage taxonomy paper."}
+    ],
+    "missingness_audit_missing": [
+      {"name": "missing not at random", "must_match_keywords": ["mnar"], "rationale": "Rubin — MAR/MCAR/MNAR taxonomy."},
+      {"name": "multiple imputation", "must_match_keywords": ["multiple", "imputation"], "rationale": "Van Buuren — MICE framework."},
+      {"name": "missing data pattern", "must_match_keywords": ["missing", "data"], "rationale": "Generic recall on missing-data audit."}
+    ]
+  }
+}

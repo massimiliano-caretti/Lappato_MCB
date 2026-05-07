@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "earth_climate",
+  "description": "Earth-system / climate / hydrology methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "model_observation_bias_high": [
+      {"name": "quantile mapping bias correction", "must_match_keywords": ["quantile", "mapping"], "rationale": "Standard bias-correction technique."},
+      {"name": "CMIP evaluation", "must_match_keywords": ["cmip"], "rationale": "CMIP intercomparison evaluation literature."},
+      {"name": "regional climate model bias", "must_match_keywords": ["regional", "climate"], "rationale": "Regional-model bias evaluation."}
+    ],
+    "water_balance_violation": [
+      {"name": "GRACE terrestrial water storage", "must_match_keywords": ["grace"], "rationale": "GRACE-based water-balance closure."},
+      {"name": "land surface model evaluation", "must_match_keywords": ["land", "surface"], "rationale": "LSM evaluation literature."},
+      {"name": "evapotranspiration partitioning", "must_match_keywords": ["evapotranspiration"], "rationale": "ET partitioning literature."}
+    ],
+    "extremes_underestimated": [
+      {"name": "extreme value climate", "must_match_keywords": ["extreme", "value"], "rationale": "EVT applied to climate extremes."},
+      {"name": "generalized extreme value", "must_match_keywords": ["generalized", "extreme"], "rationale": "GEV distribution literature."},
+      {"name": "return period climate", "must_match_keywords": ["return", "period"], "rationale": "Return-level / return-period analyses."}
+    ],
+    "ensemble_underdispersive": [
+      {"name": "rank histogram ensemble", "must_match_keywords": ["rank", "histogram"], "rationale": "Hamill — rank-histogram diagnostic."},
+      {"name": "spread skill relationship", "must_match_keywords": ["spread", "skill"], "rationale": "Standard spread/skill literature."},
+      {"name": "ensemble post-processing EMOS", "must_match_keywords": ["emos"], "rationale": "Gneiting et al. — EMOS post-processing."}
+    ],
+    "downscaling_train_period_overlap": [
+      {"name": "statistical downscaling", "must_match_keywords": ["downscaling"], "rationale": "Statistical-downscaling literature."},
+      {"name": "non-stationarity climate", "must_match_keywords": ["non", "stationarity"], "rationale": "Non-stationarity in calibration period."}
+    ]
+  }
+}

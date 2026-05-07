@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "domain": "materials_science",
+  "description": "DFT / MD / MLIP / phase-stability diagnostics.",
+  "evidence_files": {
+    "materials_kpoint_convergence.csv": {
+      "description": "Total energy at increasing k-point density.",
+      "columns": [
+        {"name": "k_density", "aliases": [], "type": "string", "required": false},
+        {"name": "total_energy", "aliases": ["energy"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["kpoint_unconverged"]
+    },
+    "materials_basis_convergence.csv": {
+      "description": "Total energy at increasing basis cutoff.",
+      "columns": [
+        {"name": "ecut", "aliases": [], "type": "number", "required": false},
+        {"name": "total_energy", "aliases": ["energy"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["basis_unconverged"]
+    },
+    "materials_force_residuals.csv": {
+      "description": "Per-structure MLIP force RMSE.",
+      "columns": [
+        {"name": "structure", "aliases": [], "type": "string", "required": false},
+        {"name": "force_rmse", "aliases": ["force_residual", "rmse_force"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["force_residuals_high"]
+    },
+    "materials_phase_stability.csv": {
+      "description": "Per-phase formation energy / hull distance.",
+      "columns": [
+        {"name": "phase", "aliases": [], "type": "string", "required": false},
+        {"name": "formation_energy_per_atom", "aliases": ["energy_above_hull", "ehull"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["phase_stability_violated"]
+    },
+    "materials_extrapolation.csv": {
+      "description": "Distance to nearest training structure.",
+      "columns": [
+        {"name": "structure", "aliases": [], "type": "string", "required": false},
+        {"name": "nearest_train_distance", "aliases": ["domain_distance"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["extrapolation_warning"]
+    }
+  }
+}

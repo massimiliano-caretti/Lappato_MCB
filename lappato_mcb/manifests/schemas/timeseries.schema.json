@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "timeseries",
+  "description": "Time-series forecasting diagnostics.",
+  "evidence_files": {
+    "timeseries_residual_acf.csv": {
+      "description": "Residual autocorrelation at lags 1..K.",
+      "columns": [
+        {"name": "lag", "aliases": [], "type": "number", "required": true},
+        {"name": "acf", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["residual_autocorrelation"]
+    },
+    "timeseries_residual_var.csv": {
+      "description": "Per-fold residual variance (rolling origin).",
+      "columns": [
+        {"name": "fold", "aliases": [], "type": "string", "required": false},
+        {"name": "variance", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["heteroscedastic_residuals"]
+    },
+    "timeseries_per_horizon.csv": {
+      "description": "Per-horizon test-set MAPE / RMSE.",
+      "columns": [
+        {"name": "horizon", "aliases": [], "type": "number", "required": true},
+        {"name": "mape", "aliases": ["rmse"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["horizon_degradation"]
+    }
+  }
+}

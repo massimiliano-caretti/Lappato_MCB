@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "rag_eval",
+  "description": "RAG evaluation methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "low_retrieval_recall": [
+      {"name": "dense retrieval BERT", "must_match_keywords": ["dense", "retrieval"], "rationale": "Karpukhin et al. — DPR family."},
+      {"name": "BM25 baseline", "must_match_keywords": ["bm25"], "rationale": "Robertson — BM25 lexical baseline."},
+      {"name": "MTEB embedding benchmark", "must_match_keywords": ["mteb"], "rationale": "Muennighoff et al. — embedding benchmark."}
+    ],
+    "unsupported_answers": [
+      {"name": "RAG faithfulness", "must_match_keywords": ["faithfulness"], "rationale": "Es et al. — RAGAS faithfulness metric."},
+      {"name": "groundedness LLM", "must_match_keywords": ["groundedness"], "rationale": "Standard groundedness eval framing."},
+      {"name": "attribution evaluation", "must_match_keywords": ["attribution"], "rationale": "Bohnet et al. — attributable QA."}
+    ],
+    "citation_mismatch": [
+      {"name": "citation generation LLM", "must_match_keywords": ["citation"], "rationale": "Citation generation / verification literature."},
+      {"name": "verifiable QA", "must_match_keywords": ["verifiable"], "rationale": "Verifiable open-domain QA framing."}
+    ],
+    "reranker_missing": [
+      {"name": "cross encoder reranker", "must_match_keywords": ["cross", "encoder"], "rationale": "Nogueira et al. — monoBERT reranker."},
+      {"name": "ColBERT late interaction", "must_match_keywords": ["colbert"], "rationale": "Khattab & Zaharia — ColBERT reranking."}
+    ],
+    "chunking_strategy_unchecked": [
+      {"name": "chunking RAG", "must_match_keywords": ["chunking"], "rationale": "Practitioner literature on chunk-size impact."},
+      {"name": "passage retrieval window", "must_match_keywords": ["passage"], "rationale": "Passage / window selection trade-offs."}
+    ]
+  }
+}

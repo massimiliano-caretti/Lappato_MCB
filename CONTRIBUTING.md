@@ -30,10 +30,16 @@ MLOps trackers. PRs that break any of them will be asked to rework.
 ## What we accept
 
 - **Bug fixes** with a regression test in `tests/test_lappato_mcb.py`.
-- **New manifests** for new domains. A complete contribution is two
-  files (`lappato_mcb/manifests/<domain>.py` + the matching
-  `lappato_mcb/reports/<domain>.py`) and a registry update. See the
-  bundled `wdbc`, `nlp`, `timeseries` manifests as reference.
+- **New manifests** for new domains. A complete contribution is
+  three files: `lappato_mcb/manifests/<domain>.py` (the manifest),
+  `lappato_mcb/manifests/schemas/<domain>.schema.json` (the
+  evidence-CSV contract), and `docs/gold_sets/<domain>_gold.json`
+  (the recall sanity check), plus a registry update in
+  `lappato_mcb/manifests/__init__.py`. The 35 bundled manifests are
+  all reference templates — `wdbc`, `nlp`, `timeseries` are the
+  smallest; `pipeline_health` is the largest (16 detectors). A
+  matching `lappato_mcb/reports/<domain>.py` report pack is optional;
+  the framework falls back to a generic pack when absent.
 - **Threshold reviews.** If you have empirical evidence that a default
   cut-off is wrong for a target cohort, open a PR that updates
   `DEFAULT_THRESHOLDS` *and* the citation in the comment above it.

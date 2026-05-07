@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "domain": "neuroscience",
+  "description": "fMRI / EEG / decoding pipeline diagnostics.",
+  "evidence_files": {
+    "neuro_motion.csv": {
+      "description": "Per-subject framewise displacement.",
+      "columns": [
+        {"name": "subject", "aliases": [], "type": "string", "required": false},
+        {"name": "framewise_displacement", "aliases": ["fd", "motion"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["motion_high"]
+    },
+    "neuro_subject_split.csv": {
+      "description": "Per-subject train / test membership (1/0).",
+      "columns": [
+        {"name": "subject", "aliases": [], "type": "string", "required": true},
+        {"name": "train", "aliases": [], "type": "number", "required": true},
+        {"name": "test", "aliases": [], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["subject_split_violation"]
+    },
+    "neuro_artifact.csv": {
+      "description": "Per-trial artefact flags.",
+      "columns": [
+        {"name": "trial", "aliases": [], "type": "string", "required": false},
+        {"name": "line_noise", "aliases": [], "type": "number", "required": false},
+        {"name": "blink", "aliases": [], "type": "number", "required": false},
+        {"name": "muscle", "aliases": [], "type": "number", "required": false},
+        {"name": "artifact", "aliases": [], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["artifact_share_high"]
+    },
+    "neuro_smoothing.csv": {
+      "description": "Smoothing kernel FWHM vs voxel size.",
+      "columns": [
+        {"name": "analysis", "aliases": [], "type": "string", "required": false},
+        {"name": "fwhm_mm", "aliases": ["fwhm"], "type": "number", "required": true},
+        {"name": "voxel_mm", "aliases": ["voxel_size"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["smoothing_below_voxel"]
+    },
+    "neuro_multiple_comparison.csv": {
+      "description": "Per-analysis multiple-comparison correction status.",
+      "columns": [
+        {"name": "analysis", "aliases": [], "type": "string", "required": false},
+        {"name": "n_tests", "aliases": [], "type": "number", "required": false},
+        {"name": "corrected", "aliases": ["multiple_comparison", "mc_correction"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["multiple_comparison_uncorrected"]
+    }
+  }
+}

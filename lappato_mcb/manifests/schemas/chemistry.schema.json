@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "domain": "chemistry",
+  "description": "Cheminformatics / computational-chemistry diagnostics.",
+  "evidence_files": {
+    "chem_validity.csv": {
+      "description": "Per-set valid-structure counts.",
+      "columns": [
+        {"name": "set", "aliases": [], "type": "string", "required": false},
+        {"name": "n_total", "aliases": ["total"], "type": "number", "required": false},
+        {"name": "n_valid", "aliases": ["valid"], "type": "number", "required": false},
+        {"name": "validity", "aliases": ["valid_share", "fraction_valid"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["structure_validity_low"]
+    },
+    "chem_space_coverage.csv": {
+      "description": "Train vs test descriptor ranges, or direct coverage share.",
+      "columns": [
+        {"name": "train_descriptor_min", "aliases": ["train_min"], "type": "number", "required": false},
+        {"name": "train_descriptor_max", "aliases": ["train_max"], "type": "number", "required": false},
+        {"name": "test_descriptor_min", "aliases": ["test_min"], "type": "number", "required": false},
+        {"name": "test_descriptor_max", "aliases": ["test_max"], "type": "number", "required": false},
+        {"name": "coverage", "aliases": ["covered_share"], "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["chemical_space_coverage_low"]
+    },
+    "chem_thermodynamics.csv": {
+      "description": "Thermodynamic-cycle closure errors.",
+      "columns": [
+        {"name": "cycle", "aliases": [], "type": "string", "required": false},
+        {"name": "closure_error", "aliases": ["cycle_error", "delta"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["thermodynamic_consistency_violation"]
+    },
+    "chem_reaction_balance.csv": {
+      "description": "Per-reaction left/right atom counts (e.g. 'C:6;H:12;O:6').",
+      "columns": [
+        {"name": "reaction", "aliases": [], "type": "string", "required": false},
+        {"name": "left_atoms", "aliases": [], "type": "string", "required": true},
+        {"name": "right_atoms", "aliases": [], "type": "string", "required": true}
+      ],
+      "used_by_detectors": ["reaction_balance_violation"]
+    },
+    "chem_stereo.csv": {
+      "description": "Input vs kept stereo-centre counts.",
+      "columns": [
+        {"name": "n_input_stereo_centers", "aliases": ["input_stereo"], "type": "number", "required": true},
+        {"name": "n_kept_stereo_centers", "aliases": ["kept_stereo"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["stereochemistry_information_dropped"]
+    }
+  }
+}

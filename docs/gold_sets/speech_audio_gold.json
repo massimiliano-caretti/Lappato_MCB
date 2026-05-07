@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "domain": "speech_audio",
+  "description": "Speech / audio recognition methodology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "high_transcription_error": [
+      {"name": "Whisper ASR", "must_match_keywords": ["whisper"], "rationale": "Radford et al. — large-scale weak supervision."},
+      {"name": "wav2vec self supervised", "must_match_keywords": ["wav2vec"], "rationale": "Baevski et al. — wav2vec 2.0."},
+      {"name": "word error rate", "must_match_keywords": ["word", "error"], "rationale": "WER / CER reporting."}
+    ],
+    "noise_robustness_gap": [
+      {"name": "noise robust speech", "must_match_keywords": ["noise", "robust"], "rationale": "Noise-robust ASR survey."},
+      {"name": "spectrogram augmentation", "must_match_keywords": ["spectrogram"], "rationale": "SpecAugment for ASR."},
+      {"name": "SpecAugment", "must_match_keywords": ["specaugment"], "rationale": "Park et al. — SpecAugment paper."}
+    ],
+    "speaker_group_gap": [
+      {"name": "accent ASR fairness", "must_match_keywords": ["accent"], "rationale": "Accent-bias literature in ASR."},
+      {"name": "speech recognition fairness", "must_match_keywords": ["fairness"], "rationale": "Koenecke et al. — racial disparities ASR."}
+    ],
+    "streaming_latency_missing": [
+      {"name": "streaming ASR latency", "must_match_keywords": ["streaming"], "rationale": "Streaming ASR latency literature."},
+      {"name": "RNN-T transducer", "must_match_keywords": ["transducer"], "rationale": "Graves — RNN-T for streaming."}
+    ],
+    "out_of_domain_audio_missing": [
+      {"name": "out of domain ASR", "must_match_keywords": ["out", "of", "domain"], "rationale": "OOD ASR literature."},
+      {"name": "AudioSet classification", "must_match_keywords": ["audioset"], "rationale": "Gemmeke et al. — AudioSet for OOD audio."}
+    ]
+  }
+}

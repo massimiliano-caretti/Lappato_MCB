@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "domain": "biology",
+  "description": "Genomics / ecology / evolutionary biology topics. See docs/gold_sets/README.md.",
+  "topics_by_weakness": {
+    "batch_effect_detected": [
+      {"name": "ComBat batch correction", "must_match_keywords": ["combat"], "rationale": "Johnson et al. — ComBat."},
+      {"name": "surrogate variable analysis", "must_match_keywords": ["surrogate", "variable"], "rationale": "Leek & Storey — SVA."},
+      {"name": "RUV remove unwanted variation", "must_match_keywords": ["ruv"], "rationale": "Risso et al. — RUV."},
+      {"name": "batch effect RNA-seq", "must_match_keywords": ["batch", "effect"], "rationale": "Generic batch-effect literature."}
+    ],
+    "low_biological_replicate_n": [
+      {"name": "RNA-seq replicate power", "must_match_keywords": ["replicate"], "rationale": "Liu et al. — RNA-seq replicate power."},
+      {"name": "differential expression sample size", "must_match_keywords": ["sample", "size"], "rationale": "DE sample-size literature."}
+    ],
+    "gene_set_overlap_high": [
+      {"name": "GSEA gene set enrichment", "must_match_keywords": ["gsea"], "rationale": "Subramanian et al. — GSEA."},
+      {"name": "pathway enrichment redundancy", "must_match_keywords": ["enrichment"], "rationale": "Pathway-enrichment redundancy literature."}
+    ],
+    "phylogenetic_signal_unmeasured": [
+      {"name": "phylogenetic generalized least squares", "must_match_keywords": ["phylogenetic"], "rationale": "PGLS literature."},
+      {"name": "Pagel lambda", "must_match_keywords": ["pagel"], "rationale": "Pagel — phylogenetic signal lambda."},
+      {"name": "Felsenstein independent contrasts", "must_match_keywords": ["felsenstein"], "rationale": "Felsenstein — independent contrasts."}
+    ],
+    "contamination_warning": [
+      {"name": "decontam microbiome", "must_match_keywords": ["decontam"], "rationale": "Davis et al. — decontam."},
+      {"name": "Kraken metagenomic classifier", "must_match_keywords": ["kraken"], "rationale": "Wood & Salzberg — Kraken."},
+      {"name": "host DNA contamination", "must_match_keywords": ["contamination"], "rationale": "Generic contamination-detection literature."}
+    ]
+  }
+}
