@@ -13,7 +13,7 @@ type: software
 authors:
   - family-names: Caretti
     given-names: Massimiliano
-    email: massimiliano.carbec@gmail.com
+    email: massimiliano.caretti@gmail.com
 
 repository-code: "https://github.com/massimiliano-caretti/Lappato_MCB"
 url: "https://github.com/massimiliano-caretti/Lappato_MCB"
