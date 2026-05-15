@@ -14,8 +14,8 @@ remote-sensing-driven Earth-system inference. Expected CSVs in
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 from ._common import f, max_value, rows, summary
 

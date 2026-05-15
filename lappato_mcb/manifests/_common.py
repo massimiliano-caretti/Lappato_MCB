@@ -7,8 +7,8 @@ evidence checks fail closed rather than firing on bad files.
 from __future__ import annotations
 
 import csv
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 
 def rows(path: Path) -> list[dict[str, str]]:

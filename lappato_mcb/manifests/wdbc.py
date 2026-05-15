@@ -7,8 +7,8 @@ Diagnostic dataset (loaded via ``sklearn.datasets.load_breast_cancer``).
 from __future__ import annotations
 
 import csv
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 RUN_TAG = "wdbc"
 

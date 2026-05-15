@@ -222,11 +222,11 @@ def suggest_dict_writer_snippet(
     snippet_lines.extend([
         "import csv",
         f"path = {checkpoints_var} / {filename!r}",
-        f"with path.open('w', newline='', encoding='utf-8') as fh:",
+        "with path.open('w', newline='', encoding='utf-8') as fh:",
         f"    writer = csv.DictWriter(fh, fieldnames=[{field_list_repr}])",
         "    writer.writeheader()",
         f"    writer.writerow({example_row})",
-        f"# -------------------------------------------------------------",
+        "# -------------------------------------------------------------",
     ])
     return "\n".join(snippet_lines)
 
@@ -282,7 +282,7 @@ def render_report(report: dict, suggest: bool = True) -> tuple[str, bool]:
             lines.append(f"        warn: {w}")
         if r["extra_columns"]:
             lines.append(
-                f"        extra columns ignored: " + ", ".join(r["extra_columns"])
+                "        extra columns ignored: " + ", ".join(r["extra_columns"])
             )
         # When the file is present but missing required columns, the
         # snippet helps the human (or AI assistant) close the gap

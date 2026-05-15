@@ -30,8 +30,8 @@ Expected CSVs in ``checkpoints/``:
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 from ._common import (
     count_rows,
@@ -62,6 +62,30 @@ DEFAULT_THRESHOLDS = {
     "hp_top_vs_mean_gap_warning": 0.05,
     "dead_feature_share_warning": 0.10,
     "dead_feature_variance_floor": 1.0e-6,
+    # ── v1.6 insight-detector thresholds (introduced 2026-05-10) ──────
+    # subgroup-disparity: minimum (error_rate(subgroup)/error_rate(global))
+    # ratio at which a subgroup is flagged.  2.0 = "twice as many errors
+    # as average" — Fisher exact p-value < α confirms it.
+    "subgroup_disparity_ratio_warning": 2.0,
+    "subgroup_disparity_p_warning": 0.05,
+    "subgroup_min_size": 5,                      # ignore tiny subgroups
+    # calibration-bin gap: max |conf - acc| inside any populated bin.
+    # 0.10 follows Guo et al. 2017 ("On Calibration of Modern Neural
+    # Networks") for "reliably miscalibrated" bins.
+    "calibration_bin_gap_warning": 0.10,
+    "calibration_bin_min_count": 10,
+    # decision-threshold ROC: flag if Youden's-J optimum is more than
+    # this distance from 0.5 (i.e. the binary decision rule is
+    # operating sub-optimally for the held-out set).
+    "decision_threshold_distance_warning": 0.05,
+    # failure-clustering: chi-square p-value below which we declare
+    # the misclassifications are NOT randomly distributed across groups.
+    "failure_clustering_p_warning": 0.05,
+    # cross-cycle drift: |slope| × N_cycles bigger than this fraction
+    # of metric range counts as drift.  0.05 = "5 % of the metric range
+    # over the observed cycle window" — generous floor.
+    "drift_total_change_warning": 0.05,
+    "drift_p_warning": 0.05,
 }
 THRESHOLDS = dict(DEFAULT_THRESHOLDS)
 
@@ -200,7 +224,7 @@ def _cohort_size_summary(path: Path) -> dict:
 
 # ─── detector 8 — external-test calibration / performance drop ─────────
 def _split_metric(path: Path, *labels: str) -> float | None:
-    target = {l.lower() for l in labels}
+    target = {label.lower() for label in labels}
     out: list[float] = []
     for row in rows(path):
         split = (row.get("split") or row.get("set") or "").strip().lower()
@@ -899,4 +923,690 @@ MANIFEST: list[dict] = [
 ]
 
 
-__all__ = ["MANIFEST", "RUN_TAG", "THRESHOLDS", "DEFAULT_THRESHOLDS", "override_thresholds"]
+# ╔═══════════════════════════════════════════════════════════════════╗
+# ║  v1.6 — Insight detectors (2026-05-10)                            ║
+# ║                                                                   ║
+# ║  Seven new detectors that move LAPPATO_MCB from "pattern-match    ║
+# ║  compliance auditor" toward "insight engine" while preserving     ║
+# ║  the stdlib-only-by-default core (statistical helpers in          ║
+# ║  ``lappato_mcb._stats`` use SciPy when present, otherwise fall   ║
+# ║  back to the pure-Python implementation).                         ║
+# ║                                                                   ║
+# ║  Each detector follows the same fail-closed convention as the     ║
+# ║  v1.5 detectors above: missing or malformed CSV → no card.        ║
+# ╚═══════════════════════════════════════════════════════════════════╝
+
+# ── d17 — Subgroup-stratified failure disparity ─────────────────────────
+# Reads ``pipeline_subgroup_metrics.csv``: rows of
+# (subgroup_key, subgroup_value, n, n_errors).
+# Fires when ANY subgroup's error rate is ≥ X× the global rate AND a
+# Fisher's-exact (or chi-square fallback) p-value crosses α.
+# Use case: would have surfaced our "R-suffix biopsies fail 4× more"
+# pattern automatically.
+
+def _subgroup_disparity_records(path: Path) -> list[dict[str, float]]:
+    out: list[dict[str, float]] = []
+    for row in rows(path):
+        n  = f(row, "n", "support", "size")
+        ne = f(row, "n_errors", "errors", "fail_count")
+        if n is None or ne is None or n <= 0:
+            continue
+        out.append({
+            "key":        str(row.get("subgroup_key",   "")).strip() or "?",
+            "value":      str(row.get("subgroup_value", "")).strip() or "?",
+            "n":          float(n),
+            "n_errors":   float(ne),
+            "error_rate": float(ne) / float(n) if n > 0 else 0.0,
+        })
+    return out
+
+
+def _subgroup_disparity_present(path: Path) -> bool:
+    recs = _subgroup_disparity_records(path)
+    if not recs:
+        return False
+    n_total       = sum(r["n"] for r in recs)
+    err_total     = sum(r["n_errors"] for r in recs)
+    if n_total <= 0 or err_total <= 0:
+        return False
+    global_rate   = err_total / n_total
+    ratio_thresh  = THRESHOLDS["subgroup_disparity_ratio_warning"]
+    p_thresh      = THRESHOLDS["subgroup_disparity_p_warning"]
+    min_size      = int(THRESHOLDS["subgroup_min_size"])
+    from .._stats import fisher_exact_2x2
+    for r in recs:
+        if r["n"] < min_size:
+            continue
+        if global_rate <= 0:
+            continue
+        if (r["error_rate"] / global_rate) < ratio_thresh:
+            continue
+        # 2x2: rows = [subgroup, rest]; cols = [errors, correct]
+        sub_n, sub_e = r["n"], r["n_errors"]
+        rest_n, rest_e = n_total - sub_n, err_total - sub_e
+        table = [
+            [sub_e,            sub_n  - sub_e],
+            [rest_e,           rest_n - rest_e],
+        ]
+        try:
+            p = fisher_exact_2x2(table)
+        except Exception:
+            continue
+        if p < p_thresh:
+            return True
+    return False
+
+
+def _subgroup_disparity_summary(path: Path) -> dict:
+    recs = _subgroup_disparity_records(path)
+    if not recs:
+        return {"rows": 0}
+    total_n = sum(r["n"] for r in recs)
+    total_e = sum(r["n_errors"] for r in recs)
+    if total_n <= 0:
+        return {"rows": len(recs)}
+    global_rate = total_e / total_n
+    worst = max(recs, key=lambda r: r["error_rate"])
+    return {
+        "rows":               len(recs),
+        "global_error_rate":  round(global_rate, 4),
+        "worst_subgroup":     f"{worst['key']}={worst['value']}",
+        "worst_error_rate":   round(worst["error_rate"], 4),
+        "worst_ratio":        round(
+            (worst["error_rate"] / global_rate) if global_rate > 0 else 0.0,
+            2,
+        ),
+    }
+
+
+# ── d18 — Calibration-bin gap ───────────────────────────────────────────
+# Reads ``pipeline_reliability_diagram.csv``: rows of
+# (bin_lo, bin_hi, count, mean_confidence, accuracy).
+# Fires when ANY populated bin has |conf − acc| ≥ Δ (default 0.10).
+# Use case: surfaces the "underconfident-midrange / overconfident-high"
+# pattern that uniform temperature scaling cannot fix.
+
+def _calibration_bin_gap_present(path: Path) -> bool:
+    min_cnt = int(THRESHOLDS["calibration_bin_min_count"])
+    delta   = float(THRESHOLDS["calibration_bin_gap_warning"])
+    for row in rows(path):
+        cnt  = f(row, "count", "n", "size")
+        conf = f(row, "mean_confidence", "mean_conf", "confidence", "conf")
+        acc  = f(row, "accuracy", "acc", "fraction_correct")
+        if cnt is None or conf is None or acc is None:
+            continue
+        if cnt < min_cnt:
+            continue
+        if abs(conf - acc) >= delta:
+            return True
+    return False
+
+
+def _calibration_bin_gap_summary(path: Path) -> dict:
+    out_rows = rows(path)
+    worst = {"bin": "", "gap": 0.0, "count": 0}
+    for row in out_rows:
+        cnt  = f(row, "count", "n", "size")
+        conf = f(row, "mean_confidence", "mean_conf", "confidence", "conf")
+        acc  = f(row, "accuracy", "acc", "fraction_correct")
+        if cnt is None or conf is None or acc is None or cnt <= 0:
+            continue
+        gap = abs(conf - acc)
+        if gap > worst["gap"]:
+            lo = f(row, "bin_lo", "lo", "low") or 0.0
+            hi = f(row, "bin_hi", "hi", "high") or 1.0
+            worst = {"bin": f"[{lo:.2f},{hi:.2f}]", "gap": float(gap),
+                     "count": int(cnt), "conf": float(conf), "acc": float(acc)}
+    return {
+        "rows":            len(out_rows),
+        "max_bin_gap":     round(worst["gap"], 4),
+        "worst_bin":       worst["bin"],
+        "worst_bin_count": worst.get("count", 0),
+    }
+
+
+# ── d19 — Decision-threshold sub-optimal ────────────────────────────────
+# Reads ``pipeline_predictions_with_probs.csv``: rows of
+# (item_id, y_true, p_positive).
+# Sweeps the binary decision threshold over [0.05, 0.95] and reports the
+# one maximising Youden's J = sens(+) + sens(-) − 1.  Fires when the
+# optimum is ≥ ``decision_threshold_distance_warning`` away from 0.5.
+# Use case: would have flagged our 0.36 threshold tuning opportunity.
+
+def _decision_threshold_optimum(path: Path) -> tuple[float, float, int, int]:
+    """Sweep thresholds → (best_threshold, best_J, n_pos, n_neg)."""
+    p_pos:  list[float] = []
+    y_true: list[int]   = []
+    for row in rows(path):
+        p = f(row, "p_positive", "p_pos", "p_tumor", "score", "prob")
+        y = f(row, "y_true", "true", "label")
+        if p is None or y is None:
+            continue
+        p_pos.append(float(p))
+        y_true.append(int(y))
+    if len(p_pos) < 10:
+        return 0.5, 0.0, 0, 0
+    n_pos = sum(1 for y in y_true if y == 1)
+    n_neg = sum(1 for y in y_true if y == 0)
+    if n_pos == 0 or n_neg == 0:
+        return 0.5, 0.0, n_pos, n_neg
+    best_t, best_j = 0.5, 0.0
+    # 0.05-step sweep — coarse enough for stdlib speed yet adequate.
+    t = 0.05
+    while t <= 0.95:
+        tp = sum(1 for p, y in zip(p_pos, y_true) if y == 1 and p >= t)
+        fp = sum(1 for p, y in zip(p_pos, y_true) if y == 0 and p >= t)
+        tn = n_neg - fp
+        sens_p = tp / n_pos if n_pos > 0 else 0.0
+        sens_n = tn / n_neg if n_neg > 0 else 0.0
+        j = sens_p + sens_n - 1.0
+        if j > best_j:
+            best_j, best_t = j, float(t)
+        t += 0.05
+    return best_t, best_j, n_pos, n_neg
+
+
+def _decision_threshold_suboptimal(path: Path) -> bool:
+    best_t, _, n_pos, n_neg = _decision_threshold_optimum(path)
+    if n_pos == 0 or n_neg == 0:
+        return False
+    delta = float(THRESHOLDS["decision_threshold_distance_warning"])
+    return abs(best_t - 0.5) >= delta
+
+
+def _decision_threshold_summary(path: Path) -> dict:
+    best_t, best_j, n_pos, n_neg = _decision_threshold_optimum(path)
+    return {
+        "rows":            n_pos + n_neg,
+        "n_positive":      n_pos,
+        "n_negative":      n_neg,
+        "best_threshold":  round(best_t, 3),
+        "best_youden_j":   round(best_j, 4),
+        "distance_from_05": round(abs(best_t - 0.5), 3),
+    }
+
+
+# ── d20 — Failure clustering ────────────────────────────────────────────
+# Reads ``pipeline_per_item_predictions.csv``: rows of
+# (item_id, group_id, y_true, y_pred, p_top).
+# Chi-square test of independence on the (group × correct/incorrect)
+# 2-column table.  Fires when p < α and at least one group has ≥ 5
+# items.  Use case: surfaces "errors concentrate in patient X /
+# scanner Y / annotator Z" patterns automatically.
+
+def _failure_clustering_table(path: Path) -> tuple[dict[str, list[int]], int]:
+    """Return ``({group: [n_errors, n_correct]}, total_groups)``.
+
+    Uses explicit None-checks instead of ``or``-fallbacks because a
+    valid prediction value of ``0`` is falsy and would otherwise be
+    silently replaced by the default sentinel — a classic Python bug
+    that would erase every "predicted negative" row from the table.
+    """
+    table: dict[str, list[int]] = {}
+    for row in rows(path):
+        gid = str(row.get("group_id", "")).strip()
+        if not gid:
+            continue
+        yt_val = f(row, "y_true", "true", "label")
+        yp_val = f(row, "y_pred", "pred")
+        if yt_val is None or yp_val is None:
+            continue
+        try:
+            yt = int(yt_val)
+            yp = int(yp_val)
+        except (TypeError, ValueError):
+            continue
+        cell = table.setdefault(gid, [0, 0])
+        if yt != yp:
+            cell[0] += 1
+        else:
+            cell[1] += 1
+    return table, len(table)
+
+
+def _failure_clustering_present(path: Path) -> bool:
+    table, n_groups = _failure_clustering_table(path)
+    if n_groups < 2:
+        return False
+    # Drop tiny groups (n < 5) to stabilise the test.
+    big_groups = {g: cnt for g, cnt in table.items() if sum(cnt) >= 5}
+    if len(big_groups) < 2:
+        return False
+    contingency = [cnt for cnt in big_groups.values()]
+    from .._stats import chi2_p_value
+    p = chi2_p_value(contingency)
+    return p < float(THRESHOLDS["failure_clustering_p_warning"])
+
+
+def _failure_clustering_summary(path: Path) -> dict:
+    table, n_groups = _failure_clustering_table(path)
+    if n_groups == 0:
+        return {"rows": 0}
+    n_total_err = sum(c[0] for c in table.values())
+    n_total     = sum(sum(c) for c in table.values())
+    worst_g, worst_rate = "?", 0.0
+    for g, c in table.items():
+        if sum(c) >= 5:
+            rate = c[0] / sum(c)
+            if rate > worst_rate:
+                worst_rate, worst_g = rate, g
+    return {
+        "rows":              n_total,
+        "n_groups":          n_groups,
+        "global_error_rate": round((n_total_err / n_total) if n_total > 0 else 0.0, 4),
+        "worst_group":       worst_g,
+        "worst_group_rate":  round(worst_rate, 4),
+    }
+
+
+# ── d21 — Cross-cycle drift ─────────────────────────────────────────────
+# Reads the run-tag-prefixed meta-log
+# ``<run_tag>_lappato_mcb_meta.csv`` — already produced by the daemon —
+# specifically the ``cycle`` and ``n_papers_kept`` columns (or, when
+# present, a user-supplied ``primary_metric`` column).  Linear regression
+# on the metric vs cycle index; fires when |slope| × N is large AND
+# the t-test p-value is below α.  Use case: surfaces silent metric drift
+# across long monitoring windows.
+
+def _cross_cycle_drift_series(path: Path) -> tuple[list[float], list[float]]:
+    out_x: list[float] = []
+    out_y: list[float] = []
+    for row in rows(path):
+        cyc = f(row, "cycle", "cycle_n", "cycle_id")
+        metric = f(row, "primary_metric", "metric_value", "score",
+                    "n_papers_kept", "n_active_weaknesses")
+        if cyc is None or metric is None:
+            continue
+        out_x.append(float(cyc))
+        out_y.append(float(metric))
+    return out_x, out_y
+
+
+def _cross_cycle_drift_present(path: Path) -> bool:
+    xs, ys = _cross_cycle_drift_series(path)
+    if len(xs) < 5:
+        return False
+    metric_range = max(ys) - min(ys) if ys else 0.0
+    if metric_range <= 0.0:
+        return False
+    from .._stats import linear_regression_slope_p
+    slope, _, p = linear_regression_slope_p(xs, ys)
+    n_cycles = max(xs) - min(xs)
+    total_change = abs(slope) * n_cycles
+    rel_change = total_change / metric_range
+    return (
+        p < float(THRESHOLDS["drift_p_warning"])
+        and rel_change >= float(THRESHOLDS["drift_total_change_warning"])
+    )
+
+
+def _cross_cycle_drift_summary(path: Path) -> dict:
+    xs, ys = _cross_cycle_drift_series(path)
+    if len(xs) < 2:
+        return {"rows": len(xs)}
+    from .._stats import linear_regression_slope_p
+    slope, intercept, p = linear_regression_slope_p(xs, ys)
+    return {
+        "rows":          len(xs),
+        "n_cycles":      int(max(xs) - min(xs)) if xs else 0,
+        "slope":         round(slope, 6),
+        "p_value":       round(p, 6),
+        "metric_range":  round((max(ys) - min(ys)) if ys else 0.0, 4),
+    }
+
+
+# ── d22 — Underpowered cohort (sample-size) ─────────────────────────────
+# Re-uses ``pipeline_class_counts.csv`` (already a v1.5 evidence file).
+# Quantifies how far the minority class is from the
+# ``min_minority_n`` literature target.  Reports the ABSOLUTE number of
+# additional samples needed (vs the abstract threshold flag of d1).
+# Always-info severity — meant to be a constructive "you need N more
+# events for 80 % power" companion to d1's pure threshold check.
+
+def _underpowered_cohort_present(path: Path) -> bool:
+    counts = _class_counts(path)
+    if not counts:
+        return False
+    min_target = float(THRESHOLDS["min_minority_n"])
+    return min(counts) < min_target
+
+
+def _underpowered_cohort_summary(path: Path) -> dict:
+    counts = _class_counts(path)
+    if not counts:
+        return {"rows": 0}
+    min_target = float(THRESHOLDS["min_minority_n"])
+    minority   = float(min(counts))
+    needed     = max(0, int(min_target - minority))
+    return {
+        "rows":             len(counts),
+        "minority_count":   int(minority),
+        "literature_target": int(min_target),
+        "additional_needed": needed,
+    }
+
+
+# ── d23 — Compositional syndrome detector ──────────────────────────────
+# Post-processor that fires when ≥ 80 % of a *named syndrome's* trigger
+# detectors are active.  Doesn't read its own CSV — it inspects the
+# active-card list of the current cycle.  ``LAPPATO_MCB._run_cycle``
+# evaluates every detector, then this one looks at the names of the
+# fired ones to decide whether a composite syndrome card is also
+# emitted.  Encoded as a special "manifest sentinel": its
+# ``evidence_check`` is True iff the composition condition holds, given
+# a snapshot of all currently-fired detector ids.
+
+SYNDROME_DEFINITIONS: dict[str, dict] = {
+    "underpowered_imbalanced_clinical_cohort": {
+        "trigger_ids": [
+            "small_minority_class",
+            "high_cross_seed_variance",
+            "acc_BAC_gap_high",
+        ],
+        "min_active_fraction": 0.66,             # ≥ 2 of 3
+        "title": ("Syndrome: underpowered imbalanced clinical cohort "
+                  "(Riley 2019 + Steyerberg 2019)"),
+        "interpretation": (
+            "The combination of small minority class, high cross-seed "
+            "variance, and a measurable accuracy / balanced-accuracy "
+            "gap is the canonical signature of a clinical-prediction "
+            "cohort below the sample size required for stable "
+            "evaluation (Riley et al., BMJ 2019; Steyerberg, Clinical "
+            "Prediction Models 2019).  Chasing single-metric "
+            "improvements without more data tends to amplify "
+            "instability rather than reduce it."
+        ),
+    },
+    "miscalibrated_modern_NN": {
+        "trigger_ids": [
+            "calibration_bin_gap",
+            "prediction_confidence_collapsed",
+        ],
+        "min_active_fraction": 0.5,
+        "title": ("Syndrome: miscalibrated modern neural network "
+                  "(Guo et al. 2017)"),
+        "interpretation": (
+            "Modern neural networks tend to be over-confident; the "
+            "combination of a populated calibration bin gap with a "
+            "collapsed prediction histogram matches the Guo et al. "
+            "2017 ICML diagnosis.  Temperature scaling fixes the "
+            "uniform component; isotonic regression is required when "
+            "the gap pattern is non-monotone across bins."
+        ),
+    },
+}
+
+
+def _syndrome_composition_active() -> tuple[bool, dict]:
+    """Inspect ``THRESHOLDS["__active_card_ids__"]`` (populated by the
+    daemon at cycle time) and decide whether a syndrome fires.  Returns
+    ``(active, summary_dict)``.
+
+    The daemon is responsible for populating
+    ``THRESHOLDS["__active_card_ids__"]`` with the set of fired card
+    ids BEFORE invoking this detector; if it doesn't, the detector
+    fails closed.
+    """
+    active_ids = THRESHOLDS.get("__active_card_ids__", set())
+    if not isinstance(active_ids, (set, list, tuple, frozenset)):
+        return False, {"rows": 0}
+    active_ids = set(active_ids)
+    fired: list[str] = []
+    for syndrome_name, sp in SYNDROME_DEFINITIONS.items():
+        triggers   = set(sp["trigger_ids"])
+        min_frac   = float(sp.get("min_active_fraction", 0.66))
+        n_required = int(round(len(triggers) * min_frac))
+        if len(triggers & active_ids) >= max(1, n_required):
+            fired.append(syndrome_name)
+    return bool(fired), {
+        "rows":           len(active_ids),
+        "active_cards":   sorted(active_ids),
+        "syndromes":      fired,
+    }
+
+
+def _syndrome_composition_present(path: Path) -> bool:
+    """``path`` is unused — kept for the manifest-uniformity contract.
+    The detector reads the runtime active-card set instead."""
+    active, _ = _syndrome_composition_active()
+    return active
+
+
+def _syndrome_composition_summary(path: Path) -> dict:
+    _, summary_dict = _syndrome_composition_active()
+    return summary_dict
+
+
+# Append the seven v1.6 entries to MANIFEST (extending in place keeps
+# the daemon discovery loop unchanged — it iterates ``MANIFEST`` only).
+MANIFEST.extend([
+    {
+        "id": "subgroup_disparity",
+        "title": "Failure rate is significantly higher in a subgroup of items",
+        "evidence": "pipeline_subgroup_metrics.csv",
+        "evidence_check": _subgroup_disparity_present,
+        "evidence_summary": _subgroup_disparity_summary,
+        "severity": "high",
+        "queries": [
+            "subgroup performance gap fairness machine learning",
+            "stratified evaluation classifier rare subgroup",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Stratify training and evaluation by the offending subgroup; "
+                       "consider subgroup-aware loss reweighting or per-subgroup "
+                       "calibration before aggregating metrics.",
+        "why_it_matters": "Aggregate metrics hide pockets of poor performance; "
+                            "subgroup disparities often signal a confounder, a "
+                            "labelling shortcut, or an unmodelled covariate.",
+        "next_checks": [
+            "Inspect feature distribution and class balance within the affected subgroup.",
+            "Compare per-subgroup confidence calibration to the global one.",
+        ],
+        "success_criteria": [
+            "Subgroup error-rate ratio falls below 2× and Fisher's exact p ≥ 0.05.",
+        ],
+        "references": [
+            "subgroup robustness",
+            "fairness through awareness",
+            "stratified evaluation",
+        ],
+    },
+    {
+        "id": "calibration_bin_gap",
+        "title": "Reliability-diagram bin shows a confidence-vs-accuracy gap",
+        "evidence": "pipeline_reliability_diagram.csv",
+        "evidence_check": _calibration_bin_gap_present,
+        "evidence_summary": _calibration_bin_gap_summary,
+        "severity": "high",
+        "queries": [
+            "reliability diagram calibration neural network",
+            "isotonic regression Platt scaling probability calibration",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Apply isotonic regression or Platt scaling on a held-out "
+                       "calibration split.  Single-parameter temperature scaling "
+                       "is INSUFFICIENT when the bin-level gap is non-monotone.",
+        "why_it_matters": "A monotone temperature is the simplest fix but cannot "
+                            "correct bin-specific gaps.  Identifying the worst-bin "
+                            "tells you whether temperature scaling will work or "
+                            "whether you need a non-parametric calibrator.",
+        "next_checks": [
+            "Plot the reliability diagram and inspect bin populations.",
+            "Compare temperature-scaled ECE against isotonic-regression ECE.",
+        ],
+        "success_criteria": [
+            "All populated bins have |conf − acc| ≤ 0.10.",
+        ],
+        "references": [
+            "Guo et al. 2017 calibration",
+            "isotonic regression probability",
+            "expected calibration error",
+        ],
+    },
+    {
+        "id": "decision_threshold_suboptimal",
+        "title": "Binary decision threshold is sub-optimal for the held-out set",
+        "evidence": "pipeline_predictions_with_probs.csv",
+        "evidence_check": _decision_threshold_suboptimal,
+        "evidence_summary": _decision_threshold_summary,
+        "severity": "high",
+        "queries": [
+            "Youden index optimal threshold ROC clinical",
+            "decision threshold tuning class imbalance binary",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Replace the default 0.5 cut-off with the Youden's-J optimal "
+                       "threshold tuned on a calibration split, never on the test set.",
+        "why_it_matters": "The default 0.5 cut-off is rarely optimal under class "
+                            "imbalance or asymmetric error costs; tuning the "
+                            "threshold can convert false negatives into false "
+                            "positives without retraining.",
+        "next_checks": [
+            "Sweep the threshold on the calibration split and report the chosen value.",
+            "Compute the cost of FN vs FP for the deployment context.",
+        ],
+        "success_criteria": [
+            "The deployment threshold is documented and reported alongside metrics.",
+        ],
+        "references": [
+            "Youden J statistic",
+            "operating point selection",
+            "cost-sensitive classification",
+        ],
+    },
+    {
+        "id": "failure_clustering",
+        "title": "Misclassifications cluster non-randomly across groups",
+        "evidence": "pipeline_per_item_predictions.csv",
+        "evidence_check": _failure_clustering_present,
+        "evidence_summary": _failure_clustering_summary,
+        "severity": "high",
+        "queries": [
+            "error clustering machine learning batch effect",
+            "concentrated failures group level confound",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Investigate group-level confounders (acquisition site, "
+                       "annotator, time window).  Consider group-aware "
+                       "cross-validation to expose generalisation gaps.",
+        "why_it_matters": "Clustered failures usually reveal an unmodelled "
+                            "covariate.  Random-fold metrics will over-state "
+                            "performance until the confound is accounted for.",
+        "next_checks": [
+            "Compute per-group precision and recall; inspect the worst group.",
+            "Switch to group-aware k-fold and recompute the headline metric.",
+        ],
+        "success_criteria": [
+            "Group-level chi-square p-value ≥ 0.05 on the failure × group table.",
+        ],
+        "references": [
+            "leave-one-group-out CV",
+            "batch effect machine learning",
+            "subpopulation generalization",
+        ],
+    },
+    {
+        "id": "cross_cycle_drift",
+        "title": "Headline metric drifts significantly across monitoring cycles",
+        "evidence": "pipeline_health_lappato_mcb_meta.csv",   # default RUN_TAG
+        "evidence_check": _cross_cycle_drift_present,
+        "evidence_summary": _cross_cycle_drift_summary,
+        "severity": "info",
+        "queries": [
+            "machine learning model drift monitoring",
+            "performance degradation deployment time",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Investigate environment / data drift before further model "
+                       "tuning.  Compare current vs baseline distributions at the "
+                       "feature, label, and prediction levels.",
+        "why_it_matters": "A linear trend in the headline metric across cycles "
+                            "usually points to upstream data drift (acquisition, "
+                            "labelling, preprocessing) rather than a model defect.",
+        "next_checks": [
+            "Run a population-stability index (PSI) on input features.",
+            "Re-fit the model on the most recent window and compare metrics.",
+        ],
+        "success_criteria": [
+            "Cross-cycle slope is statistically indistinguishable from zero.",
+        ],
+        "references": [
+            "concept drift",
+            "data drift detection",
+            "ML monitoring pipelines",
+        ],
+    },
+    {
+        "id": "underpowered_cohort",
+        "title": "Cohort size is below the literature-cited target for the minority class",
+        "evidence": "pipeline_class_counts.csv",
+        "evidence_check": _underpowered_cohort_present,
+        "evidence_summary": _underpowered_cohort_summary,
+        "severity": "info",
+        "queries": [
+            "minimum sample size machine learning clinical prediction",
+            "events per variable Riley sample size calculator",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Frame the deficit as a study limitation; quantify the "
+                       "additional events required for the standard 80 %-power, "
+                       "α=0.05 test against the literature target.",
+        "why_it_matters": "Without enough events per predictor, all downstream "
+                            "metrics carry irreducible variance.  Acknowledging "
+                            "the sample-size gap is more credible than chasing "
+                            "model improvements.",
+        "next_checks": [
+            "Document the additional events required to reach the target.",
+            "Plan an external-cohort validation as a substitute for size growth.",
+        ],
+        "success_criteria": [
+            "Minority-class events meet the published target for the chosen domain.",
+        ],
+        "references": [
+            "Riley 2019 sample size",
+            "events per variable",
+            "clinical prediction models",
+        ],
+    },
+    {
+        "id": "syndrome_composition",
+        "title": "Two or more weakness cards combine into a named syndrome",
+        # No evidence file — driven by the daemon's active-card list.
+        # The path argument is ignored by the detector; we point it
+        # at the same meta-log file so the loader passes through.
+        "evidence": "pipeline_health_lappato_mcb_meta.csv",
+        "evidence_check": _syndrome_composition_present,
+        "evidence_summary": _syndrome_composition_summary,
+        "severity": "info",
+        "queries": [
+            "machine learning weakness combination diagnosis",
+            "clinical prediction model validation checklist TRIPOD-AI",
+        ],
+        "sources": ["arXiv", "OpenAlex", "Crossref"],
+        "transplant": "Treat the combination as a single named syndrome rather "
+                       "than three independent alerts; the recommended action is "
+                       "the syndrome's collective transplant, not the sum of the "
+                       "individual ones.",
+        "why_it_matters": "Several weakness cards firing together usually point "
+                            "to a single underlying cause; addressing them "
+                            "individually wastes effort.",
+        "next_checks": [
+            "Read the syndrome's interpretation block (lappato_mcb.manifests."
+            "pipeline_health.SYNDROME_DEFINITIONS).",
+            "Apply the syndrome's collective transplant before the individual ones.",
+        ],
+        "success_criteria": [
+            "After the syndrome's transplant is applied, < 50 % of its trigger "
+            "cards remain active in the next cycle.",
+        ],
+        "references": [
+            "diagnostic syndromes",
+            "clinical model validation",
+            "TRIPOD-AI",
+        ],
+    },
+])
+
+
+__all__ = ["MANIFEST", "RUN_TAG", "THRESHOLDS", "DEFAULT_THRESHOLDS",
+           "override_thresholds", "SYNDROME_DEFINITIONS"]

@@ -7,8 +7,8 @@ Expected CSVs:
 """
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 from ._common import max_value, rows, summary, values
 

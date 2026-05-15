@@ -1,5 +1,11 @@
 # LAPPATO_MCB
 
+[![tests](https://github.com/massimiliano-caretti/Lappato_MCB/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/massimiliano-caretti/Lappato_MCB/actions/workflows/tests.yml)
+[![python](https://img.shields.io/badge/python-3.9%E2%80%933.13-blue.svg)](https://github.com/massimiliano-caretti/Lappato_MCB/blob/main/pyproject.toml)
+[![ruff](https://img.shields.io/badge/code%20style-ruff-46aef7.svg)](https://github.com/astral-sh/ruff)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/massimiliano-caretti/Lappato_MCB/blob/main/LICENSE)
+[![release](https://img.shields.io/github/v/release/massimiliano-caretti/Lappato_MCB?display_name=tag&sort=semver)](https://github.com/massimiliano-caretti/Lappato_MCB/releases)
+
 **LAPPATO_MCB** — *Literature-Aware Pipeline Partner for Adaptive Transplant
 Optimization*.
 
@@ -26,6 +32,68 @@ export LAPPATO_MCB_MAILTO="you@example.org"
 
 When set, this value is sent to OpenAlex/Crossref/JOSS through their
 documented `mailto` mechanisms and included in the User-Agent.
+
+---
+
+## What's new in v1.6 (2026-05-10) — Insight detectors
+
+LAPPATO_MCB v1.5 was, in honest terms, a **compliance auditor**: it
+flagged known statistical pitfalls (small minority class, single-split
+evaluation, label noise, hyperparameter overfit, …) but rarely
+surfaced *new* insight about a specific run.  v1.6 adds **seven new
+detectors** in the `pipeline_health` manifest that target patterns
+the v1.5 sixteen could not see:
+
+| New detector | Surface pattern | Evidence file |
+|---|---|---|
+| `subgroup_disparity`         | Failures concentrated in a stratum (e.g. one annotator, one site, one biopsy-suffix) | `pipeline_subgroup_metrics.csv` |
+| `calibration_bin_gap`        | Non-monotone miscalibration (the case temperature scaling cannot fix) | `pipeline_reliability_diagram.csv` |
+| `decision_threshold_suboptimal` | Default 0.5 cut-off is far from the Youden's-J optimum | `pipeline_predictions_with_probs.csv` |
+| `failure_clustering`         | Errors cluster non-randomly across a group axis (chi-square test) | `pipeline_per_item_predictions.csv` |
+| `cross_cycle_drift`          | Headline metric drifts linearly across monitoring cycles | `pipeline_health_lappato_mcb_meta.csv` |
+| `underpowered_cohort`        | Quantifies events shy of the Riley 2019 minimum | `pipeline_class_counts.csv` (reused) |
+| `syndrome_composition`       | Two or more cards combine into a *named* syndrome (Riley-2019 underpowered cohort, Guo-2017 modern-NN miscalibration) | meta-log (active-card snapshot) |
+
+The statistical machinery (chi-square, Fisher's exact, Student's t,
+inverse-normal CDF, sample-size calculator) lives in the new
+`lappato_mcb._stats` module under a **hybrid Strategy 3** policy: when
+SciPy is importable the detectors use it transparently; otherwise
+they fall back to pure-Python implementations (Numerical Recipes §6.2
+incomplete gamma, §6.4 incomplete beta, Beasley-Springer 1977
+inverse-normal CDF).  **The library's `dependencies = []` and MIT
+license remain unchanged.**
+
+### Quick start: emit one new evidence file, get one new card
+
+The detectors are fully opt-in — every CSV is fail-closed (missing
+file ⇒ no card).  To activate the most impactful one
+(`subgroup_disparity`), write a 4-column CSV:
+
+```python
+import csv
+from pathlib import Path
+
+stratum = "annotator"   # whatever subgroup matters in your domain
+records = [
+    (stratum, "alice", n_alice, errors_alice),
+    (stratum, "bob",   n_bob,   errors_bob),
+    (stratum, "carol", n_carol, errors_carol),
+]
+with Path("checkpoints/pipeline_subgroup_metrics.csv").open("w", newline="") as fh:
+    w = csv.writer(fh)
+    w.writerow(["subgroup_key", "subgroup_value", "n", "n_errors"])
+    w.writerows(records)
+```
+
+LAPPATO_MCB picks it up on the next polling cycle.  If any
+subgroup's error rate is ≥ 2× the global rate **and** Fisher's exact
+p < 0.05, a `subgroup_disparity` card is emitted with a literature
+queries set, severity `high`, and the worst subgroup name in the
+evidence summary.
+
+The other six detectors follow the same pattern — see the
+`pipeline_health.schema.json` `evidence_files` block and the
+`tests/test_insight_detectors.py` module for runnable examples.
 
 ---
 

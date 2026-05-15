@@ -38,10 +38,10 @@ sys.path.insert(0, str(ROOT))
 
 from lappato_mcb.cache import CorpusCache  # noqa: E402
 from lappato_mcb.core import (  # noqa: E402
-    LAPPATO_MCB,
-    Reranker,
     _DEFAULT_RERANKER_FLOOR,
     _DEFAULT_RERANKER_WEIGHT,
+    LAPPATO_MCB,
+    Reranker,
 )
 
 

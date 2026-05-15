@@ -4,6 +4,13 @@ on:
   push:
   pull_request:
 
+# Cancel in-progress runs of the same workflow on the same ref when a
+# new push lands. Cuts CI minutes on PR-iteration without losing
+# coverage on the latest commit.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -20,6 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"  # caches the pip wheels between runs
       - name: Install package with report extras
         run: python -m pip install -e ".[reports]"
       - name: Run unit tests
@@ -33,6 +41,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install package
         run: python -m pip install -e .
       - name: Run score validation harness
@@ -51,7 +60,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: "pip"
       - name: Install ruff
+        # Pin so the lint outcome is reproducible across runs even if
+        # ruff ships a new rule between two CI invocations.
         run: python -m pip install "ruff==0.6.9"
-      - name: Run ruff
+      - name: Run ruff (config from pyproject.toml)
         run: ruff check lappato_mcb examples tests

@@ -13,8 +13,8 @@ algebra). Expected CSVs in ``checkpoints/``:
 from __future__ import annotations
 
 import math
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 from ._common import f, max_value, rows, summary, values
 

@@ -15,8 +15,8 @@ Diagnostic CSVs expected in ``checkpoints/`` (emitted by
 from __future__ import annotations
 
 import csv
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 RUN_TAG = "timeseries"
 

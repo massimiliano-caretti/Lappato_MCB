@@ -336,19 +336,59 @@ def _crossref_year(message: dict) -> str:
     return "?"
 
 
-def _crossref_search(query: str, max_results: int = 5) -> list[dict]:
-    """Hit the Crossref /works endpoint and return relevance-ranked recent works.
+def _strip_jats_tags(abs_raw: str) -> str:
+    """Cheap tag-stripper for Crossref's <jats:p>-wrapped abstracts.
 
-    Crossref is the third public scholarly source LAPPATO_MCB consults
-    (alongside arXiv and OpenAlex). Like OpenAlex it accepts a
-    ``mailto`` query parameter to opt into the polite pool — no API
-    key required. We restrict to ``from-pub-date:2024`` to mirror the
-    OpenAlex recency filter and keep the three sources comparable.
+    Crossref records sometimes embed a JATS-XML fragment in the
+    ``abstract`` field. A dedicated XML parser is over-engineering for
+    what is in practice tag soup. The helper walks character-by-character
+    and emits only the content at depth-0, which is robust enough for
+    every record observed in production.
+    """
+    if not abs_raw.startswith("<"):
+        return abs_raw
+    depth = 0
+    buf: list[str] = []
+    for ch in abs_raw:
+        if ch == "<":
+            depth += 1
+        elif ch == ">":
+            depth = max(depth - 1, 0)
+        elif depth == 0:
+            buf.append(ch)
+    return "".join(buf).strip()
+
+
+def _crossref_query_works(
+    query: str,
+    *,
+    max_results: int,
+    filter_clause: str,
+    default_venue: str = "",
+    extra_fields: dict | None = None,
+) -> list[dict]:
+    """Internal Crossref ``/works`` query, shared by both
+    :func:`_crossref_search` and :func:`_joss_search`.
+
+    The two public callers differ only in:
+
+      - ``filter_clause``: ``"from-pub-date:2024"`` for the general
+        Crossref channel; ``"issn:2475-9066,from-pub-date:2020"`` for
+        the JOSS-only channel.
+      - ``default_venue``: the human-readable fall-back when Crossref
+        omits ``container-title``. Empty string for general Crossref;
+        ``"Journal of Open Source Software"`` for JOSS.
+      - ``extra_fields``: additional key/value pairs to merge into
+        every output record (e.g. ``{"software_channel": "JOSS"}``).
+
+    All other behaviour — URL, polite-pool ``mailto``, abstract
+    sanitation, DOI fallback for ``url`` — is identical and would
+    drift between the two functions if duplicated, so it lives here.
     """
     params = {
         "query": query,
         "rows": max_results,
-        "filter": "from-pub-date:2024",
+        "filter": filter_clause,
         "select": ("DOI,title,abstract,issued,container-title,"
                    "is-referenced-by-count,URL"),
     }
@@ -360,36 +400,38 @@ def _crossref_search(query: str, max_results: int = 5) -> list[dict]:
     items = (data.get("message") or {}).get("items") or []
     out: list[dict] = []
     for w in items:
-        # Crossref returns title and container-title as lists.
         title_list = w.get("title") or []
         venue_list = w.get("container-title") or []
         doi = w.get("DOI", "")
-        # Some Crossref records embed a JATS abstract (XML); strip the
-        # outer <jats:p> if present, otherwise use as-is.
-        abs_raw = (w.get("abstract") or "").strip()
-        if abs_raw.startswith("<"):
-            # Cheap XML strip — avoids an ET import for what's essentially
-            # tag soup; a dedicated parser would be over-engineering here.
-            depth = 0
-            buf: list[str] = []
-            for ch in abs_raw:
-                if ch == "<":
-                    depth += 1
-                elif ch == ">":
-                    depth -= 1 if depth > 0 else 0
-                elif depth == 0:
-                    buf.append(ch)
-            abs_raw = "".join(buf).strip()
-        out.append({
+        record = {
             "id": doi,
             "title": (title_list[0] if title_list else "").strip(),
-            "abstract": abs_raw,
+            "abstract": _strip_jats_tags((w.get("abstract") or "").strip()),
             "year": _crossref_year(w),
             "url": w.get("URL") or (f"https://doi.org/{doi}" if doi else ""),
-            "venue": (venue_list[0] if venue_list else ""),
+            "venue": (venue_list[0] if venue_list else default_venue),
             "cited_by_count": int(w.get("is-referenced-by-count", 0) or 0),
-        })
+        }
+        if extra_fields:
+            record.update(extra_fields)
+        out.append(record)
     return out
+
+
+def _crossref_search(query: str, max_results: int = 5) -> list[dict]:
+    """Hit the Crossref /works endpoint and return relevance-ranked recent works.
+
+    Crossref is the third public scholarly source LAPPATO_MCB consults
+    (alongside arXiv and OpenAlex). Like OpenAlex it accepts a
+    ``mailto`` query parameter to opt into the polite pool — no API
+    key required. We restrict to ``from-pub-date:2024`` to mirror the
+    OpenAlex recency filter and keep the three sources comparable.
+    """
+    return _crossref_query_works(
+        query,
+        max_results=max_results,
+        filter_clause="from-pub-date:2024",
+    )
 
 
 def _joss_search(query: str, max_results: int = 5) -> list[dict]:
@@ -402,47 +444,13 @@ def _joss_search(query: str, max_results: int = 5) -> list[dict]:
     dependency while surfacing citable software implementations that can
     make a weakness card more actionable.
     """
-    params = {
-        "query": query,
-        "rows": max_results,
-        "filter": "issn:2475-9066,from-pub-date:2020",
-        "select": ("DOI,title,abstract,issued,container-title,"
-                   "is-referenced-by-count,URL"),
-    }
-    if _LAPPATO_MCB_MAILTO:
-        params["mailto"] = _LAPPATO_MCB_MAILTO
-    qs = urllib.parse.urlencode(params)
-    raw = _http_get(f"https://api.crossref.org/works?{qs}")
-    data = json.loads(raw.decode("utf-8", errors="replace"))
-    items = (data.get("message") or {}).get("items") or []
-    out: list[dict] = []
-    for w in items:
-        title_list = w.get("title") or []
-        venue_list = w.get("container-title") or []
-        doi = w.get("DOI", "")
-        abs_raw = (w.get("abstract") or "").strip()
-        if abs_raw.startswith("<"):
-            depth = 0
-            buf: list[str] = []
-            for ch in abs_raw:
-                if ch == "<":
-                    depth += 1
-                elif ch == ">":
-                    depth -= 1 if depth > 0 else 0
-                elif depth == 0:
-                    buf.append(ch)
-            abs_raw = "".join(buf).strip()
-        out.append({
-            "id": doi,
-            "title": (title_list[0] if title_list else "").strip(),
-            "abstract": abs_raw,
-            "year": _crossref_year(w),
-            "url": w.get("URL") or (f"https://doi.org/{doi}" if doi else ""),
-            "venue": (venue_list[0] if venue_list else "Journal of Open Source Software"),
-            "cited_by_count": int(w.get("is-referenced-by-count", 0) or 0),
-            "software_channel": "JOSS",
-        })
-    return out
+    return _crossref_query_works(
+        query,
+        max_results=max_results,
+        filter_clause="issn:2475-9066,from-pub-date:2020",
+        default_venue="Journal of Open Source Software",
+        extra_fields={"software_channel": "JOSS"},
+    )
 
 
 # ─── LAPPATO_MCB ─────────────────────────────────────────────────────────
@@ -1052,7 +1060,18 @@ class LAPPATO_MCB:
                 continue
             try:
                 data = json.loads(path.read_text(encoding="utf-8"))
-            except Exception:
+            except Exception as exc:
+                # Log once per malformed context so the user can find
+                # why ``{model_family}`` etc. are not being
+                # substituted. Without this note the failure is
+                # invisible because the daemon keeps running with an
+                # empty context (fail-closed by design).
+                self._append(
+                    f"⚠️  Context file {path.name} failed to parse",
+                    f"```\nJSONDecodeError: {exc}\n```\n"
+                    "Manifest query placeholders will fall back to "
+                    "literal text until the file is fixed."
+                )
                 continue
             if isinstance(data, dict):
                 out.update({str(k): v for k, v in data.items()})
@@ -1226,21 +1245,6 @@ class LAPPATO_MCB:
             with self._log_path.open("a", encoding="utf-8") as fh:
                 fh.write(banner)
                 fh.flush()
-
-    @staticmethod
-    def _safe(fn: Callable, *args, **kwargs):
-        """Run a callable and swallow exceptions — used outside the harvest path.
-
-        The harvest path uses :meth:`_fetch`, which performs structured
-        retries with exponential backoff and records the resulting
-        per-source error count in the meta-log. ``_safe`` remains as a
-        no-retry guard for callers that explicitly opt into "do not
-        propagate, do not record" semantics (e.g. log-banner I/O).
-        """
-        try:
-            return fn(*args, **kwargs)
-        except Exception:
-            return None
 
     def _record_paper(self, weakness_id: str, source: str,
                       query: str, hit: dict) -> None:

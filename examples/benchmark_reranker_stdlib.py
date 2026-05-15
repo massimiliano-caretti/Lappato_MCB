@@ -256,9 +256,9 @@ def _blend_scores(lex: list[float], rerank: list[float],
                   weight: float, floor: float) -> list[float]:
     """Additive blend currently used in ``LAPPATO_MCB._apply_reranker``."""
     out: list[float] = []
-    for l, r in zip(lex, rerank):
-        contrib = max(r - floor, 0.0)
-        out.append(l + weight * contrib)
+    for lex_s, rerank_s in zip(lex, rerank):
+        contrib = max(rerank_s - floor, 0.0)
+        out.append(lex_s + weight * contrib)
     return out
 
 

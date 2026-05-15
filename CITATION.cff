@@ -1,0 +1,59 @@
+# Citation File Format 1.2.0
+# https://citation-file-format.github.io/
+#
+# This file lets GitHub render a "Cite this repository" widget in the
+# sidebar of the repo and lets Zenodo, Software Heritage, and other
+# archival services produce a canonical citation string. Update the
+# DOI line below once Zenodo has minted one for the first release.
+
+cff-version: 1.2.0
+title: "LAPPATO_MCB: Literature-Aware Pipeline Partner for Adaptive Transplant Optimization"
+message: "If you use LAPPATO_MCB in your research, please cite it using the metadata in this file."
+type: software
+authors:
+  - family-names: Caretti
+    given-names: Massimiliano
+    email: massimiliano.carbec@gmail.com
+
+repository-code: "https://github.com/massimiliano-caretti/Lappato_MCB"
+url: "https://github.com/massimiliano-caretti/Lappato_MCB"
+license: MIT
+keywords:
+  - machine-learning
+  - pipeline-monitoring
+  - literature-search
+  - arxiv
+  - openalex
+  - crossref
+  - joss
+  - research-software
+  - evidence-gated-retrieval
+abstract: >-
+  LAPPATO_MCB is a stdlib-only Python framework that monitors
+  machine-learning pipelines from the inside: it watches diagnostic
+  artefacts written to a checkpoints/ folder, activates
+  manifest-defined weakness detectors when their evidence thresholds
+  are crossed, and harvests targeted scientific literature from
+  arXiv, OpenAlex, Crossref, and JOSS. The library ships 35
+  domain manifests covering mainstream ML and 16 scientific
+  domains, with 193 evidence-gated detectors total. An optional
+  pluggable reranker interface supports embedding-aware blending
+  (RRF) for cases where token overlap fails.
+
+# When the first Zenodo release is minted, uncomment + fill the
+# identifiers block so GitHub renders both the GitHub citation and
+# the Zenodo DOI as alternative citation forms.
+#
+# identifiers:
+#   - description: "Permanent archive DOI on Zenodo (all versions)"
+#     type: doi
+#     value: 10.5281/zenodo.XXXXXXX
+#   - description: "DOI for the most recent release"
+#     type: doi
+#     value: 10.5281/zenodo.YYYYYYY
+
+# A version-bound citation is filled when a new release is tagged so
+# the BibTeX produced by GitHub's "Cite this repository" widget
+# carries the exact version the user is working against.
+version: "1.6.1"
+date-released: "2026-05-10"

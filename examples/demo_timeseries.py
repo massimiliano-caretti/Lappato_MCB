@@ -71,7 +71,7 @@ class ARpForecaster:
         self.coefs_: np.ndarray | None = None
         self.intercept_: float = 0.0
 
-    def fit(self, x: np.ndarray) -> "ARpForecaster":
+    def fit(self, x: np.ndarray) -> ARpForecaster:
         p = self.p
         if len(x) <= p:
             raise ValueError(f"need len(x) > p={p}, got {len(x)}")

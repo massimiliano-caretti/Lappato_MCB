@@ -22,8 +22,8 @@ from __future__ import annotations
 import json
 import re
 import threading
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable
 
 from .fingerprint import normalise_title
 

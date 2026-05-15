@@ -63,9 +63,14 @@ class ManifestSchemaTests(unittest.TestCase):
             self.assertEqual(run_tag, tag)
             self.assertGreaterEqual(len(m), 5, tag)
 
-    def test_pipeline_health_has_sixteen_detectors(self):
+    def test_pipeline_health_has_twenty_three_detectors(self):
+        """v1.5 shipped 16 detectors; v1.6 (2026-05-10) added 7 insight
+        detectors (subgroup_disparity, calibration_bin_gap,
+        decision_threshold_suboptimal, failure_clustering,
+        cross_cycle_drift, underpowered_cohort, syndrome_composition).
+        """
         m, _ = manifests.get("pipeline_health")
-        self.assertEqual(len(m), 16)
+        self.assertEqual(len(m), 23)
 
     def test_required_schema_keys_present(self):
         for tag in NEW_TAGS:
@@ -306,9 +311,17 @@ class ScienceDetectorFireTests(unittest.TestCase):
     def test_missing_file_fail_closed_across_manifests(self):
         from lappato_mcb.manifests import (
             biochemistry as bc,
+        )
+        from lappato_mcb.manifests import (
             biology as b,
+        )
+        from lappato_mcb.manifests import (
             chemistry as c,
+        )
+        from lappato_mcb.manifests import (
             mathematics as m,
+        )
+        from lappato_mcb.manifests import (
             physics as ph,
         )
         ghost = Path("/tmp/_lappato_ghost_evidence_file.csv")

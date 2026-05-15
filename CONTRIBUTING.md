@@ -81,6 +81,29 @@ python examples/measure_recall.py --domain wdbc
 CI runs the same three steps on Python 3.9 → 3.13 plus `ruff` lint.
 A PR turns green when all jobs pass.
 
+### Optional: pre-commit hooks
+
+A `.pre-commit-config.yaml` ships with the repo. It runs the same
+`ruff` lint pinned in CI plus a handful of file-hygiene hooks
+(trailing whitespace, end-of-file newline, YAML/TOML syntax,
+large-file guard, merge-conflict marker check, line-ending
+normalisation). The hooks never run the full test suite — that
+stays in CI — so the local commit feedback loop is sub-second.
+
+```bash
+python -m pip install pre-commit
+pre-commit install                  # one-time, per clone
+# pre-commit then runs automatically on every `git commit`.
+
+pre-commit run --all-files          # to run all hooks on demand
+```
+
+Skip a hook for a single commit when needed:
+
+```bash
+SKIP=ruff git commit -m "..."
+```
+
 ## Pull-request checklist
 
 - [ ] New behaviour has a unit test in `tests/`.

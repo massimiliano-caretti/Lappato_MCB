@@ -1,8 +1,8 @@
 """Medical-imaging manifest for classification and segmentation pipelines."""
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 from ._common import min_value, summary, values
 

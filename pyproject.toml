@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lappato_mcb"
-version = "1.5.0"
+version = "1.6.1"
 description = "Literature-aware framework for machine-learning pipelines"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -45,6 +45,14 @@ examples = [
 reports = [
   "matplotlib",
 ]
+# v1.6 — accelerates the new insight detectors' statistical helpers.
+# Without this extra LAPPATO_MCB still works (pure-Python Numerical
+# Recipes fallbacks ship in lappato_mcb._stats); installing scipy is
+# purely for numerical robustness on edge-case tables and a small
+# speed-up on very large pipelines.
+insights = [
+  "scipy",
+]
 dev = [
   "pytest",
   "build",
@@ -54,6 +62,7 @@ all = [
   "scikit-learn",
   "lightgbm",
   "matplotlib",
+  "scipy",
 ]
 
 [project.urls]
@@ -74,12 +83,15 @@ line-length = 100
 target-version = "py39"
 
 [tool.ruff.lint]
-# E,F = pyflakes/pycodestyle errors only — keep the style surface
-# narrow on purpose so lint enforces correctness, not opinion.
-select = ["E", "F", "W", "I"]
+# E,F = pyflakes/pycodestyle errors. I = import-sort. UP = pyupgrade
+# (modern Python idioms). The surface stays narrow on purpose so
+# lint enforces correctness + idiomatic style, not subjective taste.
+select = ["E", "F", "W", "I", "UP"]
 ignore = [
   "E501",  # line length is enforced by formatter, not lint
   "E731",  # lambdas are used deliberately for inline manifest hooks
+  "UP006", # `Dict[str,X]` vs `dict[str,X]` — leave deliberate uses in place
+  "UP007", # `Optional[X]` vs `X | None` — same rationale
 ]
 
 [tool.ruff.lint.per-file-ignores]

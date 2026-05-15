@@ -4,6 +4,169 @@ All notable changes to LAPPATO_MCB are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] — 2026-05-10
+
+Software-engineering polish release. **Zero functional changes**:
+no manifest added, no detector logic altered, no test expectation
+relaxed. The public API, the wire format of weakness cards, the
+schema layout, and the bundled gold-set numbers are bit-identical
+to v1.6.0.
+
+### Added
+
+- **`CITATION.cff`** at the repo root. GitHub renders it as a
+  "Cite this repository" widget in the sidebar; the file also
+  makes the metadata consumable by Zenodo, Software Heritage, and
+  other archival services. The `identifiers:` block is parked for
+  the first Zenodo DOI.
+- **README badges**: tests CI, supported Python range, ruff,
+  license, GitHub release. All point at live endpoints.
+- **`.pre-commit-config.yaml`** with file-hygiene hooks
+  (trailing-whitespace, end-of-file-fixer, check-yaml, check-toml,
+  check-added-large-files, check-merge-conflict, mixed-line-ending)
+  plus the same ruff version pinned in CI. Opt-in per
+  CONTRIBUTING; not required for clone-and-go.
+- **`UP` rule family** in `[tool.ruff.lint]` — pyupgrade-style
+  modernisation enforced on every CI run going forward.
+
+### Changed
+
+- **CI workflow `tests.yml`**: adds `concurrency` (cancels stale
+  runs on the same ref to save minutes) and `cache: "pip"` on
+  every job.
+- **Internal helper `_crossref_query_works`** factored out of
+  `_crossref_search` and `_joss_search` in `core.py`. The two
+  public functions now wrap it in five lines each. **~100 LOC of
+  copy-paste duplication eliminated** — a future bugfix in the
+  Crossref response handling now applies to both channels.
+- **JATS-tag stripper** in `core.py` lifted into a named helper
+  (`_strip_jats_tags`) instead of being inlined twice.
+- **`_load_context`** now writes a one-time warning to the
+  markdown log when a `lappato_context.json` file exists but
+  fails to parse. Previously the malformed file was silently
+  ignored and the user had to find on their own why
+  `{model_family}` placeholders were rendering as literal text.
+- **Typing imports modernised** across the package (76 sites):
+  `from typing import Mapping` → `from collections.abc import
+  Mapping`, same for `Iterable`, `Sequence`; `Tuple[...]` →
+  `tuple[...]`. Behaviour identical.
+- **Variable shadowing fixed**: a single-letter `l` in
+  `_split_metric` and in the benchmark blend renamed to `label` /
+  `lex_s` for readability and ruff `E741` compliance.
+
+### Removed
+
+- **Dead code**: `LAPPATO_MCB._safe` static method (defined, never
+  called anywhere in the codebase — verified across
+  `lappato_mcb/`, `tests/`, `examples/`).
+- **Dead local variable** `fn` in
+  `pipeline_health._youden_threshold_sweep`.
+
+### Internal
+
+- Ruff lint is now **clean across the full repo**
+  (`lappato_mcb/`, `examples/`, `tests/`): 0 errors at the
+  configured rule set (`E`, `F`, `W`, `I`, `UP`).
+- 209/209 tests pass in ~1.4s. Test count is unchanged from
+  v1.6.0 — this release does not add or relax any test.
+
+### Backwards compatibility
+
+- The public API (`LAPPATO_MCB`, `Reranker`, manifest registry,
+  weakness card schema, meta-log columns) is **byte-identical**
+  for any caller. The `_safe` removal touches a private helper
+  with zero call-sites and never appeared in `__all__`.
+- The `_load_context` log line is additive: it only appears when
+  a malformed context file is present, which previously produced
+  no output. No card field changed.
+
+## [1.6.0] — 2026-05-10
+
+**Insight detectors.**  Seven new entries in the
+``pipeline_health`` manifest move LAPPATO_MCB from "compliance
+auditor" toward "insight engine" while preserving the
+*stdlib-only-by-default* core (statistical helpers fall back to
+pure-Python implementations whenever SciPy is not importable —
+"Strategy 3" hybrid path).
+
+The seven detectors target weakness patterns that the v1.5 detectors
+did not surface — most notably **subgroup disparity** (failures
+concentrated in a stratum of items, surfaced via Fisher's exact),
+**non-monotone calibration miscalibration** (the bin-level pattern
+that defeats temperature scaling per Guo et al. 2017) and
+**sub-optimal binary decision thresholds** (where shifting the cut-off
+trades false negatives for false positives without retraining).
+
+### Added
+
+- **New module `lappato_mcb/_stats.py`** with hybrid stdlib + SciPy
+  statistical helpers (`chi2_p_value`, `fisher_exact_2x2`,
+  `t_test_p_value`, `linear_regression_slope_p`,
+  `required_sample_size_for_proportion`).  Auto-detects SciPy at
+  module import and uses it when available; falls back to pure-Python
+  implementations (Numerical Recipes §6.2 incomplete gamma, §6.4
+  incomplete beta, Beasley-Springer 1977 inverse-normal CDF) so the
+  ``dependencies = []`` core promise still holds.
+- **Seven new ``pipeline_health`` manifest entries** (manifest grew
+  from 16 → 23):
+  - `subgroup_disparity` (high) — Fisher's exact + ratio threshold.
+  - `calibration_bin_gap` (high) — flags non-monotone miscalibration.
+  - `decision_threshold_suboptimal` (high) — sweeps Youden's J on
+    held-out predictions.
+  - `failure_clustering` (high) — chi-square on group × correct/
+    incorrect tables.
+  - `cross_cycle_drift` (info) — linear regression on the daemon
+    meta-log.
+  - `underpowered_cohort` (info) — quantifies events shy of the
+    Riley 2019 minimum.
+  - `syndrome_composition` (info) — meta-detector firing when ≥ 66 %
+    of a named syndrome's trigger cards are active.
+- **Five new evidence files** documented in the schema (all optional
+  — fail-closed when absent):
+  - `pipeline_subgroup_metrics.csv`
+  - `pipeline_reliability_diagram.csv`
+  - `pipeline_predictions_with_probs.csv`
+  - `pipeline_per_item_predictions.csv`
+  - `pipeline_health_lappato_mcb_meta.csv` (the daemon's own meta-log,
+    elevated to a first-class evidence source).
+- **Six new threshold knobs** in `DEFAULT_THRESHOLDS`
+  (`subgroup_disparity_ratio_warning`, `calibration_bin_gap_warning`,
+  `decision_threshold_distance_warning`, `failure_clustering_p_warning`,
+  `drift_total_change_warning`, `drift_p_warning`), all documented
+  with literature citations and overridable through the existing
+  `override_thresholds()` API.
+- **`SYNDROME_DEFINITIONS` registry** in `pipeline_health.py` —
+  declarative mapping of syndrome names to their trigger sets and
+  interpretation blocks.  Two syndromes seeded
+  (`underpowered_imbalanced_clinical_cohort`,
+  `miscalibrated_modern_NN`); users can extend the registry without
+  touching detector code.
+- **26 new tests** in `tests/test_insight_detectors.py` covering the
+  stdlib stat helpers (incl. SciPy roundtrip), every new detector
+  (positive + negative + missing-file fail-closed) and a manifest-
+  count regression test.
+
+### Changed
+
+- `tests/test_new_manifests.py::test_pipeline_health_has_*` was
+  renamed and updated from `_sixteen_` to `_twenty_three_` to match
+  the new manifest size.
+- `pipeline_health.schema.json` description rewritten to enumerate
+  the v1.6 evidence files; `schema_version` intentionally kept at 1
+  because the column-shape contract for existing files is fully
+  backward-compatible (additive change only).
+
+### Compatibility
+
+- **MIT license unchanged.**  All new code is original and
+  MIT-compatible with any optional dependency.
+- **`dependencies = []` unchanged.**  SciPy remains a runtime
+  detection (no install required); the new optional dependency
+  group `[insights]` is reserved for future SciPy-only features.
+- **Backward compatibility**: every v1.5 detector, threshold, schema
+  field and CSV column name is preserved.  All 209 v1.5 tests pass
+  unchanged; the 26 new tests are additive.
+
 ## [1.5.0] — 2026-05-07
 
 Phase 0.6 — closes the negative finding from Phase 0.5. The Phase 0

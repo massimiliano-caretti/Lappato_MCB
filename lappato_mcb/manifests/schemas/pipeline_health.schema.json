@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "domain": "pipeline_health",
-  "description": "Domain-agnostic statistical diagnostics for any ML pipeline.",
+  "description": "Domain-agnostic statistical diagnostics for any ML pipeline.  Extended 2026-05-10 (LAPPATO v1.6) with five new evidence files for the insight detectors (subgroup_disparity, calibration_bin_gap, decision_threshold_suboptimal, failure_clustering, cross_cycle_drift, syndrome_composition); ``schema_version`` kept at 1 because the column-shape contract for existing files is fully backward-compatible.",
   "evidence_files": {
     "pipeline_class_counts.csv": {
       "description": "Per-class sample counts. Optional 'split' column enables prevalence-shift detection.",
@@ -10,7 +10,7 @@
         {"name": "count", "aliases": ["support", "n", "size"], "type": "number", "required": true},
         {"name": "split", "aliases": ["set"], "type": "string", "required": false}
       ],
-      "used_by_detectors": ["small_minority_class", "severe_class_imbalance", "small_cohort_size", "train_eval_prevalence_shift"]
+      "used_by_detectors": ["small_minority_class", "severe_class_imbalance", "small_cohort_size", "train_eval_prevalence_shift", "underpowered_cohort"]
     },
     "pipeline_cv_metrics.csv": {
       "description": "Per-seed / per-fold cross-validation metrics.",
@@ -100,6 +100,60 @@
         {"name": "eval_metric", "aliases": ["val_metric", "validation_metric", "auc", "f1", "accuracy"], "type": "number", "required": true}
       ],
       "used_by_detectors": ["loss_metric_divergence"]
+    },
+    "pipeline_subgroup_metrics.csv": {
+      "description": "Per-subgroup evaluation counts.  Each row identifies a subgroup (key+value pair) and records its size and number of misclassifications.  v1.6 introduced this file for the subgroup-disparity detector — supply ANY domain-relevant grouping (age decade, scanner site, annotator, biopsy-suffix, dialect, …) and the chi-square / Fisher's test surfaces the worst-performing one.",
+      "columns": [
+        {"name": "subgroup_key",   "aliases": ["key", "stratum"],          "type": "string", "required": true},
+        {"name": "subgroup_value", "aliases": ["value", "group", "level"], "type": "string", "required": true},
+        {"name": "n",              "aliases": ["support", "size"],         "type": "number", "required": true},
+        {"name": "n_errors",       "aliases": ["errors", "fail_count"],    "type": "number", "required": true},
+        {"name": "error_rate",     "aliases": ["fail_rate"],               "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["subgroup_disparity"]
+    },
+    "pipeline_reliability_diagram.csv": {
+      "description": "Bin-level confidence-vs-accuracy table (i.e. the data that makes a reliability diagram).  v1.6 introduced this file so the calibration-bin-gap detector can flag NON-monotone miscalibration — the case in which a single temperature scaling parameter is insufficient (Guo et al. ICML 2017).",
+      "columns": [
+        {"name": "bin_lo",          "aliases": ["lo", "low"],                       "type": "number", "required": false},
+        {"name": "bin_hi",          "aliases": ["hi", "high"],                      "type": "number", "required": false},
+        {"name": "count",           "aliases": ["n", "size"],                       "type": "number", "required": true},
+        {"name": "mean_confidence", "aliases": ["mean_conf", "confidence", "conf"], "type": "number", "required": true},
+        {"name": "accuracy",        "aliases": ["acc", "fraction_correct"],         "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["calibration_bin_gap"]
+    },
+    "pipeline_predictions_with_probs.csv": {
+      "description": "Per-item predicted positive-class probability and ground-truth label.  v1.6 introduced this file for the decision-threshold-suboptimal detector, which sweeps the binary cut-off and reports the Youden's-J optimum.",
+      "columns": [
+        {"name": "item_id",   "aliases": ["id", "biopsy_id", "sample_id"], "type": "string", "required": false},
+        {"name": "y_true",    "aliases": ["true", "label"],                "type": "number", "required": true},
+        {"name": "p_positive","aliases": ["p_pos", "p_tumor", "prob", "score"], "type": "number", "required": true}
+      ],
+      "used_by_detectors": ["decision_threshold_suboptimal"]
+    },
+    "pipeline_per_item_predictions.csv": {
+      "description": "Per-item prediction record with a group identifier (acquisition site, annotator, batch, patient_id, …).  v1.6 introduced this file for the failure-clustering detector — chi-square against the (group × correct/incorrect) table flags non-random concentration of errors.",
+      "columns": [
+        {"name": "item_id",  "aliases": ["id"],                  "type": "string", "required": false},
+        {"name": "group_id", "aliases": ["group", "patient_id"], "type": "string", "required": true},
+        {"name": "y_true",   "aliases": ["true", "label"],       "type": "number", "required": true},
+        {"name": "y_pred",   "aliases": ["pred"],                "type": "number", "required": true},
+        {"name": "p_top",    "aliases": ["confidence"],          "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["failure_clustering"]
+    },
+    "pipeline_health_lappato_mcb_meta.csv": {
+      "description": "Daemon-emitted meta-log (one row per cycle).  v1.6 reuses it as evidence for the cross-cycle-drift detector and as a placeholder for the syndrome-composition detector (which actually reads the runtime active-card set rather than this file, but conforms to the same manifest contract).  An OPTIONAL ``primary_metric`` column overrides the default ``n_papers_kept`` series for drift analysis on a user-supplied scalar.",
+      "columns": [
+        {"name": "cycle",                "aliases": ["cycle_n", "cycle_id"],   "type": "number", "required": true},
+        {"name": "ts_started_iso",       "aliases": [],                         "type": "string", "required": false},
+        {"name": "wall_seconds",         "aliases": [],                         "type": "number", "required": false},
+        {"name": "n_active_weaknesses",  "aliases": [],                         "type": "number", "required": false},
+        {"name": "n_papers_kept",        "aliases": [],                         "type": "number", "required": false},
+        {"name": "primary_metric",       "aliases": ["metric_value", "score"],  "type": "number", "required": false}
+      ],
+      "used_by_detectors": ["cross_cycle_drift", "syndrome_composition"]
     }
   }
 }

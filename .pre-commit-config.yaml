@@ -1,0 +1,41 @@
+# Optional pre-commit hooks for LAPPATO_MCB contributors.
+#
+# These hooks run the same checks that the CI workflow in
+# .github/workflows/tests.yml gates on, but locally — before the
+# commit lands — so an author catches lint regressions in seconds
+# rather than waiting for the CI round-trip.
+#
+# Install (once per clone):
+#     python -m pip install pre-commit
+#     pre-commit install
+#
+# Run manually on the whole repo:
+#     pre-commit run --all-files
+#
+# Skipping a specific hook for a single commit:
+#     SKIP=ruff git commit -m "..."
+#
+# The hooks are intentionally narrow: format-on-save, lint-on-save,
+# and small hygiene checks. They never run the full test suite
+# (that lives in CI) so the commit feedback loop stays fast.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Pin matches .github/workflows/tests.yml so local and CI agree.
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: ["--exit-non-zero-on-fix"]
