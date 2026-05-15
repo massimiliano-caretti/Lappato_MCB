@@ -9,6 +9,10 @@
 **LAPPATO_MCB** — *Literature-Aware Pipeline Partner for Adaptive Transplant
 Optimization*.
 
+| L          | A     | P        | P       | A        | T          | O            |
+|------------|-------|----------|---------|----------|------------|--------------|
+| Literature | Aware | Pipeline | Partner | Adaptive | Transplant | Optimization |
+
 LAPPATO_MCB is a lightweight Python library for literature-aware monitoring
 of machine-learning pipelines. It runs alongside a host training process as
 a daemon thread, watches diagnostic artefacts written to a `checkpoints/`
@@ -23,15 +27,6 @@ The library core uses only the Python standard library
 (`urllib`, `csv`, `json`, `threading`, `xml.etree`). Optional bundled
 examples and the PDF reporting utilities require scientific-Python packages
 (NumPy, scikit-learn, LightGBM, matplotlib).
-
-For polite API use, set a contact email before online runs:
-
-```bash
-export LAPPATO_MCB_MAILTO="you@example.org"
-```
-
-When set, this value is sent to OpenAlex/Crossref/JOSS through their
-documented `mailto` mechanisms and included in the User-Agent.
 
 ---
 
