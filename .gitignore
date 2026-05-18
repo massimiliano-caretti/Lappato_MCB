@@ -9,7 +9,7 @@ htmlcov/
 build/
 dist/
 
-# Generated LAPPATO_MCB / example artefacts.
+# Generated LAPPATO/example artefacts.
 checkpoints/*
 !checkpoints/.gitkeep
 
@@ -17,3 +17,8 @@ checkpoints/*
 .env
 .venv/
 venv/
+
+# Manuscript sources and build artefacts (Ital-IA paper + JOSS) — kept
+# local-only, never published on GitHub. The entire paper/ folder is
+# excluded from version control by author choice.
+paper/

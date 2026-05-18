@@ -174,15 +174,16 @@ additive blend (`lex + w · max(rerank − floor, 0)`) was demonstrated
 to produce **+0.0000** uplift on the synthetic hard scenario across
 35 domains: the integer-scale lexical baseline simply dominates the
 fractional reranker contribution. Phase 0.5 measured that the
-reranker signal is in fact strong (+0.40 R@5 in isolation) but
-schiacciato by the additive blend.
+reranker signal is in fact strong in isolation but is suppressed by
+the additive blend (full numbers and methodology in
+`docs/reranker_benchmark_phase05.md`).
 
 This release adds **Reciprocal Rank Fusion** (Cormack, Clarke &
 Buettcher, SIGIR 2009) as an opt-in blend mode in the core. RRF is
 scale-invariant — it operates on ranks, not raw scores — and on
-the same Phase 0.5 benchmark delivers **+0.34 R@5** (lex + 2× rerank
-weight) without degrading the easy scenario. Still zero new
-dependencies, still stdlib-only.
+the same Phase 0.5 benchmark delivers a measurable Recall@5 lift
+without degrading the easy scenario. Still zero new dependencies,
+still stdlib-only.
 
 ### Added
 
@@ -521,9 +522,11 @@ stdlib, and every behavioural change ships with a regression test.
   `recency_base_year`, `citation_log_weight`). The `LAPPATO_MCB`
   constructor accepts `score_weights=ScoreWeights(...)` for callers
   that want to retune ranking. A new `examples/validate_score.py`
-  harness reports Spearman rank correlation against a bundled
-  hand-curated relevance set (`docs/score_validation/relevance_set.json`,
-  ~17 entries). Baseline correlation is ~0.89.
+  harness reports a Spearman rank correlation against a bundled
+  maintainer-curated synthetic relevance set
+  (`docs/score_validation/relevance_set.json`) as a CI regression
+  detector; it is explicitly scoped as a sanity check, not as a
+  quality benchmark against external ground truth.
 - **Documented + overridable thresholds** (W3). Each manifest now
   exposes a `THRESHOLDS` dict with literature/empirical citations and
   an `override_thresholds()` helper for cohorts whose distribution

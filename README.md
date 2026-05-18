@@ -116,11 +116,12 @@ today, before the rest of the README dives into the details.
 5. **Optionally reranks the harvested papers** through a pluggable
    `Reranker` Protocol. A stdlib-only baseline
    (`TrigramJaccardReranker`) ships in the box; users can plug their
-   own (e.g. an embedding model). The Phase 0.5 micro-benchmark
-   measured **+0.34 R@5** on a 35-domain × 505-topic synthetic hard
-   set when `blend_mode="rrf"` is enabled (Reciprocal Rank Fusion,
-   Cormack et al. SIGIR 2009). See
-   [`docs/reranker_benchmark_phase05.md`](docs/reranker_benchmark_phase05.md).
+   own (e.g. an embedding model). On bundled synthetic hard fixtures
+   the Phase 0.5 micro-benchmark shows a measurable Recall@5 lift when
+   `blend_mode="rrf"` is enabled (Reciprocal Rank Fusion, Cormack
+   et al. SIGIR 2009). See
+   [`docs/reranker_benchmark_phase05.md`](docs/reranker_benchmark_phase05.md)
+   for methodology and the synthetic nature of the fixtures.
 6. **Emits structured weakness cards** (JSONL + a `latest.json`
    summary) per detected weakness, containing: rendered queries,
    per-source raw hit counts, ranked top papers, severity, evidence
@@ -352,13 +353,14 @@ reranker score is combined with the lexical score:
 | `"additive"` (default, v1.4 semantics) | `lex + w · max(rerank − floor, 0)` | Conservative. The reranker can only ADD score — it never demotes a paper below its lexical baseline. Best when the reranker is unproven. |
 | `"rrf"` (recommended for real reranking) | `1/(60 + rank_lex) + w · 1/(60 + rank_rerank)` | Reciprocal Rank Fusion (Cormack et al. SIGIR 2009). Scale-invariant — combines two heterogeneous rankings via ranks rather than raw scores. Floor is ignored. |
 
-The default is `"additive"` for backward compatibility. The
-[v1.4 micro-benchmark](docs/reranker_benchmark_phase05.md) measured
-that on the bundled synthetic hard fixtures (505 topics across 35
-domains), `"rrf"` lifts Recall@5 by **+0.34** versus the lexical
-baseline, while `"additive"` produces **+0.0000** because the
+The default is `"additive"` for backward compatibility. On bundled
+synthetic hard fixtures the [reranker micro-benchmark](docs/reranker_benchmark_phase05.md)
+shows `"rrf"` producing a measurable lift over the lexical baseline,
+while `"additive"` produces essentially no lift because the
 integer-scale lexical score dominates the fractional reranker
 contribution. **If you wire a reranker, use `blend_mode="rrf"`.**
+See the linked benchmark document for methodology and the synthetic
+nature of the fixtures.
 
 ### Audit trail
 
@@ -491,9 +493,10 @@ are excluded from version control by `.gitignore`.
 Two harnesses ship in `examples/` and are wired into CI:
 
 ```bash
-# 1. Spearman correlation between LAPPATO_MCB's local relevance score
-#    and a small hand-curated relevance set
-#    (docs/score_validation/relevance_set.json). Shipped baseline ~0.89.
+# 1. Spearman regression check: compares the local relevance score
+#    against a small maintainer-curated synthetic relevance set
+#    (docs/score_validation/relevance_set.json). The script reports
+#    the current Spearman value and fails CI below the floor below.
 python examples/validate_score.py --min-spearman 0.70
 
 # 2. Topic Recall@K against per-domain gold sets
@@ -502,7 +505,10 @@ python examples/validate_score.py --min-spearman 0.70
 python examples/measure_recall.py --domain all --min-macro-recall 0.70
 ```
 
-Both are sanity checks, not absolute benchmarks — see
+**Honest scope.** Both harnesses are continuous-integration regression
+detectors authored by the maintainer: they catch silent breakage of
+the pipeline relative to a frozen in-repo baseline. They are **not**
+quality benchmarks against external ground truth — see
 [`docs/gold_sets/README.md`](docs/gold_sets/README.md) for the contract.
 
 ---
