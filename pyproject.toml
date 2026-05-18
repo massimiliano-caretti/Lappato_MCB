@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 authors = [
-  { name = "Massimiliano Caretti", email = "massimiliano.carbec@gmail.com" }
+  { name = "Massimiliano Caretti", email = "massimiliano.caretti@gmail.com" }
 ]
 keywords = [
   "machine-learning",
