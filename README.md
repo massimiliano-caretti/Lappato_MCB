@@ -904,3 +904,10 @@ of the comparative claims above.
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## Author
+
+Sole author: **Massimiliano Caretti** (Sapienza Università di Roma, DIAG;
+CNR). Contact: massimiliano.caretti@gmail.com.
