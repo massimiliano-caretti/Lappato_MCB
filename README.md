@@ -909,5 +909,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Author
 
-Sole author: **Massimiliano Caretti** (Sapienza Università di Roma, DIAG;
-CNR). Contact: massimiliano.caretti@gmail.com.
+Sole author: **Massimiliano Caretti**. Contact: massimiliano.caretti@gmail.com.
