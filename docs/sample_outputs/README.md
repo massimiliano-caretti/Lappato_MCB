@@ -14,3 +14,9 @@ Files:
 
 The sample paper lists were deduplicated by canonical DOI/arXiv id and by
 normalized title before these files were written.
+
+Abstracts are kept only for arXiv records, whose metadata (abstracts
+included) arXiv releases under CC0 1.0. Abstracts obtained through
+OpenAlex or Crossref were removed on 2026-10-22: they may be subject to
+the copyright of their publishers or authors. Titles, identifiers and
+URLs are bibliographic facts and are kept.
