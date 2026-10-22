@@ -207,6 +207,33 @@ For the bundled examples and the PDF report builder:
 python -m pip install -e ".[examples,reports]"
 ```
 
+To expose LAPPATO_MCB to AI assistants as an MCP server (Python >= 3.10):
+
+```bash
+python -m pip install -e ".[mcp]"
+```
+
+## Using LAPPATO_MCB as an MCP server (optional)
+
+Since v1.7 the library can also run as a
+[Model Context Protocol](https://modelcontextprotocol.io) server, so an
+MCP client (Claude Code, Claude Desktop, IDE assistants) can list
+manifests, validate evidence CSVs, run an audit cycle and search the
+literature on your behalf. The library API above is unchanged and does
+not need the extra.
+
+```bash
+claude mcp add lappato-mcb -- lappato-mcb-mcp --root /path/to/your/projects
+```
+
+Six tools are exposed — `list_manifests`, `describe_manifest`,
+`validate_evidence`, `run_audit`, `get_weakness_cards`,
+`search_literature` — plus `lappato://manifests/{domain}` and
+`lappato://schemas/{domain}` resources. Audits run **offline** (local
+corpus) unless the client asks otherwise or the server is started with
+`--online`, and every path is confined to `--root`. Full reference:
+[`docs/mcp_server.md`](docs/mcp_server.md).
+
 ## Minimal Usage
 
 ```python
@@ -411,10 +438,17 @@ for a zero-dependency reference implementation in ~70 lines.
 - `lappato_mcb/fingerprint.py`: cross-source title deduplication
   (character-trigram + Jaccard).
 - `lappato_mcb/meta_log.py`: per-cycle self-instrumentation.
+- `lappato_mcb/literature/`: ad-hoc literature search API
+  (`search_literature`), independent of any manifest.
+- `lappato_mcb/validation/`: evidence-CSV validation against the
+  manifest JSON Schemas.
+- `lappato_mcb/mcp_server/`: optional MCP server (`[mcp]` extra) —
+  `tools/` holds one module per tool family.
 - `lappato_mcb/analysis.py`, `plots.py`, `pdf_builder.py`: optional
   analysis and reporting utilities.
 - `examples/`: runnable experimental pipelines and baseline evaluation.
-- `tests/`: stdlib unit tests for the library core.
+- `tests/`: stdlib unit tests for the library core; `tests/mcp_server/`
+  covers the MCP server (skipped when the extra is not installed).
 
 ## Supported manifest domains
 

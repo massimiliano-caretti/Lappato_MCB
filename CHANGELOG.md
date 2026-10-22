@@ -4,6 +4,44 @@ All notable changes to LAPPATO_MCB are documented here. The format
 follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] — 2026-10-22
+
+Adds an optional **Model Context Protocol server**, so MCP clients
+(Claude Code, Claude Desktop, IDE assistants) can use LAPPATO_MCB
+directly. The library API is unchanged and backward-compatible; the
+core still has zero runtime dependencies and never imports the
+server.
+
+### Added
+
+- **`lappato_mcb.mcp_server`** — MCP server behind the new `[mcp]`
+  extra (`mcp>=2.3,<3`, Python >= 3.10), started with the
+  `lappato-mcb-mcp` command or `python -m lappato_mcb.mcp_server`.
+  Six tools (`list_manifests`, `describe_manifest`,
+  `validate_evidence`, `run_audit`, `get_weakness_cards`,
+  `search_literature`) with typed output schemas, plus
+  `lappato://manifests/{domain}` and `lappato://schemas/{domain}`
+  resources. Offline by default, every path confined to `--root`.
+  See [`docs/mcp_server.md`](docs/mcp_server.md).
+- **`lappato_mcb.literature.search_literature`** — public ad-hoc search
+  across arXiv / OpenAlex / Crossref / JOSS (or the offline corpus),
+  independent of any manifest. A failing source is reported, not raised.
+- **`lappato_mcb.validation`** — the evidence-CSV validator is now an
+  importable, stdlib-only module. `load_schema` raises
+  `FileNotFoundError` on an unknown domain.
+- **`lappato_mcb.RunArtefacts`** and the read-only
+  `LAPPATO_MCB.artefacts` property — single source of truth for the
+  run output file names. New `CHECKPOINTS_DIRNAME` and
+  `CORPUS_FILENAME` constants in `lappato_mcb.core`.
+
+### Changed
+
+- `examples/validate_evidence_csv.py` is now a thin CLI over
+  `lappato_mcb.validation`; its command line, output and exit codes are
+  unchanged.
+- Evidence schemas are declared as package data, so they ship in wheels.
+- CI installs the `[mcp]` extra; the Python 3.9 leg runs without it.
+
 ## [1.6.1] — 2026-05-10
 
 Software-engineering polish release. **Zero functional changes**:

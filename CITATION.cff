@@ -55,5 +55,5 @@ abstract: >-
 # A version-bound citation is filled when a new release is tagged so
 # the BibTeX produced by GitHub's "Cite this repository" widget
 # carries the exact version the user is working against.
-version: "1.6.1"
-date-released: "2026-05-10"
+version: "1.7.0"
+date-released: "2026-10-22"
