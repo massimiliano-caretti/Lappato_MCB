@@ -13,7 +13,9 @@ MLOps trackers. PRs that break any of them will be asked to rework.
    (`lappato_mcb/core.py`, `cache.py`, `fingerprint.py`,
    `meta_log.py`) must not import third-party packages. Optional
    reporting and example modules may use NumPy / matplotlib /
-   scikit-learn behind the `[reports]` and `[examples]` extras.
+   scikit-learn behind the `[reports]` and `[examples]` extras; the
+   MCP server (`lappato_mcb/mcp_server/`) uses the `mcp` SDK behind
+   the `[mcp]` extra and must never be imported by the core.
 2. **Determinism.** Same inputs + same external-source state ⇒ same
    outputs. Avoid randomised tie-breaks, hashed-iteration ordering or
    timestamps in dedup keys. Reproducibility is a feature.

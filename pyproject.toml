@@ -21,6 +21,8 @@ keywords = [
   "joss",
   "pipeline-monitoring",
   "research-software",
+  "mcp",
+  "model-context-protocol",
 ]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
@@ -53,6 +55,13 @@ reports = [
 insights = [
   "scipy",
 ]
+# v1.7 — Model Context Protocol server (``lappato-mcb-mcp``). The SDK
+# requires Python >= 3.10; on 3.9 the extra installs nothing and the
+# entry point exits with an explanatory message. The core library
+# never imports it.
+mcp = [
+  "mcp>=2.3,<3; python_version >= '3.10'",
+]
 dev = [
   "pytest",
   "build",
@@ -63,7 +72,11 @@ all = [
   "lightgbm",
   "matplotlib",
   "scipy",
+  "mcp>=2.3,<3; python_version >= '3.10'",
 ]
+
+[project.scripts]
+lappato-mcb-mcp = "lappato_mcb.mcp_server.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/massimiliano-caretti/Lappato_MCB"
@@ -74,6 +87,11 @@ Changelog = "https://github.com/massimiliano-caretti/Lappato_MCB/blob/main/CHANG
 
 [tool.setuptools]
 packages = { find = { include = ["lappato_mcb", "lappato_mcb.*"] } }
+
+[tool.setuptools.package-data]
+# Evidence schemas are read at runtime by lappato_mcb.validation (and the
+# MCP server), so they must ship inside wheels, not only in the sdist.
+"lappato_mcb.manifests" = ["schemas/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
