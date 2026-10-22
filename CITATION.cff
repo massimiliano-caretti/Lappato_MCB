@@ -29,31 +29,14 @@ keywords:
   - research-software
   - evidence-gated-retrieval
 abstract: >-
-  LAPPATO_MCB is a stdlib-only Python framework that monitors
-  machine-learning pipelines from the inside: it watches diagnostic
-  artefacts written to a checkpoints/ folder, activates
-  manifest-defined weakness detectors when their evidence thresholds
-  are crossed, and harvests targeted scientific literature from
-  arXiv, OpenAlex, Crossref, and JOSS. The library ships 35
-  domain manifests covering mainstream ML and 16 scientific
-  domains, with 193 evidence-gated detectors total. An optional
-  pluggable reranker interface supports embedding-aware blending
-  (RRF) for cases where token overlap fails.
-
-# When the first Zenodo release is minted, uncomment + fill the
-# identifiers block so GitHub renders both the GitHub citation and
-# the Zenodo DOI as alternative citation forms.
-#
-# identifiers:
-#   - description: "Permanent archive DOI on Zenodo (all versions)"
-#     type: doi
-#     value: 10.5281/zenodo.XXXXXXX
-#   - description: "DOI for the most recent release"
-#     type: doi
-#     value: 10.5281/zenodo.YYYYYYY
-
-# A version-bound citation is filled when a new release is tagged so
-# the BibTeX produced by GitHub's "Cite this repository" widget
-# carries the exact version the user is working against.
+  LAPPATO_MCB is a Python library with no third-party runtime
+  dependencies that reads the diagnostic files a machine-learning
+  pipeline writes to a checkpoints/ folder, activates manifest-defined
+  weakness detectors when measured evidence crosses documented
+  thresholds, and retrieves targeted scientific literature from arXiv,
+  OpenAlex, Crossref and JOSS. It ships 35 domain manifests with 193
+  detectors (155 evidence-gated, 38 structural), offline replay from a
+  local corpus, a pluggable reranker interface with a standard-library
+  baseline, and an optional Model Context Protocol server.
 version: "1.7.0"
 date-released: "2026-10-22"

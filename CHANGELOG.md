@@ -42,6 +42,22 @@ server.
 - Evidence schemas are declared as package data, so they ship in wheels.
 - CI installs the `[mcp]` extra; the Python 3.9 leg runs without it.
 
+### Documentation
+
+- README rewritten as a structured presentation and manual: scope table,
+  figures for anatomy, cycle, detector gating and weakness cards
+  (light/dark), real screenshots and report pages, verification table
+  linking claims to code and tests, measured results with their scope,
+  limitations, list of features not yet implemented, disclaimers, and
+  third-party licence/trademark notices.
+- `docs/figures/build_figures.py` regenerates every figure from the
+  library and from frozen real-run data in `docs/figures/data/`.
+- Corrected counts: 193 detectors (155 evidence-gated, 38 structural);
+  `pipeline_health` has 23. Earlier documents said 186 and 16.
+- `docs/sample_outputs/`: abstracts obtained through OpenAlex and
+  Crossref removed (possible publisher copyright); arXiv abstracts
+  (CC0) kept.
+
 ## [1.6.1] — 2026-05-10
 
 Software-engineering polish release. **Zero functional changes**:

@@ -1,0 +1,953 @@
+{
+ "provenance": {
+  "description": "Frozen output of one complete LAPPATO_MCB cycle per bundled demo, used to draw the README figures. Abstracts are deliberately omitted (third-party copyright); titles, ids and URLs are bibliographic facts.",
+  "date": "2026-10-22",
+  "library_commit": "d34b1ac",
+  "procedure": "python examples/demo_<tag>.py (writes the evidence CSVs), then LAPPATO_MCB(project, manifest, run_tag).run_once() online on a fresh copy of those CSVs. Retrieved sets depend on the state of arXiv, OpenAlex and Crossref on that date."
+ },
+ "runs": {
+  "wdbc": {
+   "context": {
+    "domain": "clinical tabular",
+    "task": "binary classification",
+    "model_family": "LightGBM",
+    "dataset": "Wisconsin Breast Cancer Diagnostic"
+   },
+   "evidence_csv": {
+    "wdbc_calibration.csv": "seed,fold,brier\n0,0,0.0404\n0,1,0.0099\n0,2,0.0190\n0,3,0.0276\n0,4,0.0199\n1,0,0.0367\n1,1,0.0130\n1,2,0.0379\n1,3,0.0311\n1,4,0.0328\n2,0,0.0320\n2,1,0.0286\n2,2,0.0407\n2,3,0.0091\n2,4,0.0299\n",
+    "wdbc_feature_importance.csv": "feature,gain\nperimeter_worst,24150.61\nconcave_points_worst,16665.51\nconcave_points_mean,15389.64\narea_worst,13519.50\nradius_worst,5649.99\ntexture_worst,4185.97\nconcavity_worst,2251.99\narea_se,1885.90\ntexture_mean,1710.52\nsmoothness_worst,1068.91\n",
+    "wdbc_per_fold.csv": "seed,fold,n_train,n_test,bac,precision_M,recall_M,precision_B,recall_B\n0,0,455,114,0.9440,0.9302,0.9302,0.9577,0.9577\n0,1,455,114,0.9813,0.9767,0.9767,0.9859,0.9859\n0,2,455,114,0.9762,1.0000,0.9524,0.9730,1.0000\n0,3,455,114,0.9454,0.9744,0.9048,0.9467,0.9861\n0,4,456,113,0.9691,0.9756,0.9524,0.9722,0.9859\n1,0,455,114,0.9440,0.9302,0.9302,0.9577,0.9577\n1,1,455,114,0.9697,0.9762,0.9535,0.9722,0.9859\n1,2,455,114,0.9385,0.9500,0.9048,0.9459,0.9722\n1,3,455,114,0.9454,0.9744,0.9048,0.9467,0.9861\n1,4,456,113,0.9453,0.9744,0.9048,0.9459,0.9859\n2,0,455,114,0.9464,0.9750,0.9070,0.9459,0.9859\n2,1,455,114,0.9440,0.9302,0.9302,0.9577,0.9577\n2,2,455,114,0.9335,0.9737,0.8810,0.9342,0.9861\n2,3,455,114,0.9931,0.9767,1.0000,1.0000,0.9861\n2,4,456,113,0.9643,1.0000,0.9286,0.9595,1.0000\n"
+   },
+   "meta_log_row": {
+    "cycle": "1",
+    "ts_started_iso": "2026-10-22T06:44:41",
+    "wall_seconds": "56.37",
+    "n_active_weaknesses": "2",
+    "n_queries_executed": "6",
+    "n_arxiv_hits_raw": "27",
+    "n_openalex_hits_raw": "30",
+    "n_crossref_hits_raw": "30",
+    "n_joss_hits_raw": "30",
+    "n_arxiv_errors": "0",
+    "n_openalex_errors": "0",
+    "n_crossref_errors": "0",
+    "n_joss_errors": "0",
+    "n_id_dedup_blocked": "11",
+    "n_fp_dedup_blocked": "4",
+    "n_papers_kept": "102",
+    "first_paper_seconds": "0.165"
+   },
+   "cards": [
+    {
+     "run_tag": "wdbc",
+     "cycle": 1,
+     "weakness": "tabular_baseline_alternatives",
+     "title": "LightGBM is the only base learner — TabPFN-2.5 / CatBoost unrepresented",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "TabPFN small dataset clinical tabular benchmark medical 2025",
+      "CatBoost LightGBM stacking heterogeneous tabular clinical 2025",
+      "open source software tabular machine learning benchmark clinical"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 12,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 57,
+     "n_papers_kept": 50,
+     "why_it_matters": "Small tabular clinical datasets are exactly where model-family choice can dominate results; a single GBDT baseline is weak evidence for methodological adequacy.",
+     "next_checks": [
+      "Benchmark CatBoost, logistic elastic-net, TabPFN and AutoGluon.",
+      "Use repeated stratified CV with identical splits.",
+      "Compare discrimination, calibration and net benefit together."
+     ],
+     "success_criteria": [
+      "At least one non-LightGBM baseline is reported.",
+      "Chosen model is justified by performance stability, not only mean score."
+     ],
+     "top_papers": [
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2507.17791v1",
+       "title": "Helix 1.0: An Open-Source Framework for Reproducible and Interpretable Machine Learning on Tabular Scientific Data",
+       "year": "2025",
+       "url": "http://arxiv.org/abs/2507.17791v1",
+       "score": 29.75
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7132969133",
+       "title": "Validation of accurate predictions on small data with a tabular foundation model for clinical decision support",
+       "year": "2025",
+       "url": "https://openalex.org/W7132969133",
+       "score": 23.25
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1177/20552076241272585",
+       "title": "Predicting dementia in Parkinson's  disease on a small tabular dataset using  hybrid LightGBM–TabPFN and SHAP",
+       "year": "2024",
+       "url": "https://doi.org/10.1177/20552076241272585",
+       "score": 22.906
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2508.00718v2",
+       "title": "Democratizing Tabular Data Access with an Open$\\unicode{x2013}$Source Synthetic$\\unicode{x2013}$Data SDK",
+       "year": "2025",
+       "url": "http://arxiv.org/abs/2508.00718v2",
+       "score": 21.75
+      },
+      {
+       "source": "Crossref",
+       "id": "10.70729/me26524235555",
+       "title": "Vulnerability Detection Using Machine Learning Techniques in Open-Source Software",
+       "year": "2026",
+       "url": "https://doi.org/10.70729/me26524235555",
+       "score": 21.0
+      },
+      {
+       "source": "Crossref",
+       "id": "10.7185/gold2025.26869",
+       "title": "Geochemistry π Open Source Software: Machine Learning for Geochemists Who Don't Want to Code",
+       "year": "2025",
+       "url": "https://doi.org/10.7185/gold2025.26869",
+       "score": 20.75
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7160231324",
+       "title": "RamanBench: A Large-Scale Benchmark for Machine Learning on Raman Spectroscopy",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2605.02003",
+       "score": 20.604
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7215113963",
+       "title": "Foundation models for tabular medical detection: a robust and generalizable framework for clinical decision support",
+       "year": "2026",
+       "url": "https://doi.org/10.1038/s41598-026-73565-w",
+       "score": 20.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7203926516",
+       "title": "Applied Machine Learning in Epidemiology: Feature Selection, Benchmarks, and Software",
+       "year": "2026",
+       "url": "https://doi.org/10.26092/elib/6360",
+       "score": 20.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1007/978-3-658-46162-1_8",
+       "title": "Open-Source-Software für Online Machine Learning",
+       "year": "2024",
+       "url": "https://doi.org/10.1007/978-3-658-46162-1_8",
+       "score": 20.5
+      }
+     ]
+    },
+    {
+     "run_tag": "wdbc",
+     "cycle": 1,
+     "weakness": "decision_curve_missing",
+     "title": "No decision-curve analysis — accuracy is not clinical net benefit",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "decision curve analysis Vickers Elkin clinical classifier 2025",
+      "net benefit calibration tutorial medical machine learning 2025",
+      "open source software decision curve analysis clinical prediction"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 15,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 60,
+     "n_papers_kept": 52,
+     "why_it_matters": "A clinically useful classifier is not just accurate; it must offer net benefit at plausible decision thresholds.",
+     "next_checks": [
+      "Compute net benefit over a clinically meaningful threshold grid.",
+      "Compare against treat-all and treat-none policies.",
+      "Report calibration and decision curves in the same section."
+     ],
+     "success_criteria": [
+      "Model net benefit is positive over at least one target threshold band.",
+      "Threshold choice is stated explicitly."
+     ],
+     "top_papers": [
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7125496755",
+       "title": "Benchmarking Ensemble Machine Learning Algorithms for the Early Prediction of Stroke in Imbalanced Clinical Cohorts: A Comparative Analysis and Decision Curve Assessment",
+       "year": "2026",
+       "url": "https://doi.org/10.20944/preprints202601.1739.v1",
+       "score": 24.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7221849386",
+       "title": "Multi-environment evaluation and decision-level analysis of clinical prediction models under dataset shift",
+       "year": "2026",
+       "url": "https://doi.org/10.3389/fdgth.2026.1874296",
+       "score": 24.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.21203/rs.3.rs-10582573/v1",
+       "title": "Risk Based Software Test Prioritization Using Machine Learning Defect Prediction on Five Open Source Repositories",
+       "year": "2026",
+       "url": "https://doi.org/10.21203/rs.3.rs-10582573/v1",
+       "score": 23.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4396913703",
+       "title": "Revealing the value of Repository Centrality in lifespan prediction of Open Source Software Projects",
+       "year": "2024",
+       "url": "https://doi.org/10.48550/arxiv.2405.07508",
+       "score": 22.604
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1016/j.ijmedinf.2025.105844",
+       "title": "Hypothesis: Net benefit as an objective function during development of machine learning algorithms for medical applications",
+       "year": "2025",
+       "url": "https://doi.org/10.1016/j.ijmedinf.2025.105844",
+       "score": 21.042
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1111/anae.70339",
+       "title": "Calibration and net benefit when ranking machine‐learning models for peri‐operative cardiac risk prediction",
+       "year": "2026",
+       "url": "https://doi.org/10.1111/anae.70339",
+       "score": 21.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7167459585",
+       "title": "Translational Evaluation of Interpretable Machine Learning for Cardiovascular Risk Prediction: Calibration Decomposition, Subgroup Audits, and Decision-Utility Analysis",
+       "year": "2026",
+       "url": "https://doi.org/10.28924/2291-8639-24-2026-202",
+       "score": 20.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.54103/2282-0930/29535",
+       "title": "Integrating Calibration into the Evaluation of Clinical Utility: A Proposal for a Weighted Net Benefit",
+       "year": "2025",
+       "url": "https://doi.org/10.54103/2282-0930/29535",
+       "score": 20.25
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7119539584",
+       "title": "Explainable, modality-adaptive radiomics for MGMT methylation prediction in high-grade glioma: a decision-curve analysis study",
+       "year": "2026",
+       "url": "https://doi.org/10.3389/fonc.2025.1731258",
+       "score": 19.292
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4408333263",
+       "title": "External Validation of a Predictive Model for Thyroid Cancer Risk with Decision Curve Analysis",
+       "year": "2025",
+       "url": "https://doi.org/10.3390/diagnostics15060686",
+       "score": 19.08
+      }
+     ]
+    }
+   ]
+  },
+  "timeseries": {
+   "context": {
+    "domain": "univariate time series",
+    "task": "multi-horizon forecasting",
+    "model_family": "AR(p) OLS",
+    "dataset": "synthetic AR seasonal heteroscedastic series"
+   },
+   "evidence_csv": {
+    "timeseries_per_horizon.csv": "horizon,mape,mape_sd,n_folds\n1,2.7613,4.2434,6\n2,3.2198,5.7325,6\n3,1.3925,1.7871,6\n4,1.0876,0.7717,6\n5,1.2246,0.8420,6\n6,1.3702,0.6514,6\n7,0.9078,0.2714,6\n8,0.9330,0.1689,6\n9,0.9447,0.1559,6\n10,1.2948,0.9897,6\n11,1.0160,0.6318,6\n12,0.9265,0.5393,6\n",
+    "timeseries_residual_acf.csv": "lag,acf\n1,-0.0529\n2,-0.0532\n3,-0.0640\n4,0.0898\n5,-0.0094\n6,-0.0066\n7,0.0550\n8,-0.0241\n9,-0.0483\n10,-0.0882\n",
+    "timeseries_residual_var.csv": "fold,variance\n0,1.102865\n1,1.268792\n2,1.493645\n3,1.525926\n4,1.788375\n5,2.038549\n"
+   },
+   "meta_log_row": {
+    "cycle": "1",
+    "ts_started_iso": "2026-10-22T06:45:37",
+    "wall_seconds": "61.014",
+    "n_active_weaknesses": "3",
+    "n_queries_executed": "8",
+    "n_arxiv_hits_raw": "33",
+    "n_openalex_hits_raw": "40",
+    "n_crossref_hits_raw": "40",
+    "n_joss_hits_raw": "40",
+    "n_arxiv_errors": "0",
+    "n_openalex_errors": "0",
+    "n_crossref_errors": "0",
+    "n_joss_errors": "0",
+    "n_id_dedup_blocked": "21",
+    "n_fp_dedup_blocked": "9",
+    "n_papers_kept": "123",
+    "first_paper_seconds": "0.254"
+   },
+   "cards": [
+    {
+     "run_tag": "timeseries",
+     "cycle": 1,
+     "weakness": "heteroscedastic_residuals",
+     "title": "Residual variance grows across rolling-origin folds",
+     "evidence": "timeseries_residual_var.csv",
+     "evidence_present": true,
+     "severity": "medium",
+     "evidence_summary": {
+      "rows": 6,
+      "last_first_variance_ratio": 1.8484
+     },
+     "queries": [
+      "GARCH heteroscedasticity time series volatility clustering",
+      "log transform variance stabilisation forecasting time series"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 7,
+      "OpenAlex": 10,
+      "Crossref": 10,
+      "JOSS": 10
+     },
+     "n_raw_hits": 37,
+     "n_papers_kept": 31,
+     "why_it_matters": "Growing residual variance means point errors and uncertainty are not exchangeable across time; this harms interval coverage and risk-aware forecasting.",
+     "next_checks": [
+      "Plot residual variance by rolling-origin fold.",
+      "Compare log/Box-Cox transforms.",
+      "Test a GARCH residual model after the mean forecaster."
+     ],
+     "success_criteria": [
+      "Last/first residual variance ratio falls below 1.5.",
+      "Prediction interval empirical coverage approaches the target level."
+     ],
+     "top_papers": [
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4414360557",
+       "title": "SSA-ARIMA-GARCH Hybrid Model for Time Series with Heteroscedasticity",
+       "year": "2025",
+       "url": "https://doi.org/10.18280/mmep.120807",
+       "score": 22.75
+      },
+      {
+       "source": "Crossref",
+       "id": "10.21203/rs.3.rs-5654336/v1",
+       "title": "FTLinear: MLP based on Fourier Transform for Multivariate Time-series Forecasting",
+       "year": "2024",
+       "url": "https://doi.org/10.21203/rs.3.rs-5654336/v1",
+       "score": 22.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7202189549",
+       "title": "Analysis of Financial Return Volatility Clustering from a GARCH Perspective",
+       "year": "2026",
+       "url": "https://doi.org/10.54254/2754-1169/2026.35907",
+       "score": 20.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.21203/rs.3.rs-7011611/v1",
+       "title": "Forecasting traffic flow time series with Vine-Transform ARMA Copula models",
+       "year": "2025",
+       "url": "https://doi.org/10.21203/rs.3.rs-7011611/v1",
+       "score": 19.854
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7134071949",
+       "title": "Comparison of Statistical, Machine Learning, and Deep Learning Models for Time-Series Forecasting Using Weather Data from Dublin, Ireland.",
+       "year": "2025",
+       "url": "https://doi.org/10.63227/652.299.89",
+       "score": 18.75
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4416850874",
+       "title": "Wavelet-Enhanced Transformer for Adaptive Multi-Period Time Series Forecasting",
+       "year": "2025",
+       "url": "https://doi.org/10.3390/app152312698",
+       "score": 17.542
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4413377755",
+       "title": "Air Passengers Time Series Forecasting using ARIMA",
+       "year": "2025",
+       "url": "https://doi.org/10.31224/5150",
+       "score": 17.25
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1109/icassp55912.2026.11462616",
+       "title": "ScatterFusion: A Hierarchical Scattering Transform Framework for Enhanced Time Series Forecasting",
+       "year": "2026",
+       "url": "https://doi.org/10.1109/icassp55912.2026.11462616",
+       "score": 17.104
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1016/j.ijforecast.2023.08.006",
+       "title": "Network time series forecasting using spectral graph wavelet transform",
+       "year": "2024",
+       "url": "https://doi.org/10.1016/j.ijforecast.2023.08.006",
+       "score": 16.812
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1007/s11042-024-19780-x",
+       "title": "Analysis &amp; forecasting of juvenile crime using variance threshold and time series algorithm",
+       "year": "2024",
+       "url": "https://doi.org/10.1007/s11042-024-19780-x",
+       "score": 16.741
+      }
+     ]
+    },
+    {
+     "run_tag": "timeseries",
+     "cycle": 1,
+     "weakness": "ts_model_alternatives",
+     "title": "ARIMA-only baseline — modern forecasters (NHITS, TFT) unrepresented",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "NHITS NBEATS univariate forecasting benchmark 2025",
+      "Temporal Fusion Transformer TFT time series benchmark 2025",
+      "open source software time series forecasting benchmark"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 11,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 56,
+     "n_papers_kept": 47,
+     "why_it_matters": "An ARIMA-only baseline cannot establish whether modern global or neural forecasters are unnecessary for the observed series family.",
+     "next_checks": [
+      "Compare ARIMA, ETS, N-BEATS/N-HITS and TFT where data scale allows.",
+      "Use the same rolling-origin splits for every model.",
+      "Report mean error and fold dispersion."
+     ],
+     "success_criteria": [
+      "At least one modern baseline is reported.",
+      "Model choice is justified by rolling-origin performance and stability."
+     ],
+     "top_papers": [
+      {
+       "source": "Crossref",
+       "id": "10.51903/teknik.v6i1.1138",
+       "title": "Analisis Komparatif XGBoost dan Temporal Fusion Transformer (TFT) pada Time Series Forecasting Harga Solana",
+       "year": "2026",
+       "url": "https://doi.org/10.51903/teknik.v6i1.1138",
+       "score": 34.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4412747283",
+       "title": "XTFT: A Next-Generation Temporal Fusion Transformer for Uncertainty-Rich Time Series Forecasting",
+       "year": "2025",
+       "url": "https://doi.org/10.22541/au.175390529.91420978/v1",
+       "score": 29.915
+      },
+      {
+       "source": "Crossref",
+       "id": "10.33774/coe-2026-7rm70",
+       "title": "SuperNeuronBench - A Computational Benchmark for Comparing Time-Multiplexed Neuromorphic Architectures on Open-Source FPGAs to Parallel Biological Software Models",
+       "year": "2026",
+       "url": "https://doi.org/10.33774/coe-2026-7rm70",
+       "score": 28.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.67236/hbvg1757",
+       "title": "An Open Benchmark for Evaluating Time Series Forecasting Methods Across Financial Markets",
+       "year": "2026",
+       "url": "https://doi.org/10.67236/hbvg1757",
+       "score": 28.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7134271740",
+       "title": "Time Series Forecasting in Financial Markets: Benchmarking the Temporal Fusion Transformer Against N-BEATS.",
+       "year": "2025",
+       "url": "https://doi.org/10.63227/652.299.117",
+       "score": 26.75
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7134836700",
+       "title": "Impermanent: A Live Benchmark for Temporal Generalization in Time Series Forecasting",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2603.08707",
+       "score": 26.0
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/1912.09363v3",
+       "title": "Temporal Fusion Transformers for Interpretable Multi-horizon Time Series Forecasting",
+       "year": "2019",
+       "url": "http://arxiv.org/abs/1912.09363v3",
+       "score": 25.0
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2505.00473v2",
+       "title": "Spatially-Enhanced Temporal Fusion Transformer: Interpretable Multi-Output Prediction for Parametric Dynamical Systems with Time-Varying Inputs",
+       "year": "2025",
+       "url": "http://arxiv.org/abs/2505.00473v2",
+       "score": 24.25
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4409695029",
+       "title": "A comprehensive survey of deep learning for time series forecasting: architectural diversity and open challenges",
+       "year": "2025",
+       "url": "https://doi.org/10.1007/s10462-025-11223-9",
+       "score": 23.588
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7215054119",
+       "title": "The Nixtlaverse: An Open-Source Ecosystem for Forecasting",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2609.39741",
+       "score": 23.5
+      }
+     ]
+    },
+    {
+     "run_tag": "timeseries",
+     "cycle": 1,
+     "weakness": "probabilistic_forecast_missing",
+     "title": "Point forecasts only — no prediction intervals reported",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "conformal prediction intervals time series 2025",
+      "quantile loss probabilistic forecasting calibration",
+      "open source software conformal prediction time series forecasting"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 15,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 60,
+     "n_papers_kept": 45,
+     "why_it_matters": "Point forecasts are insufficient for operational decisions; intervals expose whether the model knows when it is uncertain.",
+     "next_checks": [
+      "Add conformal or quantile prediction intervals.",
+      "Report empirical coverage by horizon.",
+      "Check interval width vs coverage trade-off."
+     ],
+     "success_criteria": [
+      "90% intervals achieve near-90% empirical coverage.",
+      "Coverage is reported separately by forecast horizon."
+     ],
+     "top_papers": [
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2610.21648v1",
+       "title": "conformalForecast: An R package for sequential conformal prediction in time series",
+       "year": "2026",
+       "url": "http://arxiv.org/abs/2610.21648v1",
+       "score": 29.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7162585125",
+       "title": "Distribution-Aware Conformal Prediction: A Framework for generating efficient prediction intervals for time series",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2605.26569",
+       "score": 28.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7220454048",
+       "title": "Efficient conformal prediction intervals for time series: Online PID-Expert aggregation",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2610.02777",
+       "score": 28.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.2139/ssrn.6263102",
+       "title": "RL-ConFormer: Reinforcement Learning-Enhanced Conformal Prediction with Transformer-Based Hybrid Forecasting for Multi-Horizon Time Series",
+       "year": "2026",
+       "url": "https://doi.org/10.2139/ssrn.6263102",
+       "score": 28.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7163563245",
+       "title": "Conformal prediction for functional time series: application to age-specific mortality rates",
+       "year": "2026",
+       "url": "https://doi.org/10.1007/s12546-026-09422-4",
+       "score": 24.604
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2610.02357v1",
+       "title": "Conformal Prediction for Time Series with Deep Sequence Models",
+       "year": "2026",
+       "url": "http://arxiv.org/abs/2610.02357v1",
+       "score": 24.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7202294320",
+       "title": "Retrieval-Corrected Conformal Prediction for Time Series",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2608.10553",
+       "score": 24.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4415969906",
+       "title": "Quantile-Based Short-Term Probabilistic Forecasting of Solar PV Power Under Data Loss",
+       "year": "2025",
+       "url": "https://doi.org/10.1109/iecon58223.2025.11221979",
+       "score": 24.25
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2405.16828v4",
+       "title": "Kernel-based Optimally Weighted Conformal Time-Series Prediction",
+       "year": "2024",
+       "url": "http://arxiv.org/abs/2405.16828v4",
+       "score": 24.0
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2110.13031v1",
+       "title": "Applying Regression Conformal Prediction with Nearest Neighbors to time series data",
+       "year": "2021",
+       "url": "http://arxiv.org/abs/2110.13031v1",
+       "score": 23.5
+      }
+     ]
+    }
+   ]
+  },
+  "nlp": {
+   "context": {
+    "domain": "supervised NLP",
+    "task": "multiclass text classification",
+    "model_family": "TF-IDF logistic regression",
+    "dataset": "20newsgroups subset"
+   },
+   "evidence_csv": {
+    "nlp_confusion_top.csv": "true,predicted,count,share\ntalk.religion.misc,rec.sport.baseball,195,0.0302\ntalk.religion.misc,sci.med,154,0.0239\nsci.med,rec.sport.baseball,133,0.0206\ncomp.graphics,rec.sport.baseball,99,0.0153\nsci.med,comp.graphics,89,0.0138\nrec.sport.baseball,comp.graphics,71,0.0110\ncomp.graphics,sci.med,47,0.0073\ntalk.religion.misc,comp.graphics,39,0.0060\nrec.sport.baseball,sci.med,27,0.0042\nsci.med,talk.religion.misc,10,0.0015\n",
+    "nlp_per_class.csv": "class,precision,recall,f1\ncomp.graphics,0.8903,0.9133,0.9013\nrec.sport.baseball,0.7990,0.9430,0.8647\nsci.med,0.8724,0.8698,0.8708\ntalk.religion.misc,0.9741,0.6570,0.7839\n",
+    "nlp_token_importance.csv": "token,weight\ngraphics,5.3090\nhe,4.7386\ngod,4.2862\nbaseball,4.1033\nteam,3.7516\nyear,3.5948\ngame,3.5730\ngames,3.3613\nfile,3.3119\nfiles,3.2773\nit,3.2672\nimage,3.1672\nmsg,3.1092\nof,3.0099\njesus,2.9917\nhis,2.9642\nplayers,2.9170\npeople,2.8524\nmy,2.8426\nchristian,2.8341\n"
+   },
+   "meta_log_row": {
+    "cycle": "1",
+    "ts_started_iso": "2026-10-22T06:46:38",
+    "wall_seconds": "48.439",
+    "n_active_weaknesses": "2",
+    "n_queries_executed": "6",
+    "n_arxiv_hits_raw": "19",
+    "n_openalex_hits_raw": "30",
+    "n_crossref_hits_raw": "30",
+    "n_joss_hits_raw": "30",
+    "n_arxiv_errors": "0",
+    "n_openalex_errors": "0",
+    "n_crossref_errors": "0",
+    "n_joss_errors": "0",
+    "n_id_dedup_blocked": "15",
+    "n_fp_dedup_blocked": "0",
+    "n_papers_kept": "94",
+    "first_paper_seconds": "6.205"
+   },
+   "cards": [
+    {
+     "run_tag": "nlp",
+     "cycle": 1,
+     "weakness": "embedding_alternatives",
+     "title": "TF-IDF is the only representation — sentence-transformer embeddings unrepresented",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "sentence transformers MiniLM multiclass text classification benchmark 2025",
+      "fastText vs TF IDF text classification small dataset 2025",
+      "open source software text classification embeddings benchmark"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 13,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 58,
+     "n_papers_kept": 53,
+     "why_it_matters": "TF-IDF is strong but lexical; embeddings test whether semantic similarity reduces class confusions that share vocabulary.",
+     "next_checks": [
+      "Compare TF-IDF, fastText and sentence-transformer embeddings.",
+      "Evaluate macro-F1 and confusion-pair changes.",
+      "Keep a linear head for fair representation comparison."
+     ],
+     "success_criteria": [
+      "Embedding baseline is reported under identical splits.",
+      "Representation choice is justified by macro-F1 or confusion reduction."
+     ],
+     "top_papers": [
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2411.09683v1",
+       "title": "Towards a Classification of Open-Source ML Models and Datasets for Software Engineering",
+       "year": "2024",
+       "url": "http://arxiv.org/abs/2411.09683v1",
+       "score": 24.0
+      },
+      {
+       "source": "Crossref",
+       "id": "10.1145/3746027.3756877",
+       "title": "diveXplore - An Open-Source Software for Modern Video Retrieval with Image/Text Embeddings",
+       "year": "2025",
+       "url": "https://doi.org/10.1145/3746027.3756877",
+       "score": 20.854
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7135220338",
+       "title": "BTZSC: A Benchmark for Zero-Shot Text Classification Across Cross-Encoders, Embedding Models, Rerankers and LLMs",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2603.11991",
+       "score": 17.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.21203/rs.3.rs-6069218/v1",
+       "title": "Multiclass Classification using VariationalQuantum Circuit on Benchmark Dataset",
+       "year": "2025",
+       "url": "https://doi.org/10.21203/rs.3.rs-6069218/v1",
+       "score": 17.25
+      },
+      {
+       "source": "Crossref",
+       "id": "10.18280/isi.300606",
+       "title": "Performance Evaluation of Text Embedding Models for Ambiguity Classification in Indonesian News Corpus: A Comparative Study of TF-IDF, Word2Vec, FastText BERT, and GPT",
+       "year": "2025",
+       "url": "https://doi.org/10.18280/isi.300606",
+       "score": 16.991
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7167022053",
+       "title": "A Hybrid Semantic-Statistical Feature Fusion Framework for Bilingual Text Classification on Multilingual Big Data Corpora",
+       "year": "2026",
+       "url": "https://doi.org/10.14569/ijacsa.2026.0170684",
+       "score": 16.5
+      },
+      {
+       "source": "Crossref",
+       "id": "10.30871/jaic.v9i5.10627",
+       "title": "Generative AI Image Sentiment Analysis on Social Media X using TF-IDF and FastText",
+       "year": "2025",
+       "url": "https://doi.org/10.30871/jaic.v9i5.10627",
+       "score": 16.25
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7221195655",
+       "title": "Leakage Aware Evaluation of Arabic Text Classification: Quantifying Document Level Leakage and the Sufficiency of Linear TF IDF Baselines",
+       "year": "2026",
+       "url": "https://doi.org/10.65422/loujas.v2i2.341",
+       "score": 16.0
+      },
+      {
+       "source": "Crossref",
+       "id": "10.20944/preprints202510.2427.v1",
+       "title": "A Hybrid TF–IDF and SBERT Approach for Enhanced Text Classification Performance",
+       "year": "2025",
+       "url": "https://doi.org/10.20944/preprints202510.2427.v1",
+       "score": 15.854
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2202.02629v2",
+       "title": "Improving Probabilistic Models in Text Classification via Active Learning",
+       "year": "2022",
+       "url": "http://arxiv.org/abs/2202.02629v2",
+       "score": 15.5
+      }
+     ]
+    },
+    {
+     "run_tag": "nlp",
+     "cycle": 1,
+     "weakness": "calibration_missing_text",
+     "title": "No probability calibration reported — softmax confidences are biased",
+     "evidence": null,
+     "evidence_present": true,
+     "severity": "info",
+     "evidence_summary": {
+      "type": "structural",
+      "active": true
+     },
+     "queries": [
+      "softmax calibration text classifier temperature scaling 2025",
+      "expected calibration error multiclass language model 2025",
+      "open source software classifier calibration expected calibration error"
+     ],
+     "raw_hits_by_source": {
+      "arXiv": 6,
+      "OpenAlex": 15,
+      "Crossref": 15,
+      "JOSS": 15
+     },
+     "n_raw_hits": 51,
+     "n_papers_kept": 41,
+     "why_it_matters": "Confidence scores from text classifiers are often used for routing or human review; uncalibrated probabilities make triage policies fragile.",
+     "next_checks": [
+      "Report ECE, Brier score and reliability diagram.",
+      "Compare temperature scaling and isotonic calibration.",
+      "Calibrate on a held-out fold, not the test fold."
+     ],
+     "success_criteria": [
+      "ECE decreases after calibration.",
+      "Macro-F1 is unchanged or changes only within sampling noise."
+     ],
+     "top_papers": [
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7222974361",
+       "title": "CALISTO: A Standardized and Open-Source Software for Magnetic Tweezer Force Calibration",
+       "year": "2026",
+       "url": "https://doi.org/10.64898/2026.10.17.759816",
+       "score": 23.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7215073195",
+       "title": "Signal-Routed Temperature Scaling: Low-Capacity Risk-Conditioned Calibration for Small Validation Budgets",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2609.38936",
+       "score": 19.0
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4403160582",
+       "title": "A Confidence Interval for the $\\ell_2$ Expected Calibration Error",
+       "year": "2024",
+       "url": "https://doi.org/10.48550/arxiv.2408.08998",
+       "score": 18.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7129600041",
+       "title": "The Well-Tempered Classifier: Some Elementary Properties of Temperature Scaling",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2602.14862",
+       "score": 17.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7202140245",
+       "title": "Beyond Post-Hoc Temperature Scaling: Bilevel Optimization for LLM Calibration",
+       "year": "2026",
+       "url": "https://doi.org/10.48550/arxiv.2608.07419",
+       "score": 17.5
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W4412353632",
+       "title": "A study of calibration as a measurement of trustworthiness of large language models in biomedical natural language processing",
+       "year": "2025",
+       "url": "https://doi.org/10.1093/jamiaopen/ooaf058",
+       "score": 16.666
+      },
+      {
+       "source": "OpenAlex",
+       "id": "https://openalex.org/W7140149151",
+       "title": "Restoring Calibration for Aligned Large Language Models: A Calibration-Aware Fine-Tuning Approach",
+       "year": "2025",
+       "url": "https://doi.org/10.48550/arxiv.2505.01997",
+       "score": 16.25
+      },
+      {
+       "source": "Crossref",
+       "id": "10.65148/ecn/2025011",
+       "title": "Reliable Cybersecurity Threat Detection through Probability Calibration in Multiclass Classification",
+       "year": "2025",
+       "url": "https://doi.org/10.65148/ecn/2025011",
+       "score": 14.854
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2610.22131v1",
+       "title": "Intern-Decision: Efficient Multimodal Decision Making with Autoregressive Masked Language Modeling",
+       "year": "2026",
+       "url": "http://arxiv.org/abs/2610.22131v1",
+       "score": 14.0
+      },
+      {
+       "source": "arXiv",
+       "id": "http://arxiv.org/abs/2607.16344v1",
+       "title": "Benchmarking Goodness-of-Fit and Calibration Algorithms for Logistic Regression Classifiers: A Large-Scale Simulation Study under Sparse Data",
+       "year": "2026",
+       "url": "http://arxiv.org/abs/2607.16344v1",
+       "score": 14.0
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "topic_recall": {
+  "procedure": "python examples/measure_recall.py --domain <tag> --checkpoints <run>/checkpoints, on the complete cycles above. Counts only weaknesses that fired; gold topics are maintainer-curated keyword conjunctions (docs/gold_sets/README.md).",
+  "wdbc": {
+   "topics": 7,
+   "found": 6
+  },
+  "timeseries": {
+   "topics": 11,
+   "found": 9
+  },
+  "nlp": {
+   "topics": 7,
+   "found": 7
+  },
+  "spearman_validate_score": 0.891
+ }
+}
