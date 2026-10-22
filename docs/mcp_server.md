@@ -146,8 +146,8 @@ server package.
 ## Testing
 
 ```bash
-python -m pip install -e ".[mcp,reports]"
-python -m unittest discover -s tests
+python -m pip install -e ".[mcp,reports,dev]"
+python -m pytest
 ```
 
 `tests/mcp_server/` drives the server through the SDK's in-memory

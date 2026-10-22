@@ -70,7 +70,7 @@ cd lappato_mcb
 python -m pip install -e ".[reports,dev]"
 
 # unit tests (no network access required)
-python -m unittest discover -s tests -v
+python -m pytest -v
 
 # score-weight regression check
 python examples/validate_score.py --min-spearman 0.70
@@ -112,7 +112,7 @@ SKIP=ruff git commit -m "..."
 - [ ] Public API changes are mirrored in the README and CHANGELOG.
 - [ ] Threshold or score-weight changes include a citation/measurement.
 - [ ] No new third-party imports in the daemon core path.
-- [ ] `python -m unittest discover -s tests -v` passes locally.
+- [ ] `python -m pytest` passes locally (install the `[dev]` extra first).
 - [ ] `ruff check lappato_mcb examples tests` passes locally.
 
 ## Reporting issues

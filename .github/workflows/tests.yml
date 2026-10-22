@@ -28,13 +28,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"  # caches the pip wheels between runs
-      - name: Install package with report and MCP extras
+      - name: Install package with report, MCP and dev extras
         # The mcp extra is gated on python_version >= 3.10, so the 3.9
         # leg doubles as the "core library without the MCP SDK" check
         # (tests/mcp_server/* that need the SDK skip themselves there).
-        run: python -m pip install -e ".[reports,mcp]"
+        run: python -m pip install -e ".[reports,mcp,dev]"
       - name: Run unit tests
-        run: python -m unittest discover -s tests -v
+        # pytest collects both the unittest.TestCase suites and the
+        # pytest-style modules (e.g. test_insight_detectors.py), which
+        # `python -m unittest` cannot import or run.
+        run: python -m pytest -v
 
   validate-score:
     name: Validate local relevance score (Spearman)
@@ -69,4 +72,4 @@ jobs:
         # ruff ships a new rule between two CI invocations.
         run: python -m pip install "ruff==0.6.9"
       - name: Run ruff (config from pyproject.toml)
-        run: ruff check lappato_mcb examples tests
+        run: ruff check lappato_mcb examples tests docs/figures
