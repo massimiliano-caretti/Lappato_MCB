@@ -13,6 +13,7 @@ from .core import (
     GENERAL_SOURCES,
     LAPPATO_MCB,
     SOURCES,
+    RunArtefacts,
     ScoreWeights,
 )
 
@@ -20,6 +21,7 @@ __version__ = "1.6.1"
 
 __all__ = [
     "LAPPATO_MCB",
+    "RunArtefacts",
     "ScoreWeights",
     "DEFAULT_SCORE_WEIGHTS",
     "SOURCES",

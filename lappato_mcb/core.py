@@ -162,6 +162,50 @@ class ScoreWeights:
 
 DEFAULT_SCORE_WEIGHTS = ScoreWeights()
 
+# Folder, under a project root, that holds evidence CSVs and run outputs.
+CHECKPOINTS_DIRNAME = "checkpoints"
+# Default persistent corpus file inside the checkpoints folder (cache.py).
+CORPUS_FILENAME = "corpus.jsonl"
+
+
+@dataclass(frozen=True)
+class RunArtefacts:
+    """Where one ``run_tag``'s output files live under ``checkpoints/``.
+
+    Single source of truth for the artefact naming convention, so code
+    that only *reads* a run's outputs (reports, the MCP server) does
+    not need to instantiate a :class:`LAPPATO_MCB`.
+    """
+    checkpoints: Path
+    run_tag: str
+
+    @classmethod
+    def for_project(cls, project_root: Path, run_tag: str) -> RunArtefacts:
+        return cls(Path(project_root) / CHECKPOINTS_DIRNAME, run_tag)
+
+    def _named(self, suffix: str) -> Path:
+        return self.checkpoints / f"{self.run_tag}_lappato_mcb_{suffix}"
+
+    @property
+    def log(self) -> Path:
+        return self._named("log.md")
+
+    @property
+    def papers_jsonl(self) -> Path:
+        return self._named("papers.jsonl")
+
+    @property
+    def meta_log(self) -> Path:
+        return self._named("meta.csv")
+
+    @property
+    def cards_jsonl(self) -> Path:
+        return self._named("weakness_cards.jsonl")
+
+    @property
+    def cards_latest(self) -> Path:
+        return self._named("weakness_cards.latest.json")
+
 # Table-driven dispatch: source name -> search fn / polite-use delay.
 # Defined after the search functions are declared (see end of file).
 
@@ -477,7 +521,7 @@ class LAPPATO_MCB:
                          meta-log under ``n_<source>_errors``.
 
     Public surface intentionally tiny: ``start()``, ``stop()``,
-    ``is_running()``.
+    ``is_running()``, ``run_once()`` and the read-only ``artefacts``.
     """
 
     def __init__(
@@ -504,7 +548,7 @@ class LAPPATO_MCB:
                 f"for the empirical comparison."
             )
         self._root = Path(project_root)
-        self._checkpoints = self._root / "checkpoints"
+        self._checkpoints = self._root / CHECKPOINTS_DIRNAME
         self._run_tag = run_tag
         # Manifest defaults to WDBC for backward compat with the
         # original WDBC example call sites.
@@ -515,11 +559,12 @@ class LAPPATO_MCB:
 
         # Run-tagged artefact paths — enables multi-domain runs to
         # coexist in a single ``checkpoints/`` directory.
-        self._log_path = self._checkpoints / f"{run_tag}_lappato_mcb_log.md"
-        self._papers_jsonl_path = self._checkpoints / f"{run_tag}_lappato_mcb_papers.jsonl"
-        self._meta_log_path = self._checkpoints / f"{run_tag}_lappato_mcb_meta.csv"
-        self._cards_jsonl_path = self._checkpoints / f"{run_tag}_lappato_mcb_weakness_cards.jsonl"
-        self._cards_latest_path = self._checkpoints / f"{run_tag}_lappato_mcb_weakness_cards.latest.json"
+        self._artefacts = RunArtefacts(self._checkpoints, run_tag)
+        self._log_path = self._artefacts.log
+        self._papers_jsonl_path = self._artefacts.papers_jsonl
+        self._meta_log_path = self._artefacts.meta_log
+        self._cards_jsonl_path = self._artefacts.cards_jsonl
+        self._cards_latest_path = self._artefacts.cards_latest
 
         self._poll = float(poll_interval)
         self._stop = threading.Event()
@@ -535,7 +580,7 @@ class LAPPATO_MCB:
 
         # Persistent corpus + offline mode.
         self._cache = CorpusCache(
-            corpus_path or self._checkpoints / "corpus.jsonl"
+            corpus_path or self._checkpoints / CORPUS_FILENAME
         )
         self._offline = bool(offline)
 
@@ -587,6 +632,11 @@ class LAPPATO_MCB:
 
     def is_running(self) -> bool:
         return self._thread is not None and self._thread.is_alive()
+
+    @property
+    def artefacts(self) -> RunArtefacts:
+        """Paths of the files this instance writes (read-only)."""
+        return self._artefacts
 
     def run_once(self) -> None:
         """Run one synchronous harvest cycle against current checkpoints.

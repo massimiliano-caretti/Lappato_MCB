@@ -36,267 +36,45 @@ Usage::
     python examples/validate_evidence_csv.py --domain physics \\
         --csv checkpoints/physics_conservation.csv
 
-The validator is stdlib-only: it uses ``csv`` + ``json`` and lives in
-``examples/`` rather than the daemon core.
+This script is a thin command-line front-end: the validation logic
+lives in :mod:`lappato_mcb.validation.evidence` (stdlib-only), which is
+also what the MCP server's ``validate_evidence`` tool calls.
 """
 from __future__ import annotations
 
 import argparse
-import csv
-import json
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMA_DIR = ROOT / "lappato_mcb" / "manifests" / "schemas"
+sys.path.insert(0, str(ROOT))
+
+from lappato_mcb.validation.evidence import (  # noqa: E402
+    SCHEMA_DIR,
+    list_schema_domains,
+    load_schema,
+    render_report,
+    suggest_dict_writer_snippet,
+    validate_checkpoints,
+    validate_file,
+)
+
 DEFAULT_CHECKPOINTS = ROOT / "checkpoints"
+
+__all__ = [
+    "SCHEMA_DIR",
+    "render_report",
+    "suggest_dict_writer_snippet",
+    "validate_checkpoints",
+    "validate_file",
+]
 
 
 def _load_schema(domain: str) -> dict:
-    p = SCHEMA_DIR / f"{domain}.schema.json"
-    if not p.exists():
-        raise SystemExit(f"no schema for domain {domain!r} at {p}")
-    return json.loads(p.read_text(encoding="utf-8"))
-
-
-def _list_schema_domains() -> list[str]:
-    return sorted(p.stem.replace(".schema", "") for p in SCHEMA_DIR.glob("*.schema.json"))
-
-
-def _read_csv_header_and_sample(path: Path, sample_rows: int = 5) -> tuple[list[str], list[dict]]:
-    with path.open(newline="", encoding="utf-8") as fh:
-        reader = csv.DictReader(fh)
-        header = list(reader.fieldnames or [])
-        rows: list[dict] = []
-        for i, row in enumerate(reader):
-            if i >= sample_rows:
-                break
-            rows.append(row)
-    return header, rows
-
-
-def _column_present(spec: dict, header: list[str]) -> tuple[bool, str | None]:
-    """Return (found, accepted_name)."""
-    canonical = spec["name"]
-    aliases = spec.get("aliases") or []
-    candidates = [canonical, *aliases]
-    lower_header = [h.strip() for h in header]
-    for c in candidates:
-        if c in lower_header:
-            return True, c
-    return False, None
-
-
-def _looks_numeric(rows: list[dict], col: str) -> bool:
-    if not rows:
-        return True
-    seen = 0
-    for r in rows:
-        v = r.get(col)
-        if v in (None, ""):
-            continue
-        seen += 1
-        try:
-            float(v)
-        except (TypeError, ValueError):
-            return False
-    return seen == 0 or True
-
-
-def validate_file(path: Path, file_spec: dict) -> dict:
-    """Validate a single CSV against its file spec entry."""
-    if not path.exists():
-        return {
-            "file": str(path),
-            "present": False,
-            "missing_required": [],
-            "accepted_columns": [],
-            "extra_columns": [],
-            "type_warnings": [],
-        }
-
-    header, sample = _read_csv_header_and_sample(path)
-
-    missing_required: list[str] = []
-    accepted: list[dict] = []
-    type_warnings: list[str] = []
-    matched_columns: set[str] = set()
-
-    for col_spec in file_spec.get("columns", []):
-        ok, name = _column_present(col_spec, header)
-        if ok and name is not None:
-            matched_columns.add(name)
-            accepted.append({
-                "canonical": col_spec["name"],
-                "accepted_as": name,
-                "via_alias": name != col_spec["name"],
-            })
-            if col_spec.get("type") == "number" and not _looks_numeric(sample, name):
-                type_warnings.append(
-                    f"column {name!r} expected numeric values"
-                )
-        elif col_spec.get("required"):
-            missing_required.append(col_spec["name"])
-
-    extra_columns = [h for h in header if h not in matched_columns]
-
-    return {
-        "file": str(path),
-        "present": True,
-        "missing_required": missing_required,
-        "accepted_columns": accepted,
-        "extra_columns": extra_columns,
-        "type_warnings": type_warnings,
-    }
-
-
-def validate_checkpoints(domain: str, checkpoints: Path) -> dict:
-    schema = _load_schema(domain)
-    file_results: list[dict] = []
-    for fname, spec in schema.get("evidence_files", {}).items():
-        path = checkpoints / fname
-        result = validate_file(path, spec)
-        result["used_by_detectors"] = spec.get("used_by_detectors", [])
-        result["file_spec"] = spec  # retained so render_report can suggest fixes
-        result["filename"] = fname
-        file_results.append(result)
-    return {
-        "domain": domain,
-        "schema_version": schema.get("schema_version"),
-        "checkpoints": str(checkpoints),
-        "file_results": file_results,
-    }
-
-
-def suggest_dict_writer_snippet(
-    filename: str,
-    file_spec: dict,
-    checkpoints_var: str = "checkpoints_dir",
-) -> str:
-    """Return a copy-pasteable Python snippet that an AI assistant or
-    a human can drop into the host pipeline to emit the missing
-    evidence file.
-
-    The snippet uses canonical column names from the schema; aliases
-    are listed as a comment so the human can rename to match an
-    existing log convention if desired. Required columns become
-    DictWriter fields; optional columns are emitted as comments to
-    flag that they would unlock additional detectors.
-    """
-    columns = file_spec.get("columns", [])
-    if not columns:
-        return ""
-
-    required_names = [c["name"] for c in columns if c.get("required")]
-    optional_names = [c["name"] for c in columns if not c.get("required")]
-
-    alias_lines: list[str] = []
-    for c in columns:
-        aliases = c.get("aliases") or []
-        if aliases:
-            alias_lines.append(
-                f"#   '{c['name']}' also accepts aliases: {', '.join(aliases)}"
-            )
-
-    field_list = required_names + optional_names
-    field_list_repr = ", ".join(repr(n) for n in field_list)
-
-    # Use ``None`` as a placeholder so the snippet parses unchanged
-    # (the user / AI assistant replaces None with the live values).
-    example_row = "{ " + ", ".join(
-        f"{n!r}: None" for n in required_names or field_list[:1]
-    ) + " }"
-
-    snippet_lines = [
-        "",
-        f"# --- suggested csv.DictWriter for {filename} -----------------",
-        "# Drop this into your training/eval code at the point where the",
-        "# matching numbers are already computed. No new dependencies.",
-        "# Replace `None` placeholders with the live values from your",
-        "# pipeline. The snippet parses out of the box so you can paste",
-        "# it first and wire the values in second.",
-    ]
-    if alias_lines:
-        snippet_lines.append("# Schema-accepted aliases for the columns below:")
-        snippet_lines.extend(alias_lines)
-    snippet_lines.extend([
-        "import csv",
-        f"path = {checkpoints_var} / {filename!r}",
-        "with path.open('w', newline='', encoding='utf-8') as fh:",
-        f"    writer = csv.DictWriter(fh, fieldnames=[{field_list_repr}])",
-        "    writer.writeheader()",
-        f"    writer.writerow({example_row})",
-        "# -------------------------------------------------------------",
-    ])
-    return "\n".join(snippet_lines)
-
-
-def render_report(report: dict, suggest: bool = True) -> tuple[str, bool]:
-    """Pretty-print the validation report. Returns (text, ok).
-
-    When ``suggest`` is True (default) and a present file is missing
-    required columns, append a copy-pasteable ``csv.DictWriter``
-    snippet that emits the file with the canonical column names. The
-    snippet is the same one the README's three-line AI prompt expects
-    the assistant to produce, so a user can either paste it directly
-    into the pipeline or paste the validator output into a chat
-    panel and let the assistant apply it.
-    """
-    lines = [
-        f"=== {report['domain']} (schema_version={report['schema_version']}) ===",
-        f"checkpoints: {report['checkpoints']}",
-        "",
-    ]
-    ok = True
-    for r in report["file_results"]:
-        if not r["present"]:
-            lines.append(f"[--] {Path(r['file']).name}: not present")
-            if r["used_by_detectors"]:
-                lines.append(
-                    "       detectors that stay inactive: "
-                    + ", ".join(r["used_by_detectors"])
-                )
-            if suggest and r.get("file_spec"):
-                snippet = suggest_dict_writer_snippet(
-                    r.get("filename") or Path(r["file"]).name,
-                    r["file_spec"],
-                )
-                if snippet:
-                    for ln in snippet.splitlines():
-                        lines.append(f"       {ln}")
-            continue
-        if r["missing_required"]:
-            ok = False
-            lines.append(
-                f"[FAIL] {Path(r['file']).name}: missing required columns: "
-                + ", ".join(r["missing_required"])
-            )
-        else:
-            lines.append(f"[ OK ] {Path(r['file']).name}")
-        for col in r["accepted_columns"]:
-            if col["via_alias"]:
-                lines.append(
-                    f"        accepted '{col['accepted_as']}' as alias for '{col['canonical']}'"
-                )
-        for w in r["type_warnings"]:
-            lines.append(f"        warn: {w}")
-        if r["extra_columns"]:
-            lines.append(
-                "        extra columns ignored: " + ", ".join(r["extra_columns"])
-            )
-        # When the file is present but missing required columns, the
-        # snippet helps the human (or AI assistant) close the gap
-        # without re-reading the schema. Skipped when only optional
-        # columns are missing, since those don't break the contract.
-        if suggest and r["missing_required"] and r.get("file_spec"):
-            snippet = suggest_dict_writer_snippet(
-                r.get("filename") or Path(r["file"]).name,
-                r["file_spec"],
-            )
-            if snippet:
-                for ln in snippet.splitlines():
-                    lines.append(f"       {ln}")
-    return "\n".join(lines), ok
+    try:
+        return load_schema(domain)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc)) from exc
 
 
 def main() -> int:
@@ -321,7 +99,7 @@ def main() -> int:
     args = p.parse_args()
 
     if args.domain == "all":
-        domains = _list_schema_domains()
+        domains = list_schema_domains()
     else:
         domains = [args.domain]
 
@@ -347,6 +125,7 @@ def main() -> int:
                 "file_results": [r],
             }
         else:
+            _load_schema(d)  # clean SystemExit on an unknown domain
             report = validate_checkpoints(d, args.checkpoints)
         text, ok = render_report(report, suggest=not args.no_suggest)
         print(text)
